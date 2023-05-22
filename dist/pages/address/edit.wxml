@@ -1,0 +1,112 @@
+<view>
+
+  <!--pages/erkai/apply/apply.wxml-->
+  <form bindsubmit="submit">
+    <view class="apply">
+
+      <view class="apply-wrap">
+
+        <view class="inp">
+          <view class="label">
+            联系人
+          </view>
+          <view class="value">
+            <input type="text" name="name" value="{{data.name}}" placeholder="姓名" placeholder-class="inp-placeholder"></input>
+          </view>
+          <view class="icon">
+            <!-- <image src="../../static/images/icon-location.png"></image> -->
+          </view>
+        </view>
+
+        <view class="inp">
+          <view class="label">
+            手机号
+          </view>
+          <view class="value">
+            <input type="text" name="tel" value="{{data.tel}}" placeholder="请输入电话" placeholder-class="inp-placeholder"></input>
+          </view>
+          <view class="icon">
+            <!-- <image src="../../static/images/icon-location.png"></image> -->
+          </view>
+        </view>
+
+        <view class="inp">
+          <view class="label">
+            省市区
+          </view>
+          <view class="value" bindtap="chooseLocation">
+            {{data.province}} {{data.city}} {{data.district}}
+          </view>
+          <view class="icon" bindtap="chooseLocation">
+            <image src="../../static/images/icon-location.png" />
+          </view>
+        </view>
+
+        <view class="inp">
+          <view class="label">
+            详细地址
+          </view>
+          <view class="value">
+            <input type="text" name="address" value="{{data.address}}" placeholder="" placeholder-class="inp-placeholder"></input>
+          </view>
+          <view class="icon">
+            <!-- <image src="../../static/images/icon-location.png"></image> -->
+          </view>
+        </view>
+
+        <view class="inp">
+          <view class="label">
+            备注
+          </view>
+          <view class="value">
+            <input type="text" name="remark" value="{{data.remark}}" placeholder="" placeholder-class="inp-placeholder"></input>
+          </view>
+          <view class="icon">
+            <!-- <image src="../../static/images/icon-location.png"></image> -->
+          </view>
+        </view>
+
+
+        <!-- <picker mode="region" bindchange="bindRegionChange" value="{{region}}" class="picker">
+                <view class="pick">
+                    <view class="pick-value">
+                        <input type="text" value="{{region[0]}}{{region[1]}}{{region[2]}}" placeholder="请选择省市区" placeholder-class="inp-placeholder"></input>
+                    </view>
+                    <view class="pick-btn">
+                        <image src="{{host}}/icon-bottom.png"></image>
+                    </view>
+                </view>
+            </picker>              -->
+
+        <!-- <view class="inp">
+              <input type="text" name="addr" value="{{data.addr}}" placeholder="详细地址" placeholder-class="inp-placeholder"></input>
+            </view>    -->
+
+        <!-- <view class="pick">
+                <view class="pick-value">
+                    <input type="text" placeholder="点击右边授权手机号" placeholder-class="inp-placeholder"></input>
+                </view>
+                <view class="pick-btn">
+                     <image src="{{host}}/icon-right.png"></image>
+                </view>
+            </view> -->
+
+
+
+
+
+
+
+
+      </view>
+
+    </view>
+
+    <view class="submit-btn">
+      <button formType="submit" class="bg-color-main">保存地址</button>
+    </view>
+
+  </form>
+
+
+</view>

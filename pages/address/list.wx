@@ -1,0 +1,217 @@
+<template>
+  <view>
+
+<view class="cont">
+    <view class="item" wx:for="{{list}}" wx:for-index="k" wx:for-item="item">
+        <view class="info" bindtap="seladdr" data-k="{{k}}">
+            <view class="name">姓名：{{item.name}}</view>
+            <view class="tel">{{item.tel}}</view>
+        </view>
+        <view class="addr mix-bottom" bindtap="seladdr" data-k="{{k}}">收货地址：{{item.province}}{{item.city}}{{item.district}} {{item.address_name}}（{{item.remark}}）</view>
+        <view class="do-btn">
+            <view class="btn" bindtap="edit" data-id="{{item.id}}"> <image src="../../static/images/icon-edit.png"></image> </view>
+            <view class="btn" bindtap="del" data-id="{{item.id}}"> <image src="../../static/images/icon-del.png"></image></view>
+        </view>
+    </view>
+</view>
+
+<view class="add">
+  <view class="add-btn bg-color-main" bindtap="add">添加地址</view>
+</view>
+
+
+    
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '我的地址'
+  },
+  data: {},
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    
+    this.setData({
+      t:options.t
+    })    
+    
+    if(!wx.getStorageSync('token')){
+      wx.showModal({title: '提示',content: '登录后才可以操作哦',success (res) {if (res.confirm) {wx.navigateTo({url: '../login/login',})} else if (res.cancel) {wx.navigateBack({delta: 1,})}}})
+    } 
+  },
+
+
+  initData(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetAddressList',
+      data:{
+        token:wx.getStorageSync('token')
+      },
+      success(res) {
+          that.setData({
+            list:res.data.data,
+          })
+      }
+    }) 
+  },  
+
+  edit(e){
+      wx.navigateTo({
+        url: 'edit?id='+e.currentTarget.dataset.id,
+      })
+  },
+
+  del(e){
+    let that = this;
+    wx.showModal({
+      title: '提示',
+      content: '确定删除吗',
+      success (res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+
+          app.util.request({
+            'url': 'entry/wxapp/DelAddress',
+            data:{
+              token:wx.getStorageSync('token'),
+              id:e.currentTarget.dataset.id
+            },
+            success(res) {
+                that.initData();
+            }
+          }) 
+
+
+
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+
+  },
+
+
+  add(){
+    wx.navigateTo({
+      url: 'edit',
+    })
+  },
+
+  seladdr(e){
+    console.log(e)
+    console.log(this.data.t)
+    if(this.data.t==1){
+       wx.setStorageSync('seladdrdata', this.data.list[e.currentTarget.dataset.k]);
+       wx.navigateBack({
+         delta: 1,
+       })
+    }
+  },
+
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+    this.initData();
+  },
+
+  onPullDownRefresh: function () {
+    this.initData();
+    wx.stopPullDownRefresh();
+  },  
+  
+}
+</script>
+
+<style lang="less">
+
+/* lincec_store_share/pages/address/list.wxss */
+page{
+  background-color: #f7f7f7;
+
+}
+.cont{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;  
+}
+.item{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-bottom: 10px;
+  background-color: #fff;
+  padding: 10px 10px 0;
+  color: #555;
+  font-size: 14px;
+  border-radius: 4px;
+}
+.info{
+  display: flex;
+  flex: 1;
+}
+.name{
+  display: flex;
+  flex: 1;
+}
+.tel{
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
+.addr{
+  display: flex;
+  flex: 1;
+  padding: 10px 0;
+}
+.do-btn{
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 10px 0;
+}
+.btn{
+  display: flex;
+  width: 40px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.btn image{
+  width: 20px;
+  height: 20px;
+}
+
+.add{
+  display: flex;
+  flex: 1;
+  padding: 50px;
+}
+.add-btn{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 100px;
+  color: #fff;
+  font-size: 14px;
+  flex: 1;
+}
+
+
+</style>

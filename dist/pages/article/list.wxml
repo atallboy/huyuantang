@@ -1,0 +1,34 @@
+<view>
+
+  <view class="tab-container">
+    <ui-tabs index="{{ current }}" bindchange="handleChange" tab-style="{{tab_style}}" _pid="{{_pid}}">
+      <ui-tab wx:for="{{cate}}" _pid="{{_pid}}">{{item.name}} <text wx:if="{{c_ready}}" style="color:#FBF0EE;">1</text> </ui-tab>
+    </ui-tabs>
+  </view>
+
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+  <view class="article-list-container">
+    <view class="article-list-wrap">
+      <view class="article-item mix-bottom" wx:for="{{list}}" bindtap="detail" data-id="{{item.id}}">
+        <view class="article-header" wx:if="{{item.sub_image}}">
+          <view class="article-title">{{item.title}}</view>
+          <view class="article-pic">
+            <image src="{{item.sub_image}}" />
+          </view>
+        </view>
+        <view class="article-title" wx:else="">{{item.title}}</view>
+        <view class="article-info">
+          <view class="article-time">{{item.update_time}}</view>
+          <view class="article-score" wx:if="{{item.is_read==0}}">+{{item.score}}积分</view>
+          <view class="article-watch" wx:else="">{{item.read_num}}次浏览</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+
+</view>

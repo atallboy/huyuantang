@@ -1,0 +1,107 @@
+<view>
+
+  <block wx:if="{{!becomeToast}}">
+    <view class="yj-menu-container mix-top" style="position:fixed;" wx:if="{{detail.cdkey||detail.is_can_use||detail.is_can_get||cdkey}}">
+      <view class="yj-menu-wrap">
+        <view class="yj-menu-item" wx:if="{{detail.cdkey}}">
+          <button open-type="share">
+            <view class="yj-menu-item-name">分享</view>
+          </button>
+        </view>
+        <view wx:if="{{detail.is_can_get}}" class="yj-menu-item" bindtap="become">
+          <view class="yj-menu-item-name">获取</view>
+        </view>
+        <view wx:if="{{detail.is_can_use}}" class="yj-menu-item" bindtap="use">
+          <view class="yj-menu-item-name">使用</view>
+        </view>
+        <view wx:if="{{detail.is_can_gain&&e.cdkey&&can_get_cdkey}}" class="yj-menu-item" bindtap="gain">
+          <view class="yj-menu-item-name">领取</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+
+  <view style="padding:10px;">
+    <view style="width:100%;height:200px;">
+      <image src="{{detail.pic}}" style="width:100%;height:100%;border-radius:4px;" />
+    </view>
+    <view style="padding:10px 3px;font-weight:700;font-size:18px;">{{detail.name}}</view>
+    <view style="padding:6px;"> <text>所属等级：</text> {{detail.level}}级</view>
+    <view style="display:flex; padding:6px;align-items: center;"> <text>专属图标：</text>
+      <image src="{{detail.icon}}" style="width:20px;height:20px;margin-left:5px;" />
+    </view>
+    <view style="padding:6px;"> <text>拥有：</text> {{detail.card_num}} 张</view>
+
+
+    <view style="padding:15px 10px;display:flex; padding:6px;align-items: center;">
+      <view style="width:6px;height:18px;background-color:#4184F5;margin-right:10px;border-radius:100px;"></view> 卡券介绍
+    </view>
+    <view style="padding:10px;">{{detail.desc}}</view>
+
+    <!-- <view style="padding:15px 10px;display:flex; padding:6px;align-items: center;">
+            <view style="width:6px;height:18px;background-color:#4184F5;margin-right:10px;border-radius:100px;"></view> 我拥有的{{detail.name}}卡
+        </view> -->
+
+    <!-- <view class="card-list-container" style="padding:20px 10px;">
+  <view class="card-list-wrap">
+    <view class="card-list-item">
+          <view class="card-list-item-info">
+                <view class="">
+                
+                </view> 
+          </view>
+          <view class="card-list-item-btn">
+
+          </view>
+    </view>
+  </view>
+</view> -->
+
+    <view style="with:100%;height:80px;"></view>
+
+
+  </view>
+
+
+  <ui-popup show="{{ becomeToast }}" height="500" background="transparent" _pid="{{_pid}}">
+    <view class="become-toast">
+      <view class="ui-row ui-row-border-bottom" style="height:40px;">
+        <view class="ui-col valign-middle" style="padding-left: 20px;">
+          <view class="ui-col-content valign-middle">可通过以下方式获得 {{detail.name}} 身份</view>
+        </view>
+        <view bindtap="closeBecomeToast" class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 40px;">
+          <view class="ui-col-content align-center valign-middle">
+            <span type="x" size="18" color="#FC8950" class="ui-icon icon-x" style="color: #FC8950;font-size: 18px;"></span>
+          </view>
+        </view>
+      </view>
+      <view class="condition-wrap">
+        <radio-group bindchange="radioChange">
+          <scroll-view scroll-y="{{true}}" style="height: 380px;">
+            <view class="condition-item" wx:for="{{detail.condition}}" wx:for-index="k" wx:for-item="item">
+              <view class="condition-item-radio">
+                <radio value="{{k}}" color="#00B26A">
+                </radio>
+              </view>
+              <view class="condition-info mix-bottom">
+                <text class="condition-info-type-name">{{item.name}}</text> -
+                <text class="condition-info-type-msg" wx:if="{{item.type==1}}">支付{{item.price}}元</text>
+                <text class="condition-info-type-msg" wx:if="{{item.type==2}}">{{item.product_name}}</text>
+              </view>
+            </view>
+          </scroll-view>
+        </radio-group>
+      </view>
+      <view class="ui-row" style="height:50px;">
+        <view class="ui-col valign-middle" style="padding-left: 10px;padding-right: 20px;">
+          <view class="ui-col-content valign-middle">
+            <button type="primary" bindtap="toBecome">确定</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </ui-popup>
+
+
+</view>

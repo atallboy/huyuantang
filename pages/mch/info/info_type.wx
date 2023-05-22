@@ -1,0 +1,70 @@
+<template>
+  <view>
+    
+            <ui-row-list border-indent class="col-menu-wrap" style="background-color:#fff;">
+
+                <ui-row height="70" bindtap="toWhere" data-act="base_info">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-collect-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        基本信息
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>   
+
+                <ui-row height="70" bindtap="toWhere" data-act="pic_info">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-team-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        附件信息
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>                  
+
+                <ui-row height="70" bindtap="toWhere" data-act="account_info">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-team-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        账号信息
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row> 
+
+        
+
+            </ui-row-list>  
+
+  </view>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationBarTitleText: '商户信息'
+  },
+  data: {},
+
+  toWhere(e){
+    let act = e.currentTarget.dataset.act;
+    console.log(act);
+
+    if(act=='base_info'){wx.navigateTo({url:'info_base'})}
+    if(act=='pic_info'){wx.navigateTo({url:'info_pic'})}
+    if(act=='account_info'){wx.navigateTo({url:'account'})}
+
+  },
+
+}
+</script>
+
+<style lang="less">
+</style>

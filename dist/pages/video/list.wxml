@@ -1,0 +1,32 @@
+<view>
+
+  <view class="tab-container">
+    <ui-tabs index="{{ current }}" bindchange="handleChange" tab-style="{{tab_style}}" _pid="{{_pid}}">
+      <ui-tab wx:for="{{cate}}" _pid="{{_pid}}">{{item.name}} <text wx:if="{{c_ready}}" style="color:#FBF0EE;">1</text> </ui-tab>
+    </ui-tabs>
+  </view>
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+  <view class="video-list-container">
+    <view class="video-list-wrap">
+      <view class="video-item" wx:for="{{list}}" bindtap="detail" data-id="{{item.id}}">
+        <view class="video-pic">
+          <image src="{{item.sub_image}}" />
+        </view>
+        <view class="video-title">
+          <view class="video-title-txt txt-hidden">{{item.title}}</view>
+        </view>
+        <view class="video-info">
+          <view class="video-sub-title">{{item.duration}}</view>
+          <view class="video-score" wx:if="{{item.is_watch==0}}">+{{item.score}}积分</view>
+          <view class="video-watch" wx:else="">{{item.watch_num}}次观看</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+
+</view>

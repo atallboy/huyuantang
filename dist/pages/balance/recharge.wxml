@@ -1,0 +1,38 @@
+<view>
+  <view class="form-wrap">
+    <view class="form-item">
+      <input value="{{money}}" bindinput="bindinput" placeholder="请输入充值金额" placeholder-class="placeholderClass"></input>
+    </view>
+  </view>
+
+  <view class="fast-wrap">
+    <view class="fast-wrap-label">
+      <view class="fast-wrap-label-dot"></view> 快捷充值
+    </view>
+    <view class="fast-list">
+      <view class="fast-item-wrap" wx:for="{{fast_list}}" wx:for-index="k" wx:for-item="v">
+        <view class="fast-item {{v.selected}}" bindtap="selFast" data-k="{{k}}">{{v.amount}}元</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- <view class="fast-wrap">
+        <view class="fast-wrap-label">
+            <view class="fast-wrap-label-dot"></view> 充值套餐
+        </view>
+        <view class="package-list">
+            <view class="package-item {{v.selected}}" wx:for="{{solution_list}}" wx:for-index="k" wx:for-item="v"  bindtap="selSolution" data-k="{{k}}">
+              <view class="price">{{v.amount}}元</view>
+              <view class="desc" wx:if="{{v.cate==1}}">返{{v.total_deduction_amount}}抵扣金</view>
+              <view class="desc" wx:if="{{v.cate==2}}">返利{{v.cash_back_amount*v.cash_back_num}}元</view>
+            </view>           
+        </view>
+     </view>      -->
+
+  <view class="describe"> <text>{{describe}}</text> </view>
+
+  <view class="submit-wrap">
+    <button bindtap="formSubmit" class="submit-btn">立即支付</button>
+  </view>
+
+</view>

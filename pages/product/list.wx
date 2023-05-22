@@ -1,0 +1,122 @@
+<template>
+  <view>
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+<view class="goods-col-container">
+    <view class="goods-col-goods">
+         <view class="goods-col-goods-wrap" wx:for="{{list}}">
+            <view class="goods-col-goods-item">
+                <view class="goods-col-goods-pic" bindtap="detail" data-id="{{item.id}}">
+                    <image src="{{item.sub_image}}"></image>
+                    <image wx:if="{{item.fight_status_ing==1}}" src="../../../static/images/icon-xxqg-2.png" class="goods-xsqg"></image>
+                </view>
+                <view class="goods-col-goods-name">
+                    <view class="goods-col-goods-name-txt">{{item.name}}</view>
+                </view>
+                <view class="goods-col-goods-info">
+                    <view class="goods-col-goods-price"> <text>￥</text>{{item.price}}</view>
+                    <view class="goods-col-goods-detail" bindtap="addcar" data-v="{{item}}" data-id="{{item.id}}"> <image src="../../static/images/icon-car-2.png"></image> </view>
+                </view>
+            </view>
+         </view>
+    </view>
+</view>
+
+
+    
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '商品列表'
+  },
+  data: {
+    cate_id:0,
+    mch_id:0,
+    type:'',
+    product_type:'',
+  },
+  onLoad(e){
+    if(e.cate_id)this.setData({cate_id:e.cate_id})
+    if(e.type)this.setData({type:e.type})
+    if(e.mch_id)this.setData({mch_id:e.mch_id})
+    if(e.product_type)this.setData({product_type:e.product_type})
+  },    
+
+  onShow: function () {
+    this.getGoodsList();
+  },
+
+  onPullDownRefresh: function () {
+    this.getGoodsList();
+    wx.stopPullDownRefresh();
+  },    
+
+  detail(e){
+    wx.navigateTo({url:'detail?id='+e.currentTarget.dataset.id})
+  },
+
+  getGoodsList(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getProductList',
+      data:{
+        token:wx.getStorageSync('token'),
+        cate_id:this.data.cate_id,
+        mch_id:this.data.mch_id,
+        type:this.data.type,
+        product_type:this.data.product_type,
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          list:res.data.data.list,
+        })
+        wx.setNavigationBarTitle({title:res.data.data.page_title})
+      }
+    })  
+  },
+
+  addcar(e){
+    if(!wx.getStorageSync('token')){wx.navigateTo({url: '../login/login',});return ;}    
+    let v = e.currentTarget.dataset.v;
+    if(v.attribute_list.length>0){
+      wx.navigateTo({url:'detail?id='+e.currentTarget.dataset.id})
+      return ;
+    }
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/addcar',
+      data:{
+          token:wx.getStorageSync('token'),
+          product_id:e.currentTarget.dataset.id,
+          type:1,
+        },
+      success(res) {
+        console.log(res);
+        if(res.data.data>0){
+          wx.showToast({title:'已加入购物车'})
+        }
+      }
+    })  
+  },
+
+
+}
+</script>
+
+<style lang="less">
+
+page{background-color: var(--defaultBgColor);}
+
+
+.goods-col-goods-pic{position: relative;}
+.goods-xsqg{position: absolute;left: 0;right: 0;width: 50px;height: 50px;}
+
+
+</style>

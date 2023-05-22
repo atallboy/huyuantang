@@ -1,0 +1,282 @@
+<template>
+  <view>
+    
+    <block wx:if="{{!becomeToast}}">
+        <view class="yj-menu-container mix-top" style="position:fixed;" wx:if="{{detail.cdkey||detail.is_can_use||detail.is_can_get||cdkey}}">
+            <view class="yj-menu-wrap">
+                <view class="yj-menu-item" wx:if="{{detail.cdkey}}">
+                    <button open-type="share">
+                        <view class="yj-menu-item-name">分享</view>
+                    </button>
+                </view> 
+                <view wx:if="{{detail.is_can_get}}" class="yj-menu-item" bindtap="become"><view class="yj-menu-item-name">获取</view></view>                    
+                <view wx:if="{{detail.is_can_use}}" class="yj-menu-item" bindtap="use"><view class="yj-menu-item-name">使用</view></view>                                                       
+                <view wx:if="{{detail.is_can_gain&&e.cdkey&&can_get_cdkey}}" class="yj-menu-item" bindtap="gain"><view class="yj-menu-item-name">领取</view></view>
+            </view>
+        </view> 
+    </block>
+   
+
+      <view style="padding:10px;">
+        <view style="width:100%;height:200px;">
+            <image src="{{detail.pic}}" style="width:100%;height:100%;border-radius:4px;"></image>
+        </view>
+        <view style="padding:10px 3px;font-weight:700;font-size:18px;">{{detail.name}}</view>
+        <view style="padding:6px;"> <text>所属等级：</text> {{detail.level}}级</view>
+        <view style="display:flex; padding:6px;align-items: center;"> <text>专属图标：</text> <image src="{{detail.icon}}" style="width:20px;height:20px;margin-left:5px;"></image></view>
+        <view style="padding:6px;"> <text>拥有：</text> {{detail.card_num}} 张</view>
+
+
+        <view style="padding:15px 10px;display:flex; padding:6px;align-items: center;">
+            <view style="width:6px;height:18px;background-color:#4184F5;margin-right:10px;border-radius:100px;"></view> 卡券介绍
+        </view>
+        <view style="padding:10px;">{{detail.desc}}</view>   
+
+        <!-- <view style="padding:15px 10px;display:flex; padding:6px;align-items: center;">
+            <view style="width:6px;height:18px;background-color:#4184F5;margin-right:10px;border-radius:100px;"></view> 我拥有的{{detail.name}}卡
+        </view> -->
+
+<!-- <view class="card-list-container" style="padding:20px 10px;">
+  <view class="card-list-wrap">
+    <view class="card-list-item">
+          <view class="card-list-item-info">
+                <view class="">
+                
+                </view> 
+          </view>
+          <view class="card-list-item-btn">
+
+          </view>
+    </view>
+  </view>
+</view> -->
+
+      <view style="with:100%;height:80px;"></view>
+
+
+      </view>
+
+
+<ui-popup show="{{ becomeToast }}" height="500" background="transparent">
+    <view class="become-toast">
+        <ui-row height="40" border-bottom>
+            <ui-col vertical-align="middle" space-left="20">可通过以下方式获得 {{detail.name}} 身份</ui-col>
+            <ui-col width="40" vertical-align="middle" align="center" bindtap="closeBecomeToast">
+                <ui-icon type="x" size="18" color="#FC8950"></ui-icon>
+            </ui-col>
+        </ui-row>
+        <view class="condition-wrap">
+          <radio-group bindchange="radioChange">
+           <scroll-view scroll-y="{{true}}" style="height: 380px;">
+             <view class="condition-item" wx:for="{{detail.condition}}" wx:for-index="k" wx:for-item="item">
+               <view class="condition-item-radio">
+                  <radio value="{{k}}"/>
+               </view>
+               <view class="condition-info mix-bottom">
+                 <text class="condition-info-type-name">{{item.name}}</text> - 
+                 <text class="condition-info-type-msg" wx:if="{{item.type==1}}">支付{{item.price}}元</text>
+                 <text class="condition-info-type-msg" wx:if="{{item.type==2}}">{{item.product_name}}</text>
+               </view>
+             </view>
+           </scroll-view>
+           </radio-group>
+        </view>
+        <ui-row height="50">
+            <ui-col space-left="10" space-right="20" vertical-align="middle">
+                <button type="primary" bindtap="toBecome">确定</button>
+            </ui-col>
+        </ui-row>
+    </view>
+</ui-popup>
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: ''
+  },
+  data: {
+    id:0,
+    card_id:0,
+    share_id:0,
+    cdkey:'',
+    becomeToast:false,
+    detail:{},
+    condition_type:false,   
+    e:{}, 
+    can_get_cdkey:true,
+  },
+
+  onLoad(e){   
+    if(e.id){this.setData({id:e.id})};
+    if(e.share_id){this.setData({id:e.share_id})};
+    if(e.cdkey){this.setData({cdkey:e.cdkey})};
+    this.setData({e:e})
+  },
+
+  onShow(){
+    if(!wx.getStorageSync('token')){wx.navigateTo({url:'../login/login?share_id='+this.data.e.share_id})}    
+    this.initData();
+  },
+
+  onPullDownRefresh: function () {
+    this.initData();
+    wx.stopPullDownRefresh();
+  },  
+
+  initData(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getLevelCardDetail',
+      data:{
+        token:wx.getStorageSync('token'),
+        id:this.data.e.id,
+        share_id:this.data.e.share_id,
+        e:this.data.e,
+        cdkey:this.data.e.cdkey,
+      },
+      success(res) {
+        console.log(res);
+        that.setData({
+          detail:res.data.data,
+        })
+        wx.setNavigationBarTitle({title:res.data.data.name})
+      }
+    })  
+  },
+
+  use(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/becomeUserByCard',
+      data:{
+        token:wx.getStorageSync('token'),
+        id:this.data.e.id,
+      },
+      success(res) {
+        console.log(res);
+        that.initData();
+      }
+    })  
+  },
+
+  gain(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/gainLevelCard',
+      data:{
+        token:wx.getStorageSync('token'),
+        id:this.data.e.id,
+        share_id:this.data.e.share_id,
+        cdkey:this.data.e.cdkey,
+      },
+      success(res) {
+        console.log(res);
+        that.setData({
+            can_get_cdkey:res.data.data.can_get_cdkey
+        })
+        that.initData();
+      }
+    })  
+  },
+
+
+
+  toBecome(){
+    if(this.data.condition_type===false){wx.showToast({title:'请选择一种方式',icon:'none'});return ;}
+
+    let item = this.data.detail.condition[this.data.condition_type];
+    this.setData({becomeToast:false})
+    if(item.type==1){
+        wx.navigateTo({
+          url:'../balance/recharge?to_type=level_condition&amount='+item.price+'&condition_id='+item.id
+        }) 
+    }
+
+    if(item.type==2){
+        wx.navigateTo({
+          url:'../order/submit?type=1&product_num=1&product_id='+item.product_id
+        })      
+    }    
+
+  },
+
+  become(e){
+    this.setData({
+      becomeToast:true,
+      condition_type:false,
+    })
+  },
+
+  closeBecomeToast(){
+    this.setData({
+      becomeToast:false
+    })
+  },
+
+  radioChange(e){
+    console.log(e);
+    this.setData({
+      condition_type:e.detail.value
+    })
+  },
+
+
+onShareAppMessage: function () {
+    let path = '/pages/member/agent_card_detail?st=111&share_id='+wx.getStorageSync('user').id+'&id='+this.data.detail.id+'&cdkey='+this.data.detail.cdkey;
+    console.log(path);
+    this.setData({
+      p:path
+    })
+    return {
+        title: this.data.detail.name,
+        desc: '我赠送你一张'+this.data.detail.name+'卡，快来领取吧',
+        path: path
+    }
+
+}
+
+
+
+
+}
+</script>
+
+<style lang="less">
+.yj-menu-item {
+    flex: 1;
+    padding: 10px;
+}
+.yj-menu-item-name {
+    padding: 10px;
+    background-color: var(--ColorMain);
+    color: #fff;
+    width: 100%;
+    border-radius: 100px;
+    text-align: center;
+}
+
+
+
+.become-toast{
+  width: 95%;
+  background-color:#fff;
+  height:500px;  
+  margin:0 auto;
+ border-radius:5px;
+  overflow:hidden;  
+}
+
+.condition-wrap{padding: 10px;}
+.condition-item{display: flex;padding: 0px 10px;}
+.condition-item-radio{display: flex;width: 50px;align-items: center;}
+.condition-info{display: flex;flex: 1;align-items: center;padding: 20px 0;}
+.condition-info-type-name{margin-right: 3px;color: var(--ColorMain);}
+.condition-info-type-msg{margin-left: 3px;}
+
+
+</style>

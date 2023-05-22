@@ -1,0 +1,82 @@
+<view>
+
+  <!--lincec_store_share/pages/balance/recharge.wxml-->
+
+  <view class="container">
+
+
+    <view class="bar-container">
+      <view class="bar bg-color-main"></view>
+      <view class="label">我的账户</view>
+    </view>
+
+    <view class="pant-container">
+      <view class="pant-wrap">
+        <view class="pant-icon">
+          <image src="../../../static/images/icon-balance.png" />
+        </view>
+        <view class="pant-name">余额</view>
+        <view class="pant-value">￥{{balance}}</view>
+      </view>
+    </view>
+
+    <view class="recharge-container">
+      <view class="recharge-wrap">
+        <view class="recharge-form mix-bottom">
+          <input type="text" bindinput="moneyInput" placeholder="最低提现金额：{{system_info.withdrawal_min}}元" placeholder-class="placeholder"></input>
+        </view>
+        <picker bindchange="bindPickerChange" value="{{withdrawal_type_index}}" range="{{withdrawal_type}}" class="picker mix-bottom">
+          <view class="recharge-form">
+            <view class="pick-value">提现方式：<text style="color:#000;margin-left:5px;">{{withdrawal_type[withdrawal_type_index]}}</text>
+              <image src="../../static/images/icon-arrow-bottom.png" style="width:20px;height:20px;margin-left:5px;" />
+            </view>
+          </view>
+        </picker>
+        <view class="recharge-form mix-bottom">
+          <input type="text" bindinput="nameInput" placeholder="请输入姓名" placeholder-class="placeholder"></input>
+        </view>
+        <view class="recharge-form mix-bottom">
+          <input type="text" bindinput="telInput" placeholder="请输入手机号" placeholder-class="placeholder"></input>
+        </view>
+
+        <view class="recharge-form mix-bottom" wx:if="{{withdrawal_type[withdrawal_type_index]=='银行卡线下打款'}}">
+          <input type="text" bindinput="bankInput" placeholder="请输入银行名称" placeholder-class="placeholder"></input>
+        </view>
+
+        <view class="recharge-form mix-bottom" wx:if="{{withdrawal_type[withdrawal_type_index]=='银行卡线下打款'}}">
+          <input type="text" bindinput="bankCardAccountInput" placeholder="请输入银行卡账号" placeholder-class="placeholder"></input>
+        </view>
+
+        <view class="recharge-form mix-bottom" wx:if="{{withdrawal_type[withdrawal_type_index]=='支付宝线下打款'}}">
+          <input type="text" bindinput="zfbAccountInput" placeholder="请输入支付宝账号" placeholder-class="placeholder"></input>
+        </view>
+
+        <view class="recharge-btn bg-color-main" bindtap="tixian">立即提现</view>
+      </view>
+
+
+    </view>
+
+    <view style="display:flex;">
+      <!-- <view class="tixan-btn" bindtap="shuoming">提现说明</view> -->
+
+      <view class="tixan-btn" bindtap="txrecord">提现记录</view>
+
+
+      <view class="tixan-btn" bindtap="moneyRecord">余额记录</view>
+
+    </view>
+
+
+
+    <view class="bar-container">
+      <view class="bar bg-color-main"></view>
+      <view class="label">规则说明：最低提现金额为{{system_info.withdrawal_min}}元，提现时需扣除{{system_info.withdrawal_tax_point}}%的提现税点</view>
+    </view>
+    <view class="regular"></view>
+
+  </view>
+
+
+
+</view>

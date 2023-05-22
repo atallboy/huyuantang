@@ -1,0 +1,27 @@
+<view>
+
+  <view class="cont">
+    <view class="item" wx:for="{{list}}" wx:for-index="k" wx:for-item="item">
+      <view class="info" bindtap="seladdr" data-k="{{k}}">
+        <view class="name">姓名：{{item.name}}</view>
+        <view class="tel">{{item.tel}}</view>
+      </view>
+      <view class="addr mix-bottom" bindtap="seladdr" data-k="{{k}}">收货地址：{{item.province}}{{item.city}}{{item.district}} {{item.address_name}}（{{item.remark}}）</view>
+      <view class="do-btn">
+        <view class="btn" bindtap="edit" data-id="{{item.id}}">
+          <image src="../../static/images/icon-edit.png" />
+        </view>
+        <view class="btn" bindtap="del" data-id="{{item.id}}">
+          <image src="../../static/images/icon-del.png" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="add">
+    <view class="add-btn bg-color-main" bindtap="add">添加地址</view>
+  </view>
+
+
+
+</view>

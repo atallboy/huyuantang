@@ -1,0 +1,255 @@
+<template>
+  <view>
+
+<!--pages/erkai/invite/invite.wxml-->
+
+<view class="big-cont">
+    <view class="main-cont">
+        <view class="col-container">
+            <view class="col-wrap">
+                <!-- <navigator url="/pages/share/index/index" class="navigate"> -->
+                    <view class="col-item border-r">
+                     <view class="col-name">邀请总数</view>
+                        <view class="col-icon">
+                            <!-- <image src="{{host}}/icon-score.png"></image> -->
+                            {{data.total}}
+                        </view>
+                       
+                    </view>
+                <!-- </navigator> -->
+                    <!-- <view class="col-item">
+                     <view class="col-name">成功数</view>
+                        <view class="col-icon">{{data.invite_pay_num}}</view>                       
+                    </view>         -->
+                            
+            </view>
+        </view>
+
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+        <view class="invite-container">
+            <view class="invite-wrap">
+                <view class="invite-item" wx:for="{{list}}">
+                <view class="invite-l">
+                    <view class="invite-pic">
+                        <image src="{{item.avatarUrl}}"></image>
+                    </view>          
+                </view>
+                <view class="invite-r">
+                    <view class="invite-info">
+                        <view class="invite-detail">
+                            <view class="invite-name">{{item.nickName}}</view>
+                            <view class="invite-level"> {{item.level_name}}</view>
+                            <!-- <view class="invite-level" wx:if="{{item.fxs_level==1}}"><image src="../../resource/images/icon-level-3.png"></image> 金牌合伙人</view>                                                                       -->
+                        </view>                    
+                        <view class="invite-time">{{item.create_time}}</view>
+                    </view>          
+                </view>          
+
+                </view>
+            </view>
+        </view>
+    </view>
+</view>
+
+
+
+
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '我的邀请记录'
+  },
+  data: {},
+
+  onLoad(){
+      this.initData();
+  },
+
+  onPullDownRefresh: function () {
+    this.initData();
+    wx.stopPullDownRefresh();
+  },  
+
+  initData(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetInviteRecord',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log('------------');
+         console.log(res);
+        that.setData({
+          data:res.data.data,
+          list:res.data.data.list
+        })
+      }
+    })  
+  },
+
+
+}
+</script>
+
+<style lang="less">
+
+/* pages/erkai/invite/invite.wxss */
+
+page{
+  background-color: #f7f7f7;
+}
+
+.big-cont{
+  display: flex;
+  min-height: 98vh;
+  padding: 1vh;
+  flex-direction: column;
+}
+
+.main-cont{
+  display: flex;
+  flex: 1;
+  background-color: #fff;
+  flex-direction: column;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+/* 横排按钮 开始 */
+.col-container{
+  display: flex;
+  /* background-color: #f5f5f5; */
+  padding-bottom: 10px;
+  border-bottom: 1rpx dashed #ddd;
+}
+
+.col-wrap{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+.border-r{
+  border-right: 1rpx solid #f7f7f7;
+}
+
+
+.navigate{
+  display: flex;
+  flex: 1;
+}
+.col-item{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+}
+.col-icon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
+.col-icon image{
+  width: 40px;
+  height: 40px;
+}
+.col-name{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* 横排按钮 结束 */
+
+
+
+.invite-container{
+  display: flex;
+
+}
+.invite-wrap{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.invite-item{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.invite-l{
+  display: flex;
+  width: 80px;
+  padding: 15px 0 15px 15px;
+}
+.invite-r{
+  display: flex;
+  flex: 1;
+  padding: 15px 15px 15px 0;
+  border-bottom: 1rpx solid #f8f8f8;  
+}
+
+.invite-pic{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.invite-pic image{
+  width: 50px;
+  height: 50px;
+  border-radius: 100px;
+}
+.invite-info{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-content: space-between;
+}
+
+.invite-detail{
+  display: flex;
+  font-size: 17px;
+  margin-bottom: 10px;
+  flex: 1;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.invite-name{
+  display: flex;
+  font-size: 17px;
+  flex: 1;
+}
+.invite-level{
+  display: flex;
+  font-size: 14px;
+  width: 100px;
+  justify-content: flex-end;
+  color: #CD753E;
+}
+
+.invite-level image{
+  width: 20px;
+  height: 20px;
+  margin-right: 2px;
+}
+
+.invite-time{
+  display: flex;
+  color: #888;
+  font-size: 13px;
+}
+
+
+
+</style>

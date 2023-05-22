@@ -1,0 +1,1044 @@
+<template>
+  <view>
+
+      <view class="header">
+        <block wx:if="{{user.avatarUrl}}">
+          <view class="header-wrap">
+              <ui-blur height="270" url="{{ user.avatarUrl }}">
+                <ui-row style="margin-top:90px;" height="100" vertical-align="middle">
+                    <ui-col align="right" vertical-align="middle" width="100"><image src="{{user.avatarUrl}}" class="headimg border-fff"></image></ui-col>
+                    <ui-col align="left" vertical-align="middle">
+                      <view class="nickname">{{user.nickName}}</view>
+                      <view class="no" bindtap="toWhere" data-act="toQrcode"> 账号：{{user.id}} <image src="../../static/images/icon-qrcode-a.png" style=" display: inline-block;margin-left: 5px; width:15px;height:15px;"></image> <ui-icon type="arrow-right" color="#aaa" size="15"></ui-icon> </view>
+                    </ui-col>
+                    <ui-col align="right" vertical-align="middle" width="120">
+                      <view class="header-info-line level" bindtap="toWhere" data-act="toLevelList"> 
+                        <image src=" {{user.level_info.icon}}"></image> {{user.level_info.name}} 
+                        <!-- <text bindtap="toWhere" data-act="toLevelList">升级</text>  -->
+                        <ui-icon type="arrow-right" size="12" color="#fff" style="margin-left:5px;"></ui-icon> 
+                      </view>
+                      <view class="header-info-line area-agent" wx:if="{{user.area_agent_status>0}}">
+                         <text wx:if="{{user.area_agent.type==1}}">省代：</text>
+                         <text wx:if="{{user.area_agent.type==2}}">市代：</text>
+                         <text wx:if="{{user.area_agent.type==3}}">区代：</text>  
+                         <text wx:if="{{user.area_agent_status==1}}">{{user.area_agent.name}}</text>   
+                         <text wx:if="{{user.area_agent_status==2}}" bindtap="toWhere" data-act="setAreaAgent">未设置  </text>
+                         <text wx:if="{{user.area_agent_status==3}}" >审核中  </text>
+                         <ui-icon wx:if="{{user.area_agent_status==2}}" type="arrow-right" size="12" color="coral" style="margin-left:5px;"></ui-icon>
+                      </view>
+                   
+                    </ui-col>                  
+                </ui-row>    
+                <ui-row height="80" class="" vertical-align="middle">
+                    <ui-col align="center" vertical-align="middle" bindtap="toWhere" data-act="toMybalance">
+                      <view style="font-weight:650;color:#fff;font-size:17px;">{{user.balance}}</view>
+                      <view style="font-size:12px;color:#ccc;">余额</view>
+                    </ui-col>
+
+                    <!-- <ui-col align="center" vertical-align="middle" bindtap="toWhere" data-act="toMyAgentCard">
+                      <view style="font-weight:650;color:#fff;font-size:17px;">{{user.agent_card_num}}</view>
+                      <view style="font-size:12px;color:#ccc;">代理卡</view>
+                    </ui-col>
+                    <ui-col align="center" vertical-align="middle" bindtap="toWhere" data-act="toMyFans">
+                      <view style="font-weight:650;color:#fff;font-size:17px;">{{user.fans_num}}</view>
+                      <view style="font-size:12px;color:#ccc;">粉丝奖励</view>
+                    </ui-col>         -->
+                                        
+                   <ui-col align="center" vertical-align="middle" bindtap="toWhere" data-act="toMyInvite">
+                      <view style="font-weight:650;color:#fff;font-size:17px;">{{user.invite_num}}</view>
+                      <view style="font-size:12px;color:#ccc;">邀请</view>
+                    </ui-col>                                          
+
+                </ui-row>                            
+              </ui-blur>  
+          </view>
+        </block>
+        <block wx:else>
+          <view class="header-wrap">
+            <ui-blur height="200" url="{{ system_info.logo }}" bindtap="toLogin">
+              <ui-row style="margin-top:90px;">
+                  <ui-col align="center"><image src="{{system_info.logo}}" class="headimg border-fff"></image></ui-col>
+              </ui-row>
+              <ui-row class="p-t-10 p-b-40 color-fff ">
+                  <ui-col align="center" class="f-s-32">点击登录</ui-col>
+              </ui-row>                
+            </ui-blur>  
+          </view>
+        </block>      
+      </view>
+
+
+      <view class="order-conatainer">
+          <view class="order-wrap">
+            <view class="order-header">
+              <view class="order-header-name">我的订单</view>
+              <view class="order-header-more" bindtap="toOrder" data-status="0"> 全部订单 <image src="../../static/images/icon-arrow-right.png"></image> </view>
+            </view>
+            <view class="order-list">
+              <view class="order-item" bindtap="toOrder" data-status="1">
+                <view class="order-item-icon">
+                  <ui-badge wx:if="{{order_summary.wait_send}}" text="{{order_summary.wait_send}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+                  <image src="../../static/images/icon-order-wait-pay.png"></image>
+                </view>
+                <view class="order-item-name">待支付</view>
+              </view>              
+              <view class="order-item" bindtap="toOrder" data-status="2">
+                <view class="order-item-icon">
+                  <ui-badge wx:if="{{order_summary.wait_send}}" text="{{order_summary.wait_send}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+                  <image src="../../static/images/icon-order-after-sales.png"></image>
+                </view>
+                <view class="order-item-name">待发货</view>
+              </view>
+              <view class="order-item" bindtap="toOrder" data-status="3">
+                <view class="order-item-icon">
+                  <ui-badge wx:if="{{order_summary.wait_receive}}" text="{{order_summary.wait_receive}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+                  <image src="../../static/images/icon-order-wait-receive.png"></image>
+                </view>
+                <view class="order-item-name">待收货</view>
+              </view>
+              <view class="order-item" bindtap="toOrder" data-status="4">
+                <view class="order-item-icon">
+                  <ui-badge wx:if="{{order_summary.complete}}" text="{{order_summary.complete}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+                  <image src="../../static/images/icon-order-evaluate.png"></image>
+                </view>
+                <view class="order-item-name">已完成</view>
+              </view>
+              <!-- <view class="order-item" bindtap="toOrder" data-status="5">
+                <view class="order-item-icon">
+                  <ui-badge wx:if="{{order_summary.after_sale}}" text="{{order_summary.after_sale}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+                  <image src="../../static/images/icon-order-after-sales.png"></image>
+                </view>
+                <view class="order-item-name">售后</view>
+              </view>                               -->
+            </view>
+          </view>
+      </view>
+
+
+      <view class="col-menu-container">
+            <ui-row-list border-indent class="col-menu-wrap">
+
+                <ui-row height="70" bindtap="toWhere" data-act="toMyCollect">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-collect-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        我的收藏
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>   
+
+                <!-- <ui-row height="70" bindtap="toWhere" data-act="toMyTeam">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-team-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        我的团队
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>   -->
+
+                <ui-row height="70" bindtap="toWhere" data-act="toMyDistributeRelation">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-team-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        我的分销链
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>                  
+
+                <!-- <ui-row height="70" bindtap="toWhere" data-act="toMyInvite">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-invite-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        邀请记录
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>     -->
+
+
+                <ui-row height="70" bindtap="toWhere" data-act="toWithdrawalRecord">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                       <image class="col-menu-icon" src="../../static/images/icon-balance-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        提现记录
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>      
+
+                <ui-row height="70" bindtap="toWhere" data-act="toUserLevelInfo" wx:if="{{user.level_id>0}}">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                       <image class="col-menu-icon" src="../../static/images/icon-info.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        我的信息
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>                                            
+
+                <ui-row height="70" bindtap="toWhere" data-act="toSubscribe">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                       <image class="col-menu-icon" src="../../static/images/icon-message.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        订阅消息
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>  
+
+                <!-- <ui-row height="70" bindtap="toWhere" data-act="toMybalance">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <ui-icon type="currency02" color="#222"></ui-icon>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        我的佣金
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>       -->
+             
+                <ui-row height="70" bindtap="call">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                       <image class="col-menu-icon" src="../../static/images/icon-tel-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        客服电话
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>       
+
+                <button class="contact-btn" open-type="contact" bindcontact="handleContact">
+                  <ui-row height="70">
+                      <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-service-2.png"></image>
+                      </ui-col>                   
+                      <ui-col class="f-s-32 f-w-700" vertical-align="middle" align="left">
+                          微信客服
+                      </ui-col>
+                      <ui-col width="25" vertical-align="middle" align="left">
+                          <ui-icon type="arrow-right"></ui-icon>
+                      </ui-col>
+                  </ui-row>   
+                </button>     
+
+
+
+
+
+            </ui-row-list>        
+      </view>
+
+
+      <view class="col-menu-container" wx:if="{{user.is_manager==1}}">
+            <ui-row-list border-indent class="col-menu-wrap"> 
+                <ui-row height="70" bindtap="toWhere" data-act="toConsoleProduct">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-team-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        商品评价
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>  
+            </ui-row-list>       
+            <!-- <ui-row-list border-indent class="col-menu-wrap"> 
+                <ui-row height="70" bindtap="toWhere" data-act="toMchConsole">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-team-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        商户后台
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>  
+            </ui-row-list>         -->
+      </view>
+
+      <view class="col-menu-container" wx:if="{{user.level_type==4&&!user.mch_id && system_info.open_mch==1}}">
+            <ui-row-list border-indent class="col-menu-wrap">
+                <ui-row height="70" bindtap="toWhere" data-act="toRegMch">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-collect-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        商户入驻
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>    
+            </ui-row-list>        
+      </view>      
+
+
+      <ui-row height="40">
+        <ui-col vertical-align="middle" align="center">
+              <view>
+                <view style="line-height:56rpx;float:left;">
+                  <image src="{{ system_info.logo }}" style="width:50rpx;height:50rpx;display:inline-block;border-radius:100px;">
+                 </view>
+                <view class="f-l p-l-10 color-333" style="line-height:56rpx;float:left;">{{ system_info.name }}</view> 
+              </view>                     
+        </ui-col>
+      </ui-row>
+
+    <ui-popup show="{{ setAreaAgentDialog }}" height="400" background="transparent">
+      <form catchsubmit="submitAreaAgent" wx:if="{{setAreaAgentDialog}}">
+        <view class="are-agent-dialog">
+            <ui-row height="40" border-bottom>
+                <ui-col vertical-align="middle" space-left="20">区域代理设置</ui-col>
+                <ui-col width="40" vertical-align="middle" align="center" bindtap="closeAreaAgent">
+                    <ui-icon type="x" size="18" color="#FC8950"></ui-icon>
+                </ui-col>
+            </ui-row>
+            <view class="area-agent-form">
+                <view class="area-agent-form-row">
+                    <view class="area-agent-form-label">代理层级</view>
+                    <view class="area-agent-form-value mix-bottom">省代</view>
+                </view>  
+                <view class="area-agent-form-row">
+                    <view class="area-agent-form-label">姓名</view>
+                    <view class="area-agent-form-value mix-bottom">
+                      <input name="name" placeholder="请输入姓名" />
+                    </view>
+                </view>  
+                <view class="area-agent-form-row">
+                    <view class="area-agent-form-label">电话</view>
+                    <view class="area-agent-form-value mix-bottom">
+                        <input name="tel" placeholder="请输入电话" />
+                    </view>
+                </view>           
+                <view class="area-agent-form-row">
+                    <view class="area-agent-form-label">地区</view>
+                    <view class="area-agent-form-value mix-bottom">
+                      <picker mode="region"  bindchange="bindRegionChange" value="{{area_agent_region}}">
+                          <view class="picker" wx:if="{{area_agent_region[0]}}"> 
+                            {{area_agent_region[0]}}，{{area_agent_region[1]}}，{{area_agent_region[2]}}
+                          </view>
+                          <view wx:else>请选择</view>
+                        </picker>                  
+                    </view>
+                </view>                             
+            </view>
+            <ui-row height="50">
+                <ui-col space-left="80" space-right="80" vertical-align="middle">
+                    <button type="primary"  formType="submit">提交</button>
+                </ui-col>
+            </ui-row>
+        </view>
+      </form>
+    </ui-popup>
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    "navigationStyle": "custom",
+    navigationBarTitleText: '个人中心',
+  },
+  data: {
+    system_info: wx.getStorageSync('system_info'),
+    user:wx.getStorageSync('user'),
+    setAreaAgentDialog:false,
+    area_agent_region:['','',''],
+    picker_level:'sub-district',
+  },
+
+  onLoad: function() {
+
+  }, 
+  
+  onShow: function() {
+    this.setData({system_info: wx.getStorageSync('system_info')});
+    this.getUserInfo()
+  }, 
+
+  onPullDownRefresh: function () {
+    this.getUserInfo();
+    wx.stopPullDownRefresh();
+  },     
+
+  submitAreaAgent(e){
+    console.log(e);
+    if(!e.detail.value.name){wx.showToast({title:'请输入姓名',icon:'none'});return;}
+    if(!e.detail.value.tel){wx.showToast({title:'请输入姓名',icon:'none'});return;}
+    if(!this.data.area_agent_region[0]){wx.showToast({title:'请选择地区',icon:'none'});return;}
+
+      let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/submitAreaAgentInfo',
+      data:{
+        token:wx.getStorageSync('token'),
+        name:e.detail.value.name,
+        tel:e.detail.value.tel,
+        province:this.data.area_agent_region[0],
+        city:this.data.area_agent_region[1],
+        district:this.data.area_agent_region[2],        
+        },
+      success(res) {
+        console.log(res);
+        wx.showToast({title:'提交成功，请等待平台审核',icon:'none'})
+        setTimeout(function(){
+          that.getUserInfo();
+          that.setData({
+            setAreaAgentDialog:false
+          })         
+        },1000);        
+
+      }
+    })  
+
+
+  },
+
+  getUserInfo(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetUserInfo',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log(res);
+        that.setData({
+          user:res.data.data
+        })
+        wx.setStorageSync('user', res.data.data)
+      }
+    })  
+  },
+
+  toLogin(){
+    wx.navigateTo({
+      url:'../login/login'
+    })
+  },
+
+  toOrder(e){
+    wx.navigateTo({url:'../order/list?status='+e.currentTarget.dataset.status})
+  },
+
+  toWhere(e){
+    let act = e.currentTarget.dataset.act;
+    console.log(act);
+
+    if(act=='toMybalance'){wx.navigateTo({url:'../balance/record'})}    
+    if(act=='toLevelList'){wx.navigateTo({url:'../member/level_list'})}
+    if(act=='toMyAgentCard'){wx.navigateTo({url:'../member/agent_card'})}
+    if(act=='toMyFans'){wx.navigateTo({url:'../member/fans_reward'})}
+    if(act=='toWithdrawalRecord'){wx.navigateTo({url:'../balance/withdrawal_record'})}
+    if(act=='toQrcode'){wx.navigateTo({url:'qrcode'})}
+    if(act=='toMyDistributeRelation'){wx.navigateTo({url:'../distribute/floor'})}  
+    if(act=='toMyInvite'){wx.navigateTo({url:'../distribute/invite_record'})}
+    if(act=='toMyTeam'){wx.navigateTo({url:'../distribute/team'})}        
+    if(act=='toMyCollect'){wx.navigateTo({url:'../product/list?type=collect'})}
+    if(act=='toUserLevelInfo'){wx.navigateTo({url:'info'})}
+    
+    if(act=='setAreaAgent'){this.setData({setAreaAgentDialog:true})}
+
+    if(act=='toRegMch'){wx.navigateTo({url:'../mch/info/register'})}
+    if(act=='toMchConsole'){wx.navigateTo({url:'../mch/manage/console'})}
+
+    if(act=='toSubscribe'){wx.navigateTo({url:'../subscribe/list'})}
+    if(act=='toConsoleProduct'){wx.navigateTo({url:'../console/product/list'})}
+
+  },
+
+  closeAreaAgent(){
+      this.setData({setAreaAgentDialog:false}) 
+  },
+
+  myinfo(){
+    wx.navigateTo({
+      url:'info'
+    })
+  },
+
+  bindRegionChange: function (e) {
+    console.log('picker发送选择改变，携带值为', e.detail.value)
+    this.setData({
+      area_agent_region: e.detail.value
+    })
+  },
+
+  focus_company(){
+    wx.navigateTo({
+      url:'../company/focus_list'
+    })
+  },
+
+  company_list(){
+    wx.navigateTo({
+      url:'../company/list'
+    })
+  },  
+
+
+  call(){
+    wx.makePhoneCall({
+      phoneNumber:this.data.system_info.tel
+    })
+  },
+
+
+}
+</script>
+
+<style lang="less">
+
+page{
+  // background-color: #F2F5FA;
+  background-color: var(--defaultBgColor);
+}
+
+.header{
+  margin-bottom: 10px;
+}
+.ui-blur{
+  border-radius: 8px;
+}
+
+.headimg{
+  width: 66px;
+  height: 66px;
+  border-radius: 100rpx;
+  margin-right: 10px;
+}
+
+.nickname{color: #fff;font-size: 16px;font-weight: 650;}
+.no{display: flex;align-items: center;color: #aaa;margin-top: 5px;}
+
+
+.header-info-line{
+  padding: 5px 5px 5px 15px;color: #fff; display: flex;align-items: center;font-size: 13px;justify-content: flex-end;
+  background-color: rgba(0, 0, 0, 0.38);border-top-left-radius: 100px;border-bottom-left-radius: 100px;
+}
+.level{
+  margin-bottom: 8px; }
+.level image{width: 19px;height: 19px;margin-right: 3px;}
+.level text{margin-left: 5px;color: coral;font-weight: 600;}
+
+.area-agent{ }
+.area-agent text{color: coral;}
+
+.are-agent-dialog{background-color: #fff;  height:400px;  }
+.area-agent-form{padding: 15px;}
+.area-agent-form-row{display: flex;height: 56px;align-items: center;}
+.area-agent-form-label{display: flex;width: 80px;justify-content: center;height: 100%;align-items: center;}
+.area-agent-form-value{display: flex;flex: 1;height: 100%;align-items: center;}
+.area-agent-form-value input{line-height: 40px;height: 40px;}
+
+
+.col-menu-icon{width:20px;height:20px;}
+
+.main-cate-icon{
+  width: 70rpx;
+  height: 70rpx;
+  margin: 0 auto;
+}
+
+.contact-btn::after{
+   border: none;
+}
+
+.contact-btn{
+  background-color: #fff;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  color: #000;
+}
+
+
+.col-menu-container{padding: 10px;}
+.col-menu-wrap{background-color: #fff;border-radius: 5px;}
+
+
+.order-conatainer{padding: 10px;}
+.order-wrap{padding: 10px;background-color: #fff;border-radius: 5px;}
+.order-header{display: flex;padding: 5px 0 15px;}
+.order-header-name{display: flex;flex: 1;font-weight: 650;font-size: 15px;align-items: center;}
+.order-header-more{display: flex;flex: 1;align-items: center;justify-content: flex-end;font-size: 13px;color: #666;}
+.order-header-more image{width: 12px;height: 12px;}
+.order-list{display: flex;}
+.order-item{display: flex;flex: 1;flex-direction: column;align-items: center;justify-content: center;}
+.order-item-icon{display: flex;align-items: center;justify-content: center;height: 35px;position: relative;width: 35px;margin: 8px 0;}
+.order-item-icon image{width: 100%;height: 100%;}
+.badge{position: absolute;right: -10px;top: -10px;}
+.order-item-name{display: flex;align-items: center;justify-content: center;font-size: 13px;color: #666;height: 25px;}
+
+
+
+
+.padd-10 {
+  padding: 10rpx;
+}
+
+.padd-15 {
+  padding: 15rpx;
+}
+
+.padd-20 {
+  padding: 20rpx;
+}
+
+.padd-25 {
+  padding: 25rpx;
+}
+
+.padd-30 {
+  padding: 30rpx;
+}
+
+.padd-40 {
+  padding: 40rpx;
+}
+
+.padd-50 {
+  padding: 50rpx;
+}
+
+.p-t-10 {
+  padding-top: 10rpx;
+}
+
+.p-t-12 {
+  padding-top: 12rpx;
+}
+
+.p-t-14 {
+  padding-top: 14rpx;
+}
+
+.p-t-16 {
+  padding-top: 16rpx;
+}
+
+.p-t-18 {
+  padding-top: 18rpx;
+}
+
+.p-t-20 {
+  padding-top: 20rpx;
+}
+
+.p-t-22 {
+  padding-top: 22rpx;
+}
+
+.p-t-24 {
+  padding-top: 24rpx;
+}
+
+.p-t-26 {
+  padding-top: 26rpx;
+}
+
+.p-t-28 {
+  padding-top: 28rpx;
+}
+
+.p-t-30 {
+  padding-top: 30rpx;
+}
+
+.p-t-40 {
+  padding-top: 40rpx;
+}
+
+.p-t-50 {
+  padding-top: 50rpx;
+}
+
+.p-l-10 {
+  padding-left: 10rpx;
+}
+
+.p-l-12 {
+  padding-left: 12rpx;
+}
+
+.p-l-14 {
+  padding-left: 14rpx;
+}
+
+.p-l-16 {
+  padding-left: 16rpx;
+}
+
+.p-l-18 {
+  padding-left: 18rpx;
+}
+
+.p-l-20 {
+  padding-left: 20rpx;
+}
+
+.p-l-22 {
+  padding-left: 22rpx;
+}
+
+.p-l-24 {
+  padding-left: 24rpx;
+}
+
+.p-l-26 {
+  padding-left: 26rpx;
+}
+
+.p-l-28 {
+  padding-left: 28rpx;
+}
+
+.p-l-30 {
+  padding-left: 30rpx;
+}
+
+.p-l-40 {
+  padding-left: 40rpx;
+}
+
+.p-l-50 {
+  padding-left: 50rpx;
+}
+
+
+.p-b-10 {
+  padding-bottom: 10rpx;
+}
+
+.p-b-12 {
+  padding-bottom: 12rpx;
+}
+
+.p-b-14 {
+  padding-bottom: 14rpx;
+}
+
+.p-b-16 {
+  padding-bottom: 16rpx;
+}
+
+.p-b-18 {
+  padding-bottom: 18rpx;
+}
+
+.p-b-20 {
+  padding-bottom: 20rpx;
+}
+
+.p-b-22 {
+  padding-bottom: 22rpx;
+}
+
+.p-b-24 {
+  padding-bottom: 24rpx;
+}
+
+.p-b-26 {
+  padding-bottom: 26rpx;
+}
+
+.p-b-28 {
+  padding-bottom: 28rpx;
+}
+
+.p-b-30 {
+  padding-bottom: 30rpx;
+}
+
+.p-b-40 {
+  padding-bottom: 40rpx;
+}
+
+.p-b-50 {
+  padding-bottom: 50rpx;
+}
+
+.p-r-10 {
+  padding-right: 10rpx;
+}
+
+.p-r-12 {
+  padding-right: 12rpx;
+}
+
+.p-r-14 {
+  padding-right: 14rpx;
+}
+
+.p-r-16 {
+  padding-right: 16rpx;
+}
+
+.p-r-18 {
+  padding-right: 18rpx;
+}
+
+.p-r-20 {
+  padding-right: 20rpx;
+}
+
+.p-r-22 {
+  padding-right: 22rpx;
+}
+
+.p-r-24 {
+  padding-right: 24rpx;
+}
+
+.p-r-26 {
+  padding-right: 26rpx;
+}
+
+.p-r-28 {
+  padding-right: 28rpx;
+}
+
+.p-r-30 {
+  padding-right: 30rpx;
+}
+
+.p-r-40 {
+  padding-right: 40rpx;
+}
+
+.p-r-50 {
+  padding-right: 50rpx;
+}
+
+.m-r-10 {
+  margin-right: 10rpx;
+}
+
+.m-r-12 {
+  margin-right: 12rpx;
+}
+
+.m-r-14 {
+  margin-right: 14rpx;
+}
+
+.m-r-16 {
+  margin-right: 16rpx;
+}
+
+.m-r-18 {
+  margin-right: 18rpx;
+}
+
+.m-r-20 {
+  margin-right: 20rpx;
+}
+
+.m-r-22 {
+  margin-right: 22rpx;
+}
+
+.m-r-24 {
+  margin-right: 24rpx;
+}
+
+.m-r-26 {
+  margin-right: 26rpx;
+}
+
+.m-r-28 {
+  margin-right: 28rpx;
+}
+
+.m-r-30 {
+  margin-right: 30rpx;
+}
+
+.m-r-40 {
+  margin-right: 40rpx;
+}
+
+.m-r-50 {
+  margin-right: 50rpx;
+}
+
+.m-t-10 {
+  margin-top: 10rpx;
+}
+
+.m-t-12 {
+  margin-top: 12rpx;
+}
+
+.m-t-14 {
+  margin-top: 14rpx;
+}
+
+.m-t-16 {
+  margin-top: 16rpx;
+}
+
+.m-t-18 {
+  margin-top: 18rpx;
+}
+
+.m-t-20 {
+  margin-top: 20rpx;
+}
+
+.m-t-22 {
+  margin-top: 22rpx;
+}
+
+.m-t-24 {
+  margin-top: 24rpx;
+}
+
+.m-t-26 {
+  margin-top: 26rpx;
+}
+
+.m-t-28 {
+  margin-top: 28rpx;
+}
+
+.m-t-30 {
+  margin-top: 30rpx;
+}
+
+.m-t-40 {
+  margin-top: 40rpx;
+}
+
+.m-t-50 {
+  margin-top: 50rpx;
+}
+
+.m-l-10 {
+  margin-left: 10rpx;
+}
+
+.m-l-12 {
+  margin-left: 12rpx;
+}
+
+.m-l-14 {
+  margin-left: 14rpx;
+}
+
+.m-l-16 {
+  margin-left: 16rpx;
+}
+
+.m-l-18 {
+  margin-left: 18rpx;
+}
+
+.m-l-20 {
+  margin-left: 20rpx;
+}
+
+.m-l-22 {
+  margin-left: 22rpx;
+}
+
+.m-l-24 {
+  margin-left: 24rpx;
+}
+
+.m-l-26 {
+  margin-left: 26rpx;
+}
+
+.m-l-28 {
+  margin-left: 28rpx;
+}
+
+.m-l-30 {
+  margin-left: 30rpx;
+}
+
+.m-l-40 {
+  margin-left: 40rpx;
+}
+
+.m-l-50 {
+  margin-left: 50rpx;
+}
+
+.m-b-10 {
+  margin-bottom: 10rpx;
+}
+
+.m-b-12 {
+  margin-bottom: 12rpx;
+}
+
+.m-b-14 {
+  margin-bottom: 14rpx;
+}
+
+.m-b-16 {
+  margin-bottom: 16rpx;
+}
+
+.m-b-18 {
+  margin-bottom: 18rpx;
+}
+
+.m-b-20 {
+  margin-bottom: 20rpx;
+}
+
+.m-b-22 {
+  margin-bottom: 22rpx;
+}
+
+.m-b-24 {
+  margin-bottom: 24rpx;
+}
+
+.m-b-26 {
+  margin-bottom: 26rpx;
+}
+
+.m-b-28 {
+  margin-bottom: 28rpx;
+}
+
+.m-b-30 {
+  margin-bottom: 30rpx;
+}
+
+.m-b-40 {
+  margin-bottom: 40rpx;
+}
+
+.m-b-50 {
+  margin-bottom: 50rpx;
+}
+
+</style>

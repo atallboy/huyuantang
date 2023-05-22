@@ -1,0 +1,363 @@
+<template>
+  <view>
+
+<!--pages/erkai/balance/balance.wxml-->
+
+<!-- <view class="search-container">
+    <view class="search-wrap">
+        <view class="search-time">
+            <picker class="pick" mode="date" value="{{start_time}}" bindchange="bindStartTime">
+              <view class="search-picker">
+                <image src="../../resource/images/icon-time.png" class="icon-time"></image>{{start_time}}
+              </view>
+            </picker>          
+        </view>
+        <view class="search-split"> 至 </view>
+        <view class="search-time">
+            <picker class="pick" mode="date" value="{{end_time}}" bindchange="bindEndTime">
+              <view class="search-picker">
+                <image src="../../resource/images/icon-time.png" class="icon-time"></image>{{end_time}}
+              </view>
+            </picker>          
+        </view>
+        <view class="search-btn" bindtap="getListByTime">查询</view>
+    </view>
+</view> -->
+
+<!-- <view style="width:100%;height:50px;"></view> -->
+
+<view class="header">
+    <view class="title">总余额 (元)</view>
+    <view class="money">{{user.balance}}</view>
+    <view class="menu-cont">
+        <view class="menu-wrap">
+            <view class="menu-item border-r" bindtap="cz">
+                <view class="menu-txt">充值</view>
+                <view class="menu-sub-txt">快速到账</view>
+            </view>
+            <view class="menu-item" bindtap="tx">
+                <view class="menu-txt">提现</view>
+                <view class="menu-sub-txt">转出到账户</view>
+            </view>          
+        </view>      
+    </view>
+</view>
+
+<!-- <view class="imgtab">
+    <image src="../../resource/images/yuetab.jpg"></image>
+</view> -->
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+
+<view class="balance-container" wx:if="{{list.length>0}}">
+    <view class="balance-wrap">
+        <view class="balance-item" wx:for="{{list}}">
+            <view class="balance-l">
+                <view class="balance-name">{{item.msg}}</view>
+                <view class="balance-time">余额 {{item.after_balance}}</view>
+            </view>
+            <view class="balance-r">
+            <view class="balance-now">{{item.create_time}}</view>
+                <view class="balance-money">
+                    <text class="add" wx:if="{{item.type==1}}">+{{item.money}}</text>
+                    <text class="reduce" wx:if="{{item.type==2}}">-{{item.money}}</text>
+                </view>
+                
+            </view>
+        </view>
+    </view>
+</view>
+
+
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '余额记录'
+  },
+  data: {
+    user:{balance:''},
+    list:[],
+    page:0,    
+  },
+
+  onLoad(e){
+    if(!wx.getStorageSync('token')){wx.navigateTo({url:'../login/login'})}
+  },  
+
+
+  onShow(){    
+    this.getUserInfo();
+    this.initData();      
+  },
+
+  onPullDownRefresh: function () {
+    this.getUserInfo();
+    this.initData();
+    wx.stopPullDownRefresh();
+  },   
+
+  cz(){wx.navigateTo({url:'recharge'})},
+
+  tx(){wx.navigateTo({url:'withdrawal'})},
+
+  getUserInfo(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetUserInfo',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log(res);
+        that.setData({
+          user:res.data.data
+        })
+        wx.setStorageSync('user', res.data.data)
+      }
+    })  
+  }, 
+
+
+  initData(e){
+    console.log(e);
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetBalanceRecord',
+      data:{
+          token:wx.getStorageSync('token'),
+          page:this.data.page,
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          list:that.data.list.concat(res.data.data.list),
+        })
+      }
+    })  
+  },
+
+  onReachBottom: function() {
+      this.setData({
+        page:this.data.page+1
+      })
+      this.initData();
+  },  
+
+}
+</script>
+
+<style lang="less">
+
+/* pages/erkai/balance/balance.wxss */
+
+page{
+  background-color: #f7f7f7;
+}
+
+.header{
+  display: flex;
+  background-image: url("http://distribute.shop.lincec.top/static/images/ubg.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;    
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px 0 10px;
+}
+.title{
+  display: flex;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.money{
+  display: flex;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.menu-cont{
+  width: 90%;
+  display: flex;
+  padding: 20px;
+}
+.menu-wrap{
+  display: flex;
+  background-color: #fff;
+  flex: 1;
+  border-radius: 10px;
+  height: 60px;
+  padding: 10px;
+}
+.menu-item{
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.menu-txt{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600px;
+}
+.menu-sub-txt{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 13px;
+}
+.border-r{
+  border-right: 1rpx solid #f7f7f7;
+}
+
+.imgtab{
+  display: flex;
+  width: 100%;
+  height: 65px;
+  margin-top: 40px;
+}
+.imgtab image{
+  width: 100%;
+  height: 100%;
+}
+
+.icon-time{
+  width: 15px;
+  height: 15px;
+  margin-right: 6px;
+}
+.search-container{
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  flex-direction: row;
+  padding: 10px;
+  background-color: #f8f8f8;
+}
+.search-wrap{
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  height: 30px;
+  align-items: center;
+
+}
+
+.search-time{
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;  
+}
+
+.search-picker{
+  color: #8A8A8A;
+  font-size: 14px;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;    
+}
+.pick{
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+.search-split{
+  display: flex;
+  width: 22px;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-btn{
+  display: flex;
+  width: 40px;
+  justify-content: flex-end;
+  align-items: center;  
+  color: #07c160;
+}
+
+
+.balance-container{
+  display: flex;
+  padding: 10px;
+}
+.balance-wrap{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+}
+.balance-item{
+  display: flex;
+  flex-direction: row;
+   flex: 1;
+   padding: 15px 15px 15px 0;
+   border-bottom: 1rpx solid #eee;
+}
+.balance-l{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.balance-r{
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+}
+.balance-name{
+  font-size: 16px;
+  color: #000;
+  display: flex;
+  flex: 1;
+}
+.balance-time{
+  font-size: 13px;
+  color: #777;
+  display: flex;
+  flex: 1;
+
+}
+.balance-money{
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.balance-now{
+  color: #777;
+  font-size: 13px;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.add{
+  color:#E4AE44;
+}
+  
+
+
+
+
+</style>

@@ -1,0 +1,100 @@
+<view>
+
+  <view style="padding:10px;">
+
+    <view style="margin:30px 0 10px;position: relative;" wx:for="{{product_list}}" wx:for-index="k" wx:for-item="item">
+      <view style="background-color: #fff;padding-bottom: 10px;border-bottom: 1rpx dashed #f7f7f7;border-radius: 10px;padding:10px;">
+        <view style="display:flex;flex:1;flex-direction:column;">
+          <view style="display:flex;align-items:center;justify-content:center;height: 50px;">
+            <image src="{{item.sub_image}}" style="width:80px;height:80px;position: absolute;top: -20px;background-color: #fff;border-radius: 4px;" />
+          </view>
+          <view style="display:flex;align-items:center;justify-content:center;">
+            <view style="line-height:20px;">{{item.name}}</view>
+          </view>
+        </view>
+        <view class="star-demo-bottom" style="margin-bottom:0;margin-top: 10px;">
+          <view class="ui-row" style="height:35px;">
+            <view style="font-weight:bold;flex:0 0 60px;" class="ui-col valign-middle">
+              <view class="ui-col-content valign-middle">产品打分</view>
+            </view>
+            <view class="ui-col ui-col-align-left align-left valign-middle" style="">
+              <view class="ui-col-content align-left valign-middle">
+                <ui-star data="{{item.stars}}" half="{{true}}" value="{{item.score}}" readonly="{{status}}" bindchange="productScore" data-k="{{k}}" _pid="{{_pid}}"></ui-star>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view style="background-color: #fff;border-radius: 10px;padding:10px;">
+        <view class="txt-wrap" wx:if="{{!status}}">
+          <textarea class="txt-content" placeholder="请输入评价内容,从多个角度评价宝贝，可以帮助更多想买的人" value="{{item.content_1}}" disabled="{{status}}" bindinput="detailInput" data-k="{{k}}">
+            </textarea></view>
+        <view style="display:flex;flex-wrap:wrap;">
+          <view wx:for="{{item.video}}" wx:for-index="k1" wx:for-item="v1" style="display:flex;width:120px;margin: 0 10px 10px 0;position: relative;border-radius: 4px;">
+            <video style="width:120px;height:80px;" id="myVideo" src="{{v1}}" show-center-play-btn="{{false}}" show-play-btn="{{true}}" controls bindenterpictureinpicture="bindVideoEnterPictureInPicture" bindleavepictureinpicture="bindVideoLeavePictureInPicture" bindplay="bindplay"></video>
+            <image wx:if="{{!status}}" src="../../static/images/icon-close-circle.png" bindtap="delVideo" data-k="{{k}}" data-k1="{{k1}}" style="width:20px;height:20px;position:absolute;top:-7px;right:-7px;" />
+          </view>
+          <view wx:for="{{item.pic}}" wx:for-index="k1" wx:for-item="v1" style="display:flex;width:80px;margin: 0 16px 10px 0;position: relative;border-radius: 4px;">
+            <image src="{{v1}}" bindtap="preImg" data-src="{{v1}}" data-srcarr="{{item.pic}}" style="width:80px;height:80px;" />
+            <image wx:if="{{!status}}" src="../../static/images/icon-close-circle.png" bindtap="delPic" data-k="{{k}}" data-k1="{{k1}}" style="width:20px;height:20px;position:absolute;top:-7px;right:-7px;" />
+          </view>
+        </view>
+        <view wx:if="{{!status}}" style="display:flex;flex-direction:column;border: 1px solid #ccc;border-radius: 4px;padding: 15px;">
+          <view style="display:flex;align-items:center;justify-content:center;margin-bottom: 10px;">
+            <view bindtap="selPic" data-k="{{k}}" data-pic="{{item.pic}}" data-video="{{item.video}}" style="display: flex;width:100px;align-items: center;justify-content: center;">
+              <image src="../../static/images/icon-upload-pic.png" style="width:40px;height:34px;" />
+            </view>
+            <view bindtap="selVideo" data-k="{{k}}" data-pic="{{item.pic}}" data-video="{{item.video}}" style="display: flex;width:100px;align-items: center;justify-content: center;">
+              <image src="../../static/images/icon-upload-video.png" style="width:40px;height:40px;" />
+            </view>
+          </view>
+          <view style="display:flex;align-items:center;justify-content:center;"> 发图/视频能帮助他人更真实地了解商品 </view>
+        </view>
+      </view>
+    </view>
+
+    <view style="padding:10px;margin-top:10px;background-color:#fff;">
+      <view class="star-demo-bottom">
+        <view class="ui-row" style="height:35px;">
+          <view class="ui-col ui-col-align-center align-center valign-middle" style="">
+            <view class="ui-col-content align-center valign-middle">平台评价</view>
+          </view>
+        </view>
+      </view>
+      <view class="star-demo-bottom">
+        <view class="ui-row" style="height:35px;">
+          <view style="font-weight:bold;flex:0 0 50px;" class="ui-col valign-middle">
+            <view class="ui-col-content valign-middle">服务</view>
+          </view>
+          <view class="ui-col ui-col-align-left align-left valign-middle" style="">
+            <view class="ui-col-content align-left valign-middle">
+              <ui-star data="{{evaluation.stars}}" value="{{evaluation.service}}" readonly="{{status}}" bindchange="serviceScore" _pid="{{_pid}}"></ui-star>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="star-demo-bottom">
+        <view class="ui-row" style="height:35px;">
+          <view style="font-weight:bold;flex:0 0 50px;" class="ui-col valign-middle">
+            <view class="ui-col-content valign-middle">物流</view>
+          </view>
+          <view class="ui-col ui-col-align-left align-left valign-middle" style="">
+            <view class="ui-col-content align-left valign-middle">
+              <ui-star data="{{evaluation.stars}}" value="{{evaluation.deliver}}" readonly="{{status}}" bindchange="deliverScore" _pid="{{_pid}}"></ui-star>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="btn-wrap" wx:if="{{!status}}">
+      <view class="btn bg-color-main" bindtap="submit">提交评价</view>
+    </view>
+
+
+  </view>
+
+
+
+
+</view>

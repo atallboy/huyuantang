@@ -1,0 +1,178 @@
+<template>
+  <view>
+
+    <form catchsubmit="formSubmit" catchreset="formReset">
+
+      <ui-row height="40">
+          <ui-col vertical-align="middle" class="wrap-label">账号信息</ui-col>
+      </ui-row>  
+
+      <view class="form" style="background-color:#fff;padding:0 10px;">
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">登录账号</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <input class="weui-input" name="account" value="{{account_info.account}}" placeholder="请输入后台登录账号" confirm-type="next" placeholder-style="font-size:12px;" />
+              </ui-col>
+          </ui-row>   
+        </view>
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">登录密码</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <input class="weui-input" name="password" value="" placeholder="后台登录密码,不更改不输入即可" confirm-type="next" placeholder-style="font-size:12px;" />
+              </ui-col>
+          </ui-row>   
+        </view>       
+      </view>
+
+
+      <ui-row height="50">
+        <ui-col align="center"  vertical-align="middle" style="font-size:14px;color:#666;">后台登录地址：{{host}}/login</ui-col>
+      </ui-row>
+      <ui-row height="30"  vertical-align="middle">
+        <ui-col align="center"> <view style="background-color:#07c160;color:#fff;padding:7px 20px;border-radius:4px;" bindtap="copy">一键复制</view> </ui-col>
+      </ui-row>      
+
+
+      <ui-row height="75"><ui-col></ui-col></ui-row>
+      
+      <view class="submit-wrap">
+        <button form-type="submit" class="submit-btn">保存</button>
+      </view>
+      
+    </form>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+let siteinfo = getApp().siteInfo;
+export default {
+  config: {
+    navigationBarTitleText: '账号信息'
+  },
+  data: {
+    mch_id:0,
+    step:1,
+    detail:[],
+    cateArr:[],
+    cateIndex:-1,
+    province:'',
+    city:'',
+    district:'',
+    location:'',
+    address:'',   
+    latitude:'',
+    longitude:'',     
+    mch_cate:[],
+    agree_declaration:false,
+    host:siteinfo.siteroot
+  },
+
+  changDecalation(e){console.log(e); this.setData({agree_declaration:!this.data.agree_declaration})},
+
+  onLoad(e){
+    qqmapsdk = new QQMapWX({
+      key: 'KHABZ-MEULF-GGWJE-NUL5G-4TGFT-4VFT4'
+    });    
+    this.getMchCate();
+    this.getMchDetail();
+  },
+
+  onShow(){ 
+    if(!wx.getStorageSync('token')){wx.navigateTo({url:'../login/login'})}
+
+  },
+
+  copy(){
+      wx.setClipboardData({
+        data: this.data.host+'/login',
+        success (res) {
+          wx.getClipboardData({
+            success (res) {
+              console.log(res.data) // data
+              wx.showToast({title:'复制成功'})
+            }
+          })
+        }
+      })    
+  },
+
+  formSubmit(e) {
+    console.log('form发生了submit事件，携带数据为：', e.detail.value)
+
+    if(e.detail.value.account==''){wx.showToast({title:'请输入登录账号',icon:'none'});return ;} 
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/editMchAccount',
+      data:{
+          mch_id:wx.getStorageSync('user').mch_id,
+          token:wx.getStorageSync('token'), 
+          account:e.detail.value.account,
+          password:e.detail.value.password,       
+        },
+      success(res) {
+        console.log(res);   
+        wx.showToast({title:'保存成功'})     
+        // that.getMchDetail();           
+      }
+    }) 
+
+ 
+  }, 
+
+  getMchDetail(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getMchDetail',
+      data:{
+          token:wx.getStorageSync('token'),      
+        },
+      success(res) {
+        console.log(res);
+        if(res.data.data.step!=1){
+          that.setData({
+            account_info:res.data.data.account_info,
+            }) 
+        }        
+      }
+    }) 
+  },
+
+
+
+}
+</script>
+
+<style lang="less">
+.l-active{width: 100%;height: 2rpx;background-color: #FA5C37;}
+.l-default{width: 100%;height: 2rpx;background-color: #F9DBD0;}
+.line{width: 100%;height: 2rpx;background-color: #F9DBD0;}
+.n-active{background-color:#FA5C37;color:#fff;width: 16px;height: 16px;line-height: 16px;font-size: 11px;border-radius: 100px;}
+.n-default{background-color: #F9DBD0;color: #fff;width: 16px;height: 16px;line-height: 16px;font-size: 11px;border-radius: 100px;}
+.t-active{color: #FA5C37;}
+.t-default{color: #CFCFCF;}
+.placeholderClass{font-size: 12px;}
+.xing{width: 7px;height: 7px;}
+.sel-icon{width: 20px;height: 20px;}
+.yj-form-row-pick-content{display: flex;}
+.picker-input{display: flex;flex: 1;}
+.yj-form-row-item-sel{display: flex;width: 50px;justify-content: center;align-items: center;}
+
+.submit-wrap{position: fixed;left: 0;right: 0;bottom: 0;background-color: #fff;z-index:99999;}
+.submit-btn{color:#fff;background-color: var(--ColorMain);border-radius: 2rpx;width: 92%;margin: 0 auto;margin-top: 20px;margin-bottom: 20px;}
+
+
+
+.wrap-label{padding-left: 10px;color: #666;}
+
+
+</style>

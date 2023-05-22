@@ -1,0 +1,73 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+page {
+  background-color: var(--defaultBgColor);
+}
+.level-list-container {
+  padding: 10px;
+}
+.level-item {
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  display: flex;
+  background-color: #fff;
+  padding: 10px;
+}
+.level-pic {
+  display: flex;
+  width: 140px;
+}
+.level-pic image {
+  width: 96%;
+  height: 80px;
+  border-radius: 4px;
+}
+.level-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding-left: 8px;
+}
+.level-name {
+  font-weight: 700;
+  font-size: 16px;
+}
+.level-card-num {
+  color: #999;
+  margin-top: 6px;
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+}
+.level-btn-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.level-btn {
+  font-size: 13px;
+  padding: 4px 16px;
+  color: var(--ColorMain);
+  border: 1rpx solid var(--ColorMain);
+  border-radius: 100px;
+}

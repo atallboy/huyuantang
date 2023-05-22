@@ -1,0 +1,37 @@
+<view>
+
+
+  <view class="page-body">
+    <view class="video-container">
+      <video id="myVideo" src="{{detail.play_url}}" binderror="videoErrorCallback" show-center-play-btn="{{false}}" show-play-btn="{{true}}" controls bindenterpictureinpicture="bindVideoEnterPictureInPicture" bindleavepictureinpicture="bindVideoLeavePictureInPicture" bindplay="bindplay"></video>
+    </view>
+  </view>
+
+  <view class="info mix-bottom">
+    <view class="title">{{detail.title}}</view>
+    <view class="sub-title">{{detail.summary}}</view>
+  </view>
+
+  <view class="recommend">推荐</view>
+
+  <view class="video-list-a-container">
+    <view class="video-list-a-wrap">
+      <view class="video-list-a-item mix-bottom" wx:for="{{recommend}}" bindtap="detail" data-id="{{item.id}}">
+        <view class="video-list-a-pic">
+          <image src="{{item.sub_image}}" />
+        </view>
+        <view class="video-list-a-info">
+          <view class="video-list-a-title">{{item.title}}</view>
+          <view class="video-list-a-summary">
+            <view class="video-list-a-summary-col">
+              <image src="../../static/images/icon-duration.png" /> {{item.duration}}</view>
+            <view class="video-list-a-summary-col">
+              <image src="../../static/images/icon-video-play.png" /> {{item.watch_num}}</view>
+            <!-- <view class="video-list-a-summary-col"> <image src="../../static/images/icon-score-a.png"></image> {{item.score}}</view> -->
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

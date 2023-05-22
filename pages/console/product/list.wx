@@ -1,0 +1,220 @@
+<template>
+    <view>
+      <view class="add-btn" bindtap="add">+</view>
+
+      <ui-row>
+        <ui-col span="3">
+          <ui-v-tabs 
+          height="{{height}}"
+          tab-style="{{tabStyle}}"
+          active-tab-style="{{activeTabStyle}}"
+          class="tab-item"
+          index="{{ current }}"
+          data-key = "current"
+          bindchange="handleChange">
+          <ui-v-tab wx:for="{{ tabItems }}">
+            {{ item.name }}
+          </ui-v-tab>
+        </ui-v-tabs>
+        </ui-col>
+        <ui-col>
+          <scroll-view scroll-y style="{{ {height:height+'px'} }}">
+            <view class="goods-box">
+                <view class="goods-item mix-bottom" wx:for="{{goodsArr}}" wx:for-index="k" wx:for-item="v">
+                  <view class="goods-info">
+                    <view class="goods-pic">
+                      <image src="{{v.sub_image}}" />
+                    </view>
+                    <view class="goods-detail">
+                        <view class="goods-name">{{v.name}}</view>
+                        <view class="goods-brief">
+                            <!-- <view class="goods-sale">共售{{v.sale}}</view> -->
+                            <view class="goods-price"> <text>￥</text>{{v.price}} </view>
+                        </view>
+                    </view>
+                  </view>
+                  <view class="goods-btn-wrap">
+                    <view class="goods-btn" bindtap="evaluation" data-id="{{v.id}}">评价</view>
+                    <!-- <view class="goods-btn" bindtap="edit" data-id="{{v.id}}">编辑</view> -->
+                    <!-- <view class="goods-btn" bindtap="del" data-id="{{v.id}}">删除</view> -->                    
+                  </view>
+                </view>
+            </view>
+          </scroll-view>
+
+        </ui-col>
+      </ui-row>
+            
+    
+    </view>
+  </template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    "navigationBarTitleText": "商品列表",
+    "disableScroll":true
+  },
+  data : {
+    nav_height:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    current: 0,
+    tabStyle:{
+      'color':'#333',
+      'width:':'80px'
+    },
+    activeTabStyle:{
+      'color': '#ff2a00',
+      'border-right':'1px solid #ff2a00',
+      'background-color':'#fff'
+    },
+    tabItems: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},],
+    height: wx.DEFAULT_CONTENT_HEIGHT,
+    tabContents: [],
+    tabContentData: [],
+    goodsArr:[],
+  },
+
+  onLoad(e){
+
+  },
+
+  onShow(){
+    this.initData();
+  },
+
+  initData(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getCateAndProduct',
+      data:{
+          token:wx.getStorageSync('token'),   
+          mch_id: wx.getStorageSync('mch_info').id,
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          tabItems:res.data.data,
+          tabContents:res.data.data,
+          tabContentData:res.data.data[that.data.current],
+          goodsArr:res.data.data[that.data.current].product_list
+          })           
+      }
+    }) 
+  },
+
+  evaluation(e){wx.navigateTo({url:'../../evaluation/product_evaluation?show_add_btn=1&data_type=1&product_id='+e.currentTarget.dataset.id})},
+
+  edit(e){wx.navigateTo({url:'goods_edit?id='+e.currentTarget.dataset.id})},  
+
+  add(){
+        wx.navigateTo({
+          url:'goods_edit'
+        })
+  },
+
+  del(e) {
+    let that = this;      
+      wx.showModal({
+        title: '提示',
+        content: '确定删除吗？',
+        success (res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+            app.util.request({
+              'url': 'entry/wxapp/delMchGoods',
+              data:{
+                  token:wx.getStorageSync('token'),   
+                  id: e.currentTarget.dataset.id,
+                },
+              success(res) {
+                that.initData();
+              if(res.data.data==1){
+                wx.showToast({
+                  title:'已删除'
+                })  
+              }            
+              }
+            }) 
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })        
+  },  
+
+  navigateBack () {
+    wx.navigateBack()
+  },
+  handleChange (e) {
+    console.log(e)
+    let index = e.detail.index
+    this.setData({
+      current:index,
+      goodsArr:this.data.tabContents[index].product_list
+    })
+  },
+  onReady:function(){
+    // this.setData({
+    //   tabContentData:this.data.tabContents[0]
+    // })
+  }
+}
+</script>
+
+<style lang="less">
+
+  .add-btn{position: fixed;right: 30px;bottom: 100px;background-color: var(--bgColorMain);color: #fff;
+      width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 36px;
+  font-size: 26px;font-weight: bolder;border-radius: 100px;z-index: 9999;}
+
+.container {
+  display: flex;
+}
+
+.imgbox{
+  width:64px;
+  height:64px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin:0 auto;
+  // .mix-1px(1, 1, 1, 1, #ccc);
+  border:1px solid #ccc;
+  border-style:rgba(231, 231, 231, 0.6);
+  .ui-image{
+    width:100%
+  }
+}
+
+.small-title{
+  font-size: 24rpx;
+  text-align:center;
+  margin-top:20rpx;
+}
+.goods-box{
+  display: flex;
+  flex-wrap:wrap;
+  align-content: flex-start;
+  flex-direction: column;
+  .goods-item{display: flex;width: 100%;padding: 12px 2px 12px 10px;flex-direction: column;background-color: #fff;}
+  .goods-info{  
+    display: flex;
+
+  }
+  .goods-pic{display: flex;width: 90px;padding:0 10px 0 0;height: 80px;}
+  .goods-pic image{width: 100%;height: 100%;border-radius: 4px;}
+  .goods-detail{display: flex;flex-direction: column;flex: 1;}
+  .goods-name{height: 40px;font-size: 13px;color: #333;}
+  .goods-brief{display: flex;height: 24px;}
+  .goods-sale{display: flex;flex: 1;font-size: 12px;color: #999;}
+  .goods-price{display: flex;flex: 1;justify-content: flex-end;font-size: 15px;color: #0072FD;padding-right: 10px;}
+  .goods-btn-wrap{display: flex;justify-content: flex-end;margin-top: 10px;}
+  .goods-btn{color: #333; font-size: 12px;border: 1rpx solid #ddd;border-radius: 100px;text-align: center;padding: 3px 15px;margin-right: 10px;}
+
+
+}
+</style>

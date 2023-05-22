@@ -1,0 +1,220 @@
+<template>
+  <view>
+     <view class="form-wrap">
+        <view class="form-item">
+            <input value="{{money}}" bindinput="bindinput" placeholder="请输入充值金额" placeholder-class="placeholderClass" />
+        </view>           
+     </view>
+
+     <view class="fast-wrap">
+        <view class="fast-wrap-label">
+            <view class="fast-wrap-label-dot"></view> 快捷充值
+        </view>
+        <view class="fast-list">
+            <view class="fast-item-wrap" wx:for="{{fast_list}}" wx:for-index="k" wx:for-item="v">
+              <view class="fast-item {{v.selected}}" bindtap="selFast" data-k="{{k}}">{{v.amount}}元</view>
+            </view>                                                                    
+        </view>
+     </view>
+
+     <!-- <view class="fast-wrap">
+        <view class="fast-wrap-label">
+            <view class="fast-wrap-label-dot"></view> 充值套餐
+        </view>
+        <view class="package-list">
+            <view class="package-item {{v.selected}}" wx:for="{{solution_list}}" wx:for-index="k" wx:for-item="v"  bindtap="selSolution" data-k="{{k}}">
+              <view class="price">{{v.amount}}元</view>
+              <view class="desc" wx:if="{{v.cate==1}}">返{{v.total_deduction_amount}}抵扣金</view>
+              <view class="desc" wx:if="{{v.cate==2}}">返利{{v.cash_back_amount*v.cash_back_num}}元</view>
+            </view>           
+        </view>
+     </view>      -->
+
+     <view class="describe"> <text>{{describe}}</text> </view>
+
+    <view class="submit-wrap">
+      <button bindtap="formSubmit" class="submit-btn">立即支付</button>
+    </view>         
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '充值中心'
+  },
+  data: {
+    money:'',
+    fast_list:[
+      {id:0,amount:100,selected:''},{id:0,amount:200,selected:''},{id:0,amount:500,selected:''},{id:0,amount:1000,selected:''}
+      ],
+    solution_list:[],
+    ori_fast_list:[],
+    ori_solution_list:[],    
+    _id:0,
+    describe:'',
+  },
+
+  onLoad(e){
+    if(e.amount){this.setData({money:e.amount})}
+    if(!wx.getStorageSync('token')){wx.navigateTo({url:'../login/login'})}
+    //  this.getSolution();     
+  },   
+
+  selFast(e){
+    let k = e.currentTarget.dataset.k;
+    let data = this.data.fast_list;    
+    let data2 = this.data.solution_list;      
+    let s = '';
+    let amount = '';
+    if(this.data.fast_list[k].selected==''){s='fast-item-active';amount=data[k].amount;}
+    for(var i=0;i<data.length;i++){
+      if(i==k){data[i].selected = s;
+      }else{
+        data[i].selected = '';
+      }
+    }    
+    for(var j=0;j<data2.length;j++){
+      data2[j].selected = '';
+    }       
+        console.log(data)
+    this.setData({
+      fast_list:data,
+      solution_list:data2,
+      money:amount,
+      _id:data[k].id,
+      describe:'',
+    })
+  },
+
+  selSolution(e){
+    let k = e.currentTarget.dataset.k;
+    let data2 = this.data.fast_list;    
+    let data = this.data.solution_list;      
+    let s = '';
+    let amount = '';
+    let describe = '';
+    if(this.data.solution_list[k].selected==''){s='package-item-active';amount=data[k].amount;describe=data[k].describe}
+    for(var i=0;i<data.length;i++){
+      if(i==k){data[i].selected = s;
+      }else{
+        data[i].selected = '';
+      }
+    }    
+    for(var j=0;j<data2.length;j++){
+      data2[j].selected = '';
+    }       
+        console.log(data)
+    this.setData({
+      solution_list:data,
+      fast_list:data2,
+      money:amount,
+      _id:data[k].id,
+      describe:describe,
+    })
+  },
+
+  bindinput(e){
+    let data = this.data.fast_list;    
+    let data2 = this.data.solution_list;      
+    for(var i=0;i<data.length;i++){ data[i].selected = '';}    
+    for(var j=0;j<data2.length;j++){
+      data2[j].selected = '';
+    }       
+    this.setData({
+      money:e.detail.value,
+      // fast_list:data,
+      // solution_list:data2,
+      _id:0,
+      describe:'',
+    })
+  },
+
+  getSolution(e){
+    console.log(e);
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getRechargeSolution',
+      data:{token:wx.getStorageSync('token'),},
+      success(res) {
+        console.log(res);
+        that.setData({
+          ori_fast_list:res.data.data.fast,
+          ori_solution_list:res.data.data.solution,
+          fast_list:res.data.data.fast,
+          solution_list:res.data.data.solution,          
+        })
+      }
+    })  
+  },
+
+
+  formSubmit(e){
+    console.log(e);
+    if(!(this.data.money>0)){wx.showToast({title:'充值金额无效'});return ;}
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/CreateRechargeOrder',
+      data:{
+          id:this.data._id,
+          token:wx.getStorageSync('token'),
+          money:this.data.money,
+        },
+      success(res) {
+        console.log(res);
+        that.setData({orderInfo:res.data.data.orderInfo})
+          let param = res.data.data.payInfo;
+          wx.requestPayment({
+            timeStamp: param.timeStamp,
+            nonceStr: param.nonceStr,
+            package: param.package,
+            signType: param.signType,
+            paySign: param.paySign,
+            'success': function (res) {
+                wx.redirectTo({url:'../balance/record'})
+            },
+            fail:function(res){
+              console.log(res);
+            },
+          })  
+
+      }
+    })  
+
+  },
+
+
+
+}
+</script>
+
+<style lang="less">
+.form-wrap{padding: 10px;}
+.form-item{border-bottom: 1px solid #ddd;}
+input{width: 100%;font-weight: 700;text-align: center;padding: 10px 0;height: 50px;font-size: 25px;}
+.placeholderClass{text-align: center;color: #666;font-size: 20px;font-weight: normal;}
+
+.fast-wrap{padding: 10px 10px 0;}
+.fast-wrap-label{display: flex;align-items: center;padding: 10px 0;font-size: 15px;font-weight: 650;}
+.fast-wrap-label-dot{display: flex;width: 3px;height: 16px;background-color: var(--ColorMain);margin-right: 10px;border-radius: 100px;}
+.fast-list{display: flex;flex-wrap: wrap;}
+.fast-item-wrap{display: flex;width: 25%;}
+.fast-item{width: 90%;text-align: center; padding: 8px 0;border: 1rpx solid #E3E3E3;border-radius: 4px;color: #333;margin-right: 15px;margin-bottom: 15px;}
+.fast-item-active{color: var(--ColorMain);border: 1rpx solid var(--ColorMain);} 
+
+.package-list{display: flex;flex-wrap: wrap;}
+.package-item{display: flex;width: 30%;padding: 10px 0;text-align: center;flex-direction: column;border: 1rpx solid #F9DBD0;border-radius: 8px;margin: 0 10px 10px 0;}
+.price{font-weight: 700;}
+.desc{color: #666;font-size: 12px;}
+.package-item-active{background-image: linear-gradient(#E6615C, #E8865A);}
+.package-item-active .price{color:#fff;}
+.package-item-active .desc{color:#eee;}
+
+.submit-wrap{position: fixed;left: 0;right: 0;bottom: 0;}
+.submit-btn{color:#fff;background-color: var(--ColorMain);border-radius: 2rpx;width: 92%;margin: 0 auto;margin-top: 20px;margin-bottom: 20px;}
+
+.describe{padding:10px;color: #666;font-size: 13px;}
+
+</style>

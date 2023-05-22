@@ -1,0 +1,88 @@
+<view>
+
+  <!--lincec_store_share/pages/mall/car/index.wxml-->
+
+
+  <view class="container">
+
+    <view class="car-menu-container">
+      <view class="car-menu-wrap">
+        <view class="sel-item selected" wx:if="{{is_all_sel}}" bindtap="selAll" data-d="0"></view>
+        <view class="sel-item" wx:else="" bindtap="selAll" data-d="1"></view>
+        <view class="sel-txt">全选</view>
+        <view class="car-calc"> 总计：￥{{total_price}}</view>
+        <block wx:if="{{is_del}}">
+          <view class="car-menu-btn menu-sel" wx:if="{{is_sel}}" bindtap="delCarGoods">删除</view>
+          <view class="car-menu-btn menu-default" wx:else="">删除</view>
+        </block>
+        <block wx:else="">
+          <view class="car-menu-btn menu-sel" wx:if="{{is_sel}}" bindtap="submit">去结算</view>
+          <view class="car-menu-btn menu-default" wx:else="">去结算</view>
+        </block>
+
+      </view>
+    </view>
+
+
+    <view class="behavior-container">
+      <view class="behavior-txt">商品库存有限，请尽快下单</view>
+      <view class="behavior-btn" bindtap="edittype" wx:if="{{is_del}}">完成</view>
+      <view class="behavior-btn" bindtap="edittype" wx:else="">管理</view>
+    </view>
+
+    <!-- <view class="all-sel">
+        <view class="sel-item"></view> 
+        <view class="sel-txt">全选</view>
+    </view> -->
+
+    <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+    <view class="car-container">
+      <view class="car-wrap">
+        <view class="car-item" wx:for="{{list}}" wx:for-index="k" wx:for-item="item">
+          <view class="sel-item selected" wx:if="{{item.is_sel==1}}" bindtap="sel" data-k="{{k}}" data-d="0"></view>
+          <view class="sel-item" wx:else="" bindtap="sel" data-k="{{k}}" data-d="1"></view>
+          <view class="car-goods-pic">
+            <image src="{{item.sub_image}}" />
+          </view>
+          <view class="car-goods-info">
+            <view class="car-goods-name">
+              <view class="car-goods-name-txt">{{item.name}}</view>
+            </view>
+            <view class="car-goods-param">{{item.attribute}}</view>
+            <view class="car-goods-int">
+              <view class="car-goods-price"> <text>￥</text>{{item.price}} </view>
+              <view class="car-goods-nums">
+                <view class="car-goods-reduce" bindtap="doit" data-k="{{k}}" data-t="1"> - </view>
+                <view class="car-goods-num">{{item.num}}</view>
+                <view class="car-goods-add" bindtap="doit" data-k="{{k}}" data-t="2"> + </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <!-- <view class="car-item">
+              <view class="sel-item selected"></view>
+              <view class="car-goods-pic">
+                  <image src="../../../resource/images/logo.png"></image>
+              </view>
+              <view class="car-goods-info">
+                  <view class="car-goods-name">asdgrg</view>
+                  <view class="car-goods-param">1</view>
+                  <view class="car-goods-int">
+                      <view class="car-goods-price"> <text>￥</text>13.66 </view>
+                      <view class="car-goods-nums">
+                          <view class="car-goods-reduce"> - </view>
+                          <view class="car-goods-num">3</view>
+                          <view class="car-goods-add"> + </view>
+                      </view>
+                  </view>
+              </view>
+          </view>         -->
+      </view>
+    </view>
+
+  </view>
+
+
+</view>

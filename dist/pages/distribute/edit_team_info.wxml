@@ -1,0 +1,44 @@
+<view>
+
+
+
+  <form catchsubmit="formSubmit" catchreset="formReset">
+
+
+    <view class="form" style="background-color:#fff;padding:0 10px;">
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">团队名称</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="name" placeholder="请输入团队名称" value="{{detail.name}}" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+
+
+    </view>
+
+
+
+    <view class="ui-row" style="height:75px;">
+      <view class="ui-col" style="">
+        <view class="ui-col-content"></view>
+      </view>
+    </view>
+
+    <view class="submit-wrap">
+      <button form-type="submit" class="submit-btn">保存</button>
+    </view>
+
+  </form>
+
+</view>

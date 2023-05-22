@@ -1,0 +1,60 @@
+<view>
+
+
+  <view>
+    <view class="image-upload-container">
+      <!-- <ui-row height="40">
+            <ui-col vertical-align="middle" class="p-l-20 bg-f2f4f7">上传个人材料</ui-col>
+        </ui-row>             -->
+      <view class="image-upload-wrap">
+        <view class="image-upload-item">
+          <view class="image-upload-preview">
+            <image src="{{pic1}}" />
+          </view>
+          <view class="image-upload-btn">
+            <view class="image-upload-select" bindtap="upload" data-t="1">正面照</view>
+          </view>
+        </view>
+        <view class="image-upload-item">
+          <view class="image-upload-preview">
+            <image src="{{pic2}}" />
+          </view>
+          <view class="image-upload-btn">
+            <view class="image-upload-select" bindtap="upload" data-t="2">身份证</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="image-upload-container">
+      <!-- <ui-row height="40">
+            <ui-col vertical-align="middle" class="p-l-20 bg-f2f4f7">上传公司材料</ui-col>
+        </ui-row>             -->
+      <view class="image-upload-wrap">
+        <view class="image-upload-item">
+          <view class="image-upload-preview">
+            <image src="{{pic3}}" />
+          </view>
+          <view class="image-upload-btn">
+            <view class="image-upload-select" bindtap="upload" data-t="3">营业执照</view>
+          </view>
+        </view>
+        <view class="image-upload-item">
+          <view class="image-upload-preview">
+            <image src="{{pic4}}" />
+          </view>
+          <view class="image-upload-btn">
+            <view class="image-upload-select" bindtap="upload" data-t="4">门头照</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="submit-wrap">
+      <button class="submit-btn" bindtap="saveImg">保存</button>
+    </view>
+  </view>
+
+
+
+
+</view>

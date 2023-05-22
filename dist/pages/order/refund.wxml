@@ -1,0 +1,54 @@
+<view>
+
+  <!--lincec_store_share/pages/order/refund/apply.wxml-->
+
+  <view class="container">
+    <view class="wrap">
+      <picker bindchange="bindTkyyChange" value="{{tkyy_index}}" range="{{tkyy}}" class="pick">
+        <view class="row mix-bottom">
+          <view class="label">退款原因</view>
+          <view class="value">
+            <input placeholder="点击选择申请原因" disabled value="{{tkyy[tkyy_index]}}" placeholder-class="plc"></input>
+          </view>
+          <view class="icon"> <span type="arrow-right" size="13" color="#000000" class="ui-icon icon-arrow-right" style="color: #000000;font-size: 13px;"></span> </view>
+        </view>
+      </picker>
+
+    </view>
+
+    <view class="wrap" style="margin-top:10px;">
+      <view class="row mix-bottom">
+        <view class="label">退款金额</view>
+        <view class="value">
+          <input type="number" placeholder="不能超过订单金额：{{order.pay_money}}元" bindinput="moneyInput" value="" placeholder-class="plc"></input>
+        </view>
+      </view>
+    </view>
+
+    <view class="wrap" style="margin-top:10px;padding-top:5px;">
+      <textarea bindinput="smInput" placeholder="退款说明（详细退款原因）">
+  </textarea></view>
+    <view class="yj-row-file">
+      <view class="yj-file">
+        <view class="yj-file-add" bindtap="chooseImg">
+          <image src="../../../static/images/add.png" />
+        </view>
+
+        <view class="yj-file-add" bindtap="doimg" wx:for="{{imgs}}" wx:for-index="k" wx:for-item="v" data-k="{{k}}">
+          <image src="{{site}}{{v}}" />
+        </view>
+
+      </view>
+    </view>
+
+
+
+  </view>
+
+
+  <view class="btn-container">
+    <view class="btn bg-color-main" bindtap="submit">提交申请</view>
+  </view>
+
+
+</view>

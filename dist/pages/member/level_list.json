@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "ui-popup": "../../packages/touchui-wx-components/ui-popup/dist/index"
+  },
+  "navigationBarTitleText": "会员等级"
+}

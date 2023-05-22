@@ -1,0 +1,317 @@
+<template>
+  <view>
+
+<view class="order-g-container">
+  <view class="order-g-wrap">
+    <view class="order-g-item">
+        <view class="order-status">
+              <text wx:if="{{data.status==0}}">待付款</text>
+              <text wx:if="{{data.status==1}}">待发货</text>
+              <text wx:if="{{data.status==2}}">待收货</text>
+              <text wx:if="{{data.status==3}}">已签收</text>
+              <text wx:if="{{data.status==4}}">已完成</text>
+              <text wx:if="{{data.status==5}}">已取消</text>
+              <text wx:if="{{data.status==6}}">申请退款中</text>
+              <text wx:if="{{data.status==7}}">已退款</text>
+        </view>
+        <view class="order-g-address">
+          <view class="order-g-address-info">
+              <view class="order-g-address-t">
+                  <text class="order-g-address-name">{{data.snap.name}}</text>
+                  <text class="order-g-address-tel">{{data.snap.tel}}</text>
+                  <!-- <text class="order-g-address-tel-call" bindtap="call">一键拨打</text> -->
+              </view>
+              <view class="order-g-address-detail">{{data.snap.province}}{{data.snap.city}}{{data.snap.district}}{{data.snap.address}}</view>
+          </view>
+          <view class="order-g-icon" bindtap="openLocation">
+              <image src="../../../static/images/icon-address.png" class="ercode_pic"></image>
+          </view>         
+        </view>     
+        <view class="address-bottom"> <image src="../../../static/images/address-bottom.png"></image> </view>   
+        <view class="order-g-detail">
+          <view class="order-g-goods">
+            <view class="order-g-goods-item" wx:for="{{data.productArr}}" wx:for-index="k1" wx:for-item="v1">
+               <view class="order-g-goods-pic">
+                 <image src="{{v1.sub_image}}" class="ercode_pic"></image>
+               </view>
+               <view class="order-g-goods-info">
+                 <view class="order-g-goods-name">{{v1.name}}</view>
+                 <view class="order-g-goods-param">
+                    <view class="order-g-goods-param-both">
+                      <text class="order-g-goods-param-name">--</text>                    
+                      <text class="order-g-goods-price">￥{{v1.price}}</text>
+                    </view>
+                    <view class="order-g-goods-param-num">x{{v1.num}}</view>                    
+                 </view>
+                
+               </view>
+            </view>            
+          </view>
+          <view class="order-g-total-info">
+             <view class="order-g-deliver">
+                <text>商家配送</text>
+             </view>
+             <view class="order-g-calc">
+               <text class="order-g-num">共{{data.goods_num}}件商品</text>
+               <text class="order-g-total-price">合计：{{data.product_money}}</text>
+             </view>
+          </view>
+          <view class="order-g-about">
+            <view class="order-g-about-label">邮费：</view>
+            <view class="order-g-about-value">{{data.freight}}</view>
+          </view>          
+          <view class="order-g-about">
+            <view class="order-g-about-label">订单总额：</view>
+            <view class="order-g-about-value">{{data.total_money}}</view>
+          </view>             
+          <view class="order-g-about">
+            <view class="order-g-about-label">订单号：</view>
+            <view class="order-g-about-value">{{data.order_no}}</view>
+          </view>
+          <view class="order-g-about">
+            <view class="order-g-about-label">订单时间：</view>
+            <view class="order-g-about-value">{{data.create_time}}</view>
+          </view>          
+          <view class="order-g-remark"> 备注：{{data.remark}} </view>
+        </view>
+    </view>
+  </view>
+</view>
+
+
+
+<view class="btn-container">
+  <view class="btn-wrap">
+    <!-- <view class="btn-left">更多</view> -->
+    <view class="btn-right">
+        <view class="btn-item" wx:if="{{data.eva==0}}" bindtap="toEva">去评价</view>
+        <view class="btn-item" wx:if="{{data.eva==1}}" bindtap="toEva">我的评价</view>
+        <view class="btn-item" wx:if="{{data.status==0}}" bindtap="cancel">取消订单</view>
+        <view class="btn-item" wx:if="{{data.status==0}}" bindtap="pay">订单支付</view>
+        <view class="btn-item" wx:if="{{data.status==1}}" bindtap="cancel">取消订单</view>
+        <view class="btn-item btn-complete" wx:if="{{data.status==2||data.status==3}}" bindtap="refund">申请退款</view>
+        <!-- <view class="btn-item" wx:if="{{into_type==1&&data.status==2}}" bindtap="sendGoods">修改物流</view> -->
+        <view class="btn-item" wx:if="{{data.status==2}}" bindtap="checkDeliver">查看物流</view>
+        <!-- <view class="btn-item" wx:if="{{into_type==1&&data.status==1}}" bindtap="sendGoods">订单发货</view> -->
+        <view class="btn-item btn-complete" wx:if="{{data.status==2}}" bindtap="confirm">订单完成</view>
+    </view>
+  </view>
+</view>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '订单详情'
+  },
+  data: {
+    id:0,
+    data:[],
+    into_type:0,
+  },
+
+  onLoad(e){
+    this.setData({
+      // id:122,
+      id:e.id,
+      into_type:e.into_type,
+      })
+  },    
+
+  onPullDownRefresh: function () {
+    this.getGoodsOrderDetail();
+    wx.stopPullDownRefresh();
+  },      
+
+  onShow: function () {
+    if(!wx.getStorageSync('token')){wx.navigateTo({url: '../../login/login',})}    
+    this.getGoodsOrderDetail();
+  },
+
+  getGoodsOrderDetail(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getOrderDetail',
+      data:{token:wx.getStorageSync('token'),id:this.data.id},
+      success(res) {
+        console.log(res);
+        that.setData({
+          data:res.data.data,
+        })
+      }
+    })  
+  }, 
+
+  pay(){
+        var that=this;
+        app.util.request({
+        'url': 'entry/wxapp/OrderDo',
+        data:{
+            token:wx.getStorageSync('token'),
+            id:that.data.id,
+            op:'pay'
+            },
+        success(res) {
+            console.log(res);
+                let param = res.data.data.payInfo;
+                wx.requestPayment({
+                  timeStamp: param.timeStamp,
+                  nonceStr: param.nonceStr,
+                  package: param.package,
+                  signType: param.signType,
+                  paySign: param.paySign,
+                  'success': function (res) {                     
+                  },
+                  fail:function(res){
+                    console.log(res);
+                  },
+                  complete:function(res){
+                     that.getGoodsOrderDetail();
+                  }
+                })              
+           
+        }
+        }) 
+  },
+
+  cancel(){
+      var that=this;
+        wx.showModal({
+        title: '提示',
+        content: '确定取消订单吗',
+        success (res) {
+            if (res.confirm) {  
+                app.util.request({
+                'url': 'entry/wxapp/OrderDo',
+                data:{
+                    token:wx.getStorageSync('token'),
+                    id:that.data.id,
+                    op:'cancel'
+                    },
+                success(res) {
+                    console.log(res);
+                    that.getGoodsOrderDetail();
+                }
+                }) 
+            }
+        }
+        })      
+
+  },
+
+  confirm(){
+      var that=this;
+        wx.showModal({
+        title: '提示',
+        content: '确定完成订单吗',
+        success (res) {
+            if (res.confirm) {  
+                app.util.request({
+                'url': 'entry/wxapp/OrderDo',
+                data:{
+                    token:wx.getStorageSync('token'),
+                    id:that.data.id,
+                    op:'confirm'
+                    },
+                success(res) {
+                    console.log(res);
+                    that.getGoodsOrderDetail();
+                }
+                }) 
+            }
+        }
+        }) 
+  },
+
+  toEva(){wx.navigateTo({url:'../evaluation/edit?order_id='+this.data.id})},
+  refund(){
+  wx.navigateTo({url:'refund?order_id='+this.data.id})
+  },
+
+  sendGoods(){
+    wx.navigateTo({url:'../../deliver/send?order_id='+this.data.id})
+  },
+  checkDeliver(){
+    wx.navigateTo({url:'../deliver/detail?order_id='+this.data.id})
+  },
+
+  openLocation(){
+      let lat = Number(this.data.data.snap.latitude);
+      let lon = Number(this.data.data.snap.longitude);
+      console.log(lat)
+      wx.openLocation({latitude:lat,longitude:lon,scale: 18})      
+  },
+ 
+  call(){
+    wx.makePhoneCall({phoneNumber:this.data.data.snap.tel})
+  },
+
+}
+</script>
+
+<style lang="less">
+
+page{background-color: var(--defaultBgColor);}
+
+.btn-complete{background-color: #006BFF;color: #fff;}
+
+
+.btn-container{position: fixed;left: 0;right: 0;bottom: 0;z-index: 9999;background-color: #fff;}
+.btn-wrap{height: 50px;border-top: 1px solid #eee;display: flex;align-items: center;justify-content: center;font-size: 14px;}
+.btn-left{display: flex;width: 60px;align-items: center;justify-content:center;}
+.btn-right{display: flex;align-items: center;justify-content: flex-end;flex: 1;}
+.btn-item{display: flex;padding: 4px 10px;border-radius: 100px;margin-right: 10px;border:1rpx solid #ededed;}
+
+
+// .order-g-container{padding: 10px;}
+
+  
+.order-g-wrap{display: flex;flex-direction: column;flex: 1;font-size: 14px;}
+.order-g-item{display: flex;flex-direction: column;}
+.order-g-time{display: flex;align-items: center;justify-content: center;    margin-bottom: 5px;}
+.order-g-time text{padding: 0 10px;height: 25px;line-height: 25px;font-size: 13px;font-weight: 650; text-align: center;border-radius: 100px;background-color: #F0F0F0;}
+.order-status{padding: 15px;text-align: center;font-size: 16px;font-weight: 700;color: #111;background-color: #fff;}
+
+.order-g-detail{display: flex;flex-direction: column;padding: 20px !important;padding-bottom: 0 !important;}
+.order-g-no{display: flex;padding: 10px 0;}
+.order-g-order-no{display: flex;flex: 1;color: #000;}
+.order-g-status{display: flex;width: 80px;justify-content: flex-end;}
+.order-g-goods{display: flex;flex-direction: column;}
+.order-g-goods-item{display: flex;padding: 5px 0;}
+.order-g-goods-pic{display: flex;width: 70px;height: 70px;}
+.order-g-goods-pic image{width: 100%;height: 100%;border-radius: 5px;}
+.order-g-goods-info{display: flex;flex-direction: column;padding-left: 5px;flex: 1;}
+.order-g-goods-name{display: flex;font-size: 15px;}
+.order-g-goods-param{display: flex;font-size: 13px;color: #666;margin-top: 10px;}
+.order-g-goods-param-both{display: flex;font-size: 14px;flex: 1;}
+.order-g-goods-param-name{margin-right: 10px;}
+.order-g-goods-price{}
+.order-g-goods-param-num{display: flex;font-size: 14px;width: 50px;justify-content: flex-end;}
+.order-g-total-info{display: flex;margin-top: 15px;}
+.order-g-deliver{display: flex;}
+.order-g-deliver text{background-color: #FFEFE2;color: #ff531a;font-size: 13px;padding: 3px 10px;border-radius: 100px;}
+.order-g-calc{display: flex;flex: 1;justify-content: flex-end;align-items: center;}
+.order-g-num{font-size: 13px;color: #666;margin-right: 10px;}
+.order-g-total-price{font-size: 15px;font-weight: 650;}
+.order-g-remark{display: flex;padding: 15px 0;color: #666;font-size: 13px;}
+.order-g-address{display: flex;padding: 15px !important;background-color: #fff;}
+.order-g-icon{display: flex;width: 40px;align-items: center;justify-content: center;}
+.order-g-icon image{width: 20px;height: 20px;}
+.order-g-address-info{display: flex;flex-direction: column;flex: 1;}
+.order-g-address-t{display: flex;margin-bottom: 5px;}
+.order-g-address-name{font-size: 15px;margin-right: 6px;color: #000;}
+.order-g-address-tel{font-size: 14px;color: #333;}
+.order-g-address-tel-call{color: var(--ColorMain);font-weight: 650;margin-left: 10px;}
+.order-g-address-detail{font-size: 14px;color: #333;}
+.order-g-address-btn{display: flex;width: 70px;align-items: center;justify-content: flex-end;}
+.order-g-address-btn text{padding: 4px 10px; border: 1rpx solid #ddd;border-radius: 100px;font-size: 13px;text-align: center;}
+.order-g-about{display: flex;margin-top: 15px;color: #333;}
+.order-g-about-label{display: flex;width: 80px;}
+.order-g-about-value{display: flex;flex: 1;justify-content: flex-end;}
+.address-bottom{width: 100%;height: 3px;display: flex;}
+.address-bottom image{width: 100%;height: 100%;}
+
+</style>

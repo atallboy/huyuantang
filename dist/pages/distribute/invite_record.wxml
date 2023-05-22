@@ -1,0 +1,61 @@
+<view>
+
+  <!--pages/erkai/invite/invite.wxml-->
+
+  <view class="big-cont">
+    <view class="main-cont">
+      <view class="col-container">
+        <view class="col-wrap">
+          <!-- <navigator url="/pages/share/index/index" class="navigate"> -->
+          <view class="col-item border-r">
+            <view class="col-name">邀请总数</view>
+            <view class="col-icon">
+              <!-- <image src="{{host}}/icon-score.png"></image> -->
+              {{data.total}}
+            </view>
+
+          </view>
+          <!-- </navigator> -->
+          <!-- <view class="col-item">
+                     <view class="col-name">成功数</view>
+                        <view class="col-icon">{{data.invite_pay_num}}</view>                       
+                    </view>         -->
+
+        </view>
+      </view>
+
+
+      <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+      <view class="invite-container">
+        <view class="invite-wrap">
+          <view class="invite-item" wx:for="{{list}}">
+            <view class="invite-l">
+              <view class="invite-pic">
+                <image src="{{item.avatarUrl}}" />
+              </view>
+            </view>
+            <view class="invite-r">
+              <view class="invite-info">
+                <view class="invite-detail">
+                  <view class="invite-name">{{item.nickName}}</view>
+                  <view class="invite-level"> {{item.level_name}}</view>
+                  <!-- <view class="invite-level" wx:if="{{item.fxs_level==1}}"><image src="../../resource/images/icon-level-3.png"></image> 金牌合伙人</view>                                                                       -->
+                </view>
+                <view class="invite-time">{{item.create_time}}</view>
+              </view>
+            </view>
+
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+
+
+
+
+</view>

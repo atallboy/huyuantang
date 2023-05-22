@@ -1,0 +1,280 @@
+<view>
+
+
+
+  <view class="yj-menu-container mix-top" style="position: fixed;z-index:99;">
+    <view class="yj-menu-wrap">
+      <view class="yj-menu-item" bindtap="toIndex">
+        <view class="yj-menu-item-icon">
+          <image src="../../static/images/icon-index.png" />
+        </view>
+        <view class="yj-menu-item-name">首页</view>
+      </view>
+      <!-- <view class="yj-menu-item">
+                <button open-type="contact">
+                    <view class="yj-menu-item-icon">
+                        <image src="../../../static/images/icon-service.png"></image>
+                    </view>
+                    <view class="yj-menu-item-name">客服</view>
+                </button>
+            </view>                -->
+      <!-- <view class="yj-menu-item">
+                <button open-type="share">
+                    <view class="yj-menu-item-icon">
+                        <image src="../../../static/images/icon-share.png"></image>
+                    </view>
+                    <view class="yj-menu-item-name">分享</view>
+                </button>
+            </view>         -->
+      <view class="yj-menu-item" bindtap="toCar">
+        <view class="yj-menu-item-icon">
+          <image src="../../static/images/icon-car-2.png" />
+        </view>
+        <view class="yj-menu-item-name">购物车</view>
+      </view>
+      <!-- <view class="yj-menu-btn-wrap">    
+                <view class="yj-menu-btn" style="background-color:#FBAB07;" bindtap="addCar">加入购物车</view>
+            </view>            
+            <view class="yj-menu-btn-wrap">       
+                <view class="yj-menu-btn bg-color-main" bindtap="submit">立即下单</view>
+            </view>    -->
+      <view class="yj-menu-btn-wrap" wx:if="{{detail.is_open_sale==1&&detail.stock>0}}">
+        <view class="yj-menu-btn yj-menu-btn-car" bindtap="addCar" data-t="1">加入购物车</view>
+        <view class="yj-menu-btn yj-menu-btn-submit" bindtap="openToast" data-t="1">立即下单</view>
+      </view>
+      <view class="yj-menu-btn-wrap" wx:if="{{detail.can_buy<1}}">
+        <view class="yj-menu-btn yj-menu-btn-open-sale" bindtap="noOpenSale">{{detail.can_buy_msg}}</view>
+      </view>
+      <view class="yj-menu-btn-wrap" wx:if="{{detail.stock==0}}">
+        <view class="yj-menu-btn yj-menu-btn-open-sale" bindtap="noOpenSale">缺货</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="yj-swiper">
+    <swiper autoplay="{{false}}" interval="3000" duration="500" circular="{{true}}" bindchange="bindchange" indicator-dots indicator-active-color="#00B26A">
+      <block wx:for="{{detail.images}}" wx:key="*this">
+        <swiper-item wx:if="{{item.type==1}}">
+          <image src="{{item.src}}" style="display: block;width: 100%;height: 100%;" bindtap="previewPic" data-v="{{item}}" />
+        </swiper-item>
+        <swiper-item wx:if="{{item.type==2}}">
+          <video style="width:100%;height:100%;" src="{{item.src}}" show-center-play-btn="{{true}}" show-play-btn="{{true}}" controls enable-play-gesture="{{true}}"></video>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="swiper-number">
+      <text class="swiper-current-number">{{current+1}}</text> <text class="swiper-number-division">/</text> <text class="swiper-total-number">{{bannerCount}}</text>
+    </view>
+  </view>
+
+  <view class="price-wrap">
+    <view class="price-info">
+      <view class="sale-price" wx:if="{{detail.fight_status_ing==1}}">
+        <image src="../../../static/images/icon-xsqg-1.png" /> <text>￥</text>{{detail.fight_price}} </view>
+      <view class="sale-price" wx:else=""> <text>￥</text>{{detail.price}} </view>
+      <view class="old-price" wx:if="{{detail.old_price>0}}"> <text>￥</text>{{detail.old_price}} </view>
+      <view class="fight-time">
+        <text>{{detail.start_date}} {{detail.start_time}}</text>
+        <text>{{detail.end_date}} {{detail.end_time}}</text>
+      </view>
+    </view>
+
+    <view class="pri-item" bindtap="toCollect">
+      <block wx:if="{{detail.is_collect==1}}">
+        <view class="pri-item-icon">
+          <image src="../../static/images/icon-love-selected.png" />
+        </view>
+        <view class="pri-item-name pri-item-name-active">收藏</view>
+      </block>
+      <block wx:else="">
+        <view class="pri-item-icon">
+          <image src="../../static/images/icon-love.png" />
+        </view>
+        <view class="pri-item-name">收藏</view>
+      </block>
+    </view>
+    <view class="pri-item">
+      <button open-type="share">
+        <view class="pri-item-icon">
+          <image src="../../static/images/icon-share.png" />
+        </view>
+        <view class="pri-item-name">转发</view>
+      </button>
+    </view>
+  </view>
+
+  <view class="info">
+    <view class="info-title"> <text class="goods-origin" wx:if="{{detail.mch_id==0}}">自营</text> {{detail.name}}</view>
+  </view>
+  <view wx:if="{{detail.sub_name}}" style="padding:0 10px 10px;font-size:13px;color:#444;background-color: #fff;">{{detail.sub_name}}</view>
+  <view class="goods-brief">
+    <view class="goods-brief-item">
+      <image src="../../static/images/icon-love.png" /> {{detail.operate_data.collect+detail.base_collect}}人收藏 </view>
+    <view class="goods-brief-item goods-brief-item-l"> 已售{{detail.operate_data.sale+detail.base_sale}}件 </view>
+  </view>
+
+
+  <block wx:for="{{detail.character}}" wx:for-index="idx" wx:for-item="v">
+    <view class="info mix-top">
+      <view class="info-character">{{v.name}}</view>
+    </view>
+    <view class="info" wx:for="{{v.list}}">
+      <view class="info-label">{{item.label}}</view>
+      <view class="info-value"> <text>{{item.detail}}</text> </view>
+    </view>
+  </block>
+
+
+  <view class="evaluation-container">
+    <view class="evaluation-header">
+      <view class="evaluation-header-label">评价 <text>({{evaluation_total}}条)</text> </view>
+      <!-- <view class="evaluation-header-quatity">98%好评</view> -->
+    </view>
+    <view class="evaluation-wrap">
+      <view class="evaluation-item" wx:for="{{evaluation_list}}" wx:for-index="k" wx:for-item="v">
+        <view class="evaluation-user">
+          <view class="evaluation-user-pic">
+            <image src="{{v.avatarUrl}}" />
+          </view>
+          <view class="evaluation-user-name">{{v.nickName}}</view>
+          <view class="evaluation-time">{{v.create_time}}</view>
+        </view>
+        <view class="evaluation-product">
+          <view class="evaluation-score">
+            <image wx:for="{{v.score_stars}}" wx:for-index="k1" wx:for-item="v1" src="{{v1}}" />
+          </view>
+          <view class="evaluation-product-name">{{v.product_name}}</view>
+        </view>
+        <view class="evaluation-content">
+          <view class="evaluation-txt"> <text>{{v.content}}</text> </view>
+        </view>
+        <view class="evaluation-attachment">
+          <block wx:for="{{v.attachment}}" wx:for-index="k1" wx:for-item="v1">
+            <view class="evaluation-attachment-item" wx:if="{{k1==1||k1==4||k1==7}}" style="margin-left:3.5vw;margin-right:3.5vw;">
+              <view class="evaluation-video" wx:if="{{v1.attachment_type==1}}">
+                <video src="{{v1.src}}" show-center-play-btn="{{true}}" show-play-btn="{{true}}" controls></video>
+              </view>
+              <view class="evaluation-pic" wx:if="{{v1.attachment_type==2}}">
+                <image src="{{v1.src}}" bindtap="preImg" data-src="{{v1.src}}" data-srcarr="{{v.pic}}" />
+              </view>
+            </view>
+            <view class="evaluation-attachment-item" wx:else="">
+              <view class="evaluation-video" wx:if="{{v1.attachment_type==1}}">
+                <video src="{{v1.src}}" show-center-play-btn="{{true}}" show-play-btn="{{true}}" controls></video>
+              </view>
+              <view class="evaluation-pic" wx:if="{{v1.attachment_type==2}}">
+                <image src="{{v1.src}}" bindtap="preImg" data-src="{{v1.src}}" data-srcarr="{{v.pic}}" />
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class="evaluation-more">
+      <view class="evaluation-more-btn" wx:if="{{evaluation_list[0]}}" bindtap="moreEvaluation">查看全部评价</view>
+      <view class="evaluation-more-btn" wx:if="{{!evaluation_list[0]}}">暂无评价</view>
+    </view>
+  </view>
+
+
+  <!-- <view class="info" wx:if="{{detail.price_type==2}}">
+        <view class="info-label">订金价格</view>
+        <view class="info-value">{{detail.pre_price}}元</view>
+    </view>
+
+    <view class="info" wx:if="{{detail.price_type==2}}">
+        <view class="info-label">尾款价格</view>
+        <view class="info-value">{{detail.final_price}}元</view>
+    </view>    
+
+    <view class="achieve">
+       <view class="achieve-cont mix-bottom">成交 <text>{{detail.show_sale}}</text> 单</view>
+    </view> -->
+
+  <!-- <view class="coupon">
+        <view class="coupon-label">优惠券</view>
+        <view class="coupon-sel">满20减5</view>
+        <view class="icon">
+          <ui-icon type="arrow-right"></ui-icon>
+        </view>
+    </view> -->
+
+  <view class="goods-content">
+    <view>
+      <image src="../../static/images/goods-detail.png" style="width:100%;height:80rpx;" />
+    </view>
+    <view class="goods-content-text">
+      <!-- <rich-text nodes="{{content}}"></rich-text> -->
+      <import src="../../static/utils/wxParse/wxParse.wxml" />
+      <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+    </view>
+  </view>
+
+
+  <ui-popup show="{{ attributeToast }}" height="500" background="transparent" _pid="{{_pid}}">
+    <view class="become-toast">
+      <view style="display:flex;height:100px;">
+        <view class="ui-row ui-row-border-bottom" style="height:100px;">
+          <view class="ui-col valign-middle" style="padding-left: 20px;flex:0 0 80px;">
+            <view class="ui-col-content valign-middle">
+              <image src="{{detail.sub_image_src}}" style="width:50px;height:50px;" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="padding-left: 20px;">
+            <view class="ui-col-content valign-middle">
+              <view style="font-size:15px;font-weight:650;">{{detail.name}}</view>
+              <view style="font-size:13px;color:#E51C23;margin-top:5px;">{{price}}元 <text style="margin-left:20px;color:#666;">库存：{{stock}}件</text> </view>
+            </view>
+          </view>
+          <view bindtap="closeAttributeToast" class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 40px;">
+            <view class="ui-col-content align-center valign-middle">
+              <span type="x" size="18" color="#FC8950" class="ui-icon icon-x" style="color: #FC8950;font-size: 18px;"></span>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="toast-param">
+        <view class="attribute-wrap" wx:if="{{attribute_list[0]}}">
+          <!-- <view class="attribute-row" wx:for="{{attribute_list}}" wx:for-index="k" wx:for-item="v">
+                  <view class="attribute-label">{{v.cate}}</view>
+                  <view class="attribute-list">
+                      <view class="attribute-item {{v1.selected}}" wx:for="{{v.list}}" wx:for-index="k1" wx:for-item="v1" bindtap="selAttribute" data-k="{{k}}" data-k1="{{k1}}">{{v1.attribute_name}}</view>
+                  </view>
+              </view> -->
+          <view class="attribute-row">
+            <view class="attribute-label">规格</view>
+            <view class="attribute-list">
+              <view class="attribute-item {{v.selected}}" wx:for="{{attribute_list}}" wx:for-index="k" wx:for-item="v" bindtap="selAttribute" data-k="{{k}}" data-v="{{v}}">{{v.attribute_name}}</view>
+            </view>
+          </view>
+        </view>
+        <view class="car-goods-int">
+          <view class="car-goods-price"> 数量 </view>
+          <view class="car-goods-nums">
+            <view class="car-goods-reduce" bindtap="changeNum" data-k="{{k}}" data-t="1"> - </view>
+            <view class="car-goods-num">
+              <input type="number" value="{{num}}" bindinput="numInput"></input>
+            </view>
+            <view class="car-goods-add" bindtap="changeNum" data-k="{{k}}" data-t="2"> + </view>
+          </view>
+        </view>
+      </view>
+      <view style="display:flex;height:50px;">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="padding-left: 10px;padding-right: 20px;">
+            <view class="ui-col-content valign-middle">
+              <view class="yj-menu-btn-wrap">
+                <view class="yj-menu-btn yj-menu-btn-car" bindtap="addCar" data-t="0">加入购物车</view>
+                <view class="yj-menu-btn yj-menu-btn-submit" data-t="0" bindtap="submit">立即下单</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+  </ui-popup>
+
+
+
+</view>

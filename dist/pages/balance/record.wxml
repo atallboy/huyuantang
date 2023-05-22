@@ -1,0 +1,75 @@
+<view>
+
+  <!--pages/erkai/balance/balance.wxml-->
+
+  <!-- <view class="search-container">
+    <view class="search-wrap">
+        <view class="search-time">
+            <picker class="pick" mode="date" value="{{start_time}}" bindchange="bindStartTime">
+              <view class="search-picker">
+                <image src="../../resource/images/icon-time.png" class="icon-time"></image>{{start_time}}
+              </view>
+            </picker>          
+        </view>
+        <view class="search-split"> 至 </view>
+        <view class="search-time">
+            <picker class="pick" mode="date" value="{{end_time}}" bindchange="bindEndTime">
+              <view class="search-picker">
+                <image src="../../resource/images/icon-time.png" class="icon-time"></image>{{end_time}}
+              </view>
+            </picker>          
+        </view>
+        <view class="search-btn" bindtap="getListByTime">查询</view>
+    </view>
+</view> -->
+
+  <!-- <view style="width:100%;height:50px;"></view> -->
+
+  <view class="header">
+    <view class="title">总余额 (元)</view>
+    <view class="money">{{user.balance}}</view>
+    <view class="menu-cont">
+      <view class="menu-wrap">
+        <view class="menu-item border-r" bindtap="cz">
+          <view class="menu-txt">充值</view>
+          <view class="menu-sub-txt">快速到账</view>
+        </view>
+        <view class="menu-item" bindtap="tx">
+          <view class="menu-txt">提现</view>
+          <view class="menu-sub-txt">转出到账户</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- <view class="imgtab">
+    <image src="../../resource/images/yuetab.jpg"></image>
+</view> -->
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+
+  <view class="balance-container" wx:if="{{list.length>0}}">
+    <view class="balance-wrap">
+      <view class="balance-item" wx:for="{{list}}">
+        <view class="balance-l">
+          <view class="balance-name">{{item.msg}}</view>
+          <view class="balance-time">余额 {{item.after_balance}}</view>
+        </view>
+        <view class="balance-r">
+          <view class="balance-now">{{item.create_time}}</view>
+          <view class="balance-money">
+            <text class="add" wx:if="{{item.type==1}}">+{{item.money}}</text>
+            <text class="reduce" wx:if="{{item.type==2}}">-{{item.money}}</text>
+          </view>
+
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+
+
+</view>

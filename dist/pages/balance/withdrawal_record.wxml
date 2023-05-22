@@ -1,0 +1,27 @@
+<view>
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+  <view class="record-container">
+    <view class="record-wrap">
+      <view class="record-item" wx:for="{{list}}">
+        <view class="record-info">
+          <view class="record-type">{{item.type_msg}} <text>{{item.status_msg}}</text> </view>
+          <view class="record-cate" wx:if="{{item.type==2}}">支付宝账户：{{item.zfb_account}}</view>
+          <view class="record-cate" wx:if="{{item.type==3}}">银行：{{item.bank}}</view>
+          <view class="record-cate" wx:if="{{item.type==3}}">银行账号：{{item.bank_card_account}}</view>
+          <view class="record-cate">提现时间：{{item.create_time}}</view>
+          <view class="record-cate" wx:if="{{item.status!=0}}">审核时间：{{item.deal_time}}</view>
+          <view class="record-cate" wx:if="{{item.status!=0}}">审核说明：{{item.deal_remark}}</view>
+        </view>
+        <view class="record-money">
+          <view class="withdrawal-money">￥{{item.withdrawal_money}}</view>
+          <view class="withdrawal-tax-money">税额:{{item.withdrawal_tax_money}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+</view>

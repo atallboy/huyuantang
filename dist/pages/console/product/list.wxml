@@ -1,0 +1,45 @@
+<view>
+  <view class="add-btn" bindtap="add">+</view>
+
+  <view class="ui-row" style="">
+    <view class="ui-col ui-col-3" style="flex: 0 0 25%;">
+      <view class="ui-col-content">
+        <ui-v-tabs height="{{height}}" tab-style="{{tabStyle}}" active-tab-style="{{activeTabStyle}}" class="tab-item" index="{{ current }}" data-key="current" bindchange="handleChange" _pid="{{_pid}}">
+          <ui-v-tab wx:for="{{ tabItems }}" _pid="{{_pid}}">
+            {{ item.name }}
+          </ui-v-tab>
+        </ui-v-tabs>
+      </view>
+    </view>
+    <view class="ui-col" style="">
+      <view class="ui-col-content">
+        <scroll-view scroll-y style="height: {{ height+'px' }};">
+          <view class="goods-box">
+            <view class="goods-item mix-bottom" wx:for="{{goodsArr}}" wx:for-index="k" wx:for-item="v">
+              <view class="goods-info">
+                <view class="goods-pic">
+                  <image src="{{v.sub_image}}" />
+                </view>
+                <view class="goods-detail">
+                  <view class="goods-name">{{v.name}}</view>
+                  <view class="goods-brief">
+                    <!-- <view class="goods-sale">共售{{v.sale}}</view> -->
+                    <view class="goods-price"> <text>￥</text>{{v.price}} </view>
+                  </view>
+                </view>
+              </view>
+              <view class="goods-btn-wrap">
+                <view class="goods-btn" bindtap="evaluation" data-id="{{v.id}}">评价</view>
+                <!-- <view class="goods-btn" bindtap="edit" data-id="{{v.id}}">编辑</view> -->
+                <!-- <view class="goods-btn" bindtap="del" data-id="{{v.id}}">删除</view> -->
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+
+      </view>
+    </view>
+  </view>
+
+
+</view>

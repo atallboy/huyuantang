@@ -1,0 +1,253 @@
+<template>
+  <view class="container">
+
+    <View class="mch-info">
+        <ui-row height="70">
+            <ui-col width="80" vertical-align="middle">
+                <image src="{{detail.store_img}}" class="store_pic"></image>
+            </ui-col>
+            <ui-col>
+                <view class="store_name">{{detail.mch_name}}</view>
+                <view class="boss_name">{{detail.user_name}}</view>
+            </ui-col>
+            <!-- <ui-col width="50" align="center" vertical-align="middle">
+                <image src="../../../static/images/mch-ercode.png" class="ercode_pic"></image>
+                <view class="ercode-name">商户码</view>
+            </ui-col> -->
+            <ui-col width="50" align="center" vertical-align="middle" bindtap="toStoreInfo">
+                <image src="../../../static/images/mch-info.png" class="ercode_pic"></image>
+                <!-- <view class="ercode-name">商户码</view> -->
+            </ui-col>            
+        </ui-row>        
+    </View>
+
+  <view class="earnings-container">
+      <view class="earnings-brief">
+          <view class="earnings-price">{{user.balance}}</view>
+          <view class="earnings-name">当前账户总额</view>
+      </view>
+      <view class="earnings-tx">
+          <view class="earnings-tx-btn" bindtap="toTixian"> <image src="../../../static/images/icon-tixian.png" class="icon-tx"></image> 提现 </view>
+      </view>
+  </view>
+
+  <!-- <view class="menu-container" style="margin-bottom:15px;">
+        <ui-row height="40">
+          <ui-col vertical-align="middle" class="menu-header-name ">商品管理</ui-col>
+        </ui-row>      
+        <ui-row height="90">
+            <ui-col span="3" align="center" vertical-align="middle" bindtap="toGoodsList">
+                <image src="../../../static/images/icon-product-list.png" class="menu-icon"></image>
+                <view class="menu-name">店铺商品</view>
+            </ui-col>
+            <ui-col span="3" align="center" vertical-align="middle" bindtap="toGoodsCate">
+                <image src="../../../static/images/icon-product-cate.png" class="menu-icon"></image>
+                <view class="menu-name">商品分类</view>
+            </ui-col> 
+            <ui-col span="3" align="center" vertical-align="middle" bindtap="toAddGoods">
+                <image src="../../../static/images/icon-product-add.png" class="menu-icon"></image>
+                <view class="menu-name">添加商品</view>
+            </ui-col>            
+        </ui-row>        
+  </view> -->
+
+  <view class="order-conatainer">
+      <view class="order-wrap">
+        <view class="order-header">
+          <view class="order-header-name">订单列表</view>
+          <view class="order-header-more" bindtap="toOrder" data-status="0"> 全部订单 <image src="../../../static/images/icon-arrow-right.png"></image> </view>
+        </view>
+        <view class="order-list">
+          <view class="order-item" bindtap="toOrder" data-status="1">
+            <view class="order-item-icon">
+              <ui-badge wx:if="{{order_summary.wait_send}}" text="{{order_summary.wait_send}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+              <image src="../../../static/images/icon-order-wait-pay.png"></image>
+            </view>
+            <view class="order-item-name">待发货</view>
+          </view>
+          <view class="order-item" bindtap="toOrder" data-status="2">
+            <view class="order-item-icon">
+              <ui-badge wx:if="{{order_summary.wait_receive}}" text="{{order_summary.wait_receive}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+              <image src="../../../static/images/icon-order-after-sales.png"></image>
+            </view>
+            <view class="order-item-name">待收货</view>
+          </view>
+          <view class="order-item" bindtap="toOrder" data-status="3">
+            <view class="order-item-icon">
+              <ui-badge wx:if="{{order_summary.complete}}" text="{{order_summary.complete}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+              <image src="../../../static/images/icon-order-wait-receive.png"></image>
+            </view>
+            <view class="order-item-name">已完成</view>
+          </view>
+          <view class="order-item" bindtap="toOrder" data-status="4">
+            <view class="order-item-icon">
+              <ui-badge wx:if="{{order_summary.after_sale}}" text="{{order_summary.after_sale}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+              <image src="../../../static/images/icon-order-evaluate.png"></image>
+            </view>
+            <view class="order-item-name">售后</view>
+          </view>                              
+        </view>
+      </view>
+  </view>
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarBackgroundColor: '#006BFF', 
+    navigationBarTextStyle: 'white', 
+    navigationBarTitleText: '商户中心'
+  },
+  data: {
+    wait_num:2,
+    customStyle:{
+      'background-color': '#006BFF'
+    }    
+  },
+
+  onLoad(e){
+    if(!wx.getStorageSync('token')){wx.navigateTo({url:'../../login/login'})}  
+  },
+
+  onShow(){
+    this.getUserInfo();
+    this.getMchDetail();
+  },  
+
+  toOrder(e){
+      wx.navigateTo({url:'../order/list?status='+e.currentTarget.dataset.status})
+  },
+
+  getUserInfo(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetUserInfo',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log(res);
+        if(res.data.data==-1){
+          wx.navigateTo({url: '../login/login',});
+        }
+        that.setData({
+          user:res.data.data
+        })
+        wx.setStorageSync('user', res.data.data);
+      }
+    })  
+  },    
+
+  getMchDetail(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getMchDetail',
+      data:{
+          token:wx.getStorageSync('token'),      
+        },
+      success(res) {
+        console.log(res);
+        
+        if(res.data.data.step==1){
+            wx.showModal({
+              title: '提示',
+              cancelText:'返回',
+              confirmText:'申请入驻',
+              content: '你还未入驻平台，是否申请入驻？',
+              success (res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                  wx.navigateTo({url:'../info/register'})
+                } else if (res.cancel) {
+                  wx.navigateBack();
+                }
+              }
+            })                
+        }else{
+          that.setData({
+            detail:res.data.data.info,
+          }) 
+          // wx.setStorageSync('mch_info',res.data.data)            
+        }
+      }
+    }) 
+  },
+
+  toTixian(){
+      wx.navigateTo({url:'../../balance/withdrawal'})
+  },
+
+  toGoodsList(){
+      wx.navigateTo({url:'../goods/goods_list'})
+  },
+  toGoodsCate(){
+      wx.navigateTo({url:'../goods/cate'})
+  },  
+  toStoreInfo(){
+      wx.navigateTo({url:'../info/info_type'})
+  },  
+  toAddGoods(){
+      wx.navigateTo({url:'../goods/goods_edit'})      
+  },
+
+  toServiceList(){
+      wx.navigateTo({url:'../service/list'})
+  },  
+  toAddService(){
+      wx.navigateTo({url:'../service/edit'})      
+  },
+  toServiceOrder(){
+      wx.navigateTo({url:'../order/service_order'})    
+  },
+
+}
+</script>
+
+<style lang="less">
+
+page{background-color: var(--defaultBgColor);}
+
+.container{padding: 10px;}
+.mch-info{background-color: #fff;border-radius: 5px;padding: 10px;margin-bottom: 15px;}
+
+
+.order-conatainer{padding: 10px;background-color: #fff;border-radius: 5px;margin-bottom: 15px;}
+.order-wrap{}
+.order-header{display: flex;padding: 5px 0 15px;}
+.order-header-name{display: flex;flex: 1;font-weight: 650;font-size: 15px;align-items: center;}
+.order-header-more{display: flex;flex: 1;align-items: center;justify-content: flex-end;font-size: 13px;color: #666;}
+.order-header-more image{width: 12px;height: 12px;}
+.order-list{display: flex;}
+.order-item{display: flex;flex: 1;flex-direction: column;align-items: center;justify-content: center;}
+.order-item-icon{display: flex;align-items: center;justify-content: center;height: 35px;position: relative;width: 35px;margin: 8px 0;}
+.order-item-icon image{width: 100%;height: 100%;}
+.badge{position: absolute;right: -10px;top: -10px;}
+.order-item-name{display: flex;align-items: center;justify-content: center;font-size: 13px;color: #666;height: 25px;}
+
+
+
+
+.store_pic{width: 70px;height: 70px;border-radius: 4px;border: 1px solid #46B767;box-sizing: content-box;}
+.store_name{font-weight: 650;font-size: 17px;margin-bottom: 5px;}
+.boss_name{font-size: 15px;color: #888;}
+.ercode_pic{width: 30px;height: 30px;}
+.ercode-name{font-size: 13px;color: #46B767;}
+
+
+.earnings-container{display: flex; border-radius: 5px;background-color: #fff;padding: 10px 0 10px 10px;margin-bottom: 15px;}
+.earnings-brief{display: flex;flex: 1;flex-direction: column;}
+.earnings-price{font-size: 18px;font-weight: 700;}
+.earnings-name{font-size: 15px;}
+.earnings-tx{display: flex;width: 70px;align-items: center;justify-content: center;}
+.earnings-tx-btn{font-size: 13px;width: 100%; height: 30px;display: flex;border-top-left-radius: 100px;border-bottom-left-radius: 100px;background-color: var(--defaultBgColor);align-items: center;justify-content: center;}
+.earnings-tx-btn image{width: 20px;height: 20px;margin-right: 8px;}
+
+
+.menu-container{background-color: #fff;border-radius: 5px;}
+.menu-header-name{padding-left:10px;font-weight: 650;font-size: 15px;}
+.menu-icon{width: 40px;height: 40px;}
+.menu-name{font-size: 13px;line-height: 30px;}
+
+</style>

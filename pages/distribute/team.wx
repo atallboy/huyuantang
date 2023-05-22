@@ -1,0 +1,309 @@
+<template>
+  <view>
+
+<!--pages/erkai/team/team.wxml-->
+
+    <block  wx:if="{{!list[0]}}">
+      <image  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+      <view class="create-btn" bindtap="build">创建团队</view>
+    </block>
+
+
+    <block wx:else>
+        <view class="menu-container">
+                  <ui-row height="50" bindtap="info" class="mix-bottom">               
+                      <ui-col class="menu-label" vertical-align="middle">
+                          团队名称
+                      </ui-col>
+                      <ui-col class="menu-name" vertical-align="middle" align="right">
+                          {{detail.name}}
+                      </ui-col>              
+                      <ui-col width="25" vertical-align="middle" align="right">
+                          <ui-icon type="arrow-right"></ui-icon>
+                      </ui-col>
+                  </ui-row>   
+                  <ui-row height="50" bindtap="qrcode">               
+                      <ui-col class="menu-label" vertical-align="middle">
+                          团队二维码
+                      </ui-col>
+                      <ui-col class="menu-name" vertical-align="middle" align="right">
+                          <image src="../../static/images/icon-qrcode-a"></image>
+                      </ui-col>              
+                      <ui-col width="25" vertical-align="middle" align="right">
+                          <ui-icon type="arrow-right"></ui-icon>
+                      </ui-col>
+                  </ui-row>       
+        </view>
+        <view class="team-container">
+            <view class="team-wrap">
+                <view class="team-list">
+                    <view class="team-item" wx:for="{{list}}" wx:for-index="k" wx:for-item="v">
+                        <view class="team-pic"> <image src="{{v.avatarUrl}}"></image> </view>
+                        <view class="team-name"> <view class="team-name-txt">{{v.nickName}}</view> </view>
+                    </view>                                                                                
+                </view>
+            </view>
+        </view>
+    </block>
+
+
+<view class="btn-wrap">
+    <view wx:if="{{isCanJoin}}" class="btn-item" bindtap="joinTeam">加入该团队</view>
+</view>
+
+
+<view class="qrcode-toast" wx:if="{{showQrcode}}">
+    <view class="qrcode-wrap">
+      <image src="{{detail.qrcode}}"></image>
+    </view>
+    <view class="qrcode-btn">
+      <view class="qrcode-close-btn" bindtap="closeQrcode">
+          <image src="../../static/images/icon-close.png"></image>
+      </view>      
+    </view>
+</view>
+
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '我的团队'
+  },
+  data: {
+    showQrcode:false,
+    isCanJoin:false,
+  },
+
+  onLoad(e){
+    if(e.scene){
+      this.setData({
+        scene:decodeURIComponent(e.scene)
+      })
+    }
+  },
+
+  onShow(){  
+      this.getUserInfo();
+  },
+
+  onPullDownRefresh: function () {
+    this.getUserInfo();
+    wx.stopPullDownRefresh();
+  },    
+ 
+  info(){
+    if(this.data.detail.user_id==wx.getStorageSync('user').id){
+        wx.navigateTo({url:'edit_team_info'});
+    }
+  },
+  qrcode(){this.setData({showQrcode:true})},
+  closeQrcode(){this.setData({showQrcode:false})},
+
+  build(){
+    let that = this;
+    wx.showModal({
+      title: '提示',
+      content: '确认创建团队吗？',
+      success (res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+          that.createTeam();
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })    
+  },
+
+  createTeam(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/createTeam',
+      data:{
+        token:wx.getStorageSync('token'),
+        },
+      success(res) {
+        console.log('------------');
+         console.log(res);
+         that.getUserInfo();
+      }
+    }) 
+  },
+
+  initData(team_id){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getTeamInfo',
+      data:{
+        token:wx.getStorageSync('token'),
+        team_id:team_id
+      },
+      success(res) {
+        console.log('------------');
+         console.log(res);
+        that.setData({
+          detail:res.data.data,
+          list:res.data.data.team_user
+        })
+      }
+    })  
+  },
+
+  getUserInfo(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetUserInfo',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log(res);
+        that.setData({
+          user:res.data.data
+        })
+        that.setData({isCanJoin:false})
+        if(res.data.data.team_id){that.initData(res.data.data.team_id);}
+        else{
+          if(that.data.scene){
+              that.initData(that.data.scene);
+              that.setData({isCanJoin:true})
+          }
+        }
+        wx.setStorageSync('user', res.data.data)
+      }
+    })  
+  },
+
+  joinTeam(){
+      let that = this;
+      wx.showModal({
+        title: '提示',
+        content: '确认加入团队吗？',
+        success (res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+            
+            app.util.request({
+              'url': 'entry/wxapp/joinTeam',
+              data:{
+                token:wx.getStorageSync('token'),
+                team_id:that.data.scene,
+              },
+              success(res) {
+                that.getUserInfo();
+              }
+            })  
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      }) 
+  },
+
+
+}
+</script>
+
+<style lang="less">
+
+/* pages/erkai/team/team.wxss */
+page{
+  
+}
+
+.qrcode-toast{position: fixed;left: 0;right: 0;top: 0;bottom: 0;background-color: rgba(0, 0, 0, 0.35);z-index: 9999;display: flex;align-items: center;justify-content: center;flex-direction: column;}
+.qrcode-wrap{width: 280px;height: 280px;background-color: #fff;border-radius: 6px;padding: 10px;}
+.qrcode-wrap image{width: 100%;height: 100%;}
+.qrcode-btn{display: flex;align-items: center;justify-content: center;margin-top: 20px;}
+.qrcode-close-btn{width: 30px;height: 30px;background-color: #fff;border-radius: 100px;}
+.qrcode-close-btn image{width: 100%;height: 100%;}
+
+
+.btn-wrap{display: flex;align-items: center;justify-content: center;padding: 10px;}
+.btn-item{width: 100px;line-height: 30px;border-radius: 100px; font-size: 13px;background-color: (var(--ColorMain));color: #fff;text-align: center;margin:0 10px;}
+
+.create-btn{
+  width: 130px;
+  line-height: 40px;
+  margin: 0 auto;
+  border-radius: 100px;background-color: (var(--ColorMain));color: #fff;text-align: center;
+  margin-top: 30px;
+  }
+
+.menu-container{background-color: #fff;padding:5px 15px;}
+.menu-label{color: #666;}
+.menu-name{}
+.menu-name image{width: 20px;height: 20px;}
+
+image{
+  display: block;
+  width: 125rpx;
+  height: 125rpx;
+  border-radius: 4px;
+}
+
+.team-container{
+  display: flex;
+  flex: 1;
+  // padding: 15px;
+  flex-direction: column;
+  margin-top: 10px;
+}
+.team-wrap{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  // border-bottom: 1rpx dashed #f2f2f2;
+  background-color: #fff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;  
+}
+
+.team-cate{
+  display: flex;
+  flex: 1;
+  // padding: 20px 0;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.team-list{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.team-item{
+  display: flex;
+  width: 175rpx;
+  flex-direction: column;
+  padding-right: 50rpx;
+  margin-bottom: 30rpx;
+}
+.team-pic{
+  display: flex;
+  flex: 1;
+
+}
+.team-name{
+  display: flex;
+  flex: 1;
+}
+.team-name-txt{
+  width: 100%;
+  font-size: 12px;
+  color: #777;
+  max-height:30px;
+  line-height:30px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;  
+  text-align: center; 
+}
+
+
+</style>

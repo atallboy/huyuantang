@@ -1,0 +1,245 @@
+<view>
+
+  <!--lincec_store_share/pages/order/confirm/confirm.wxml-->
+
+  <view class="pay-type-container" wx:if="{{is_pay}}">
+    <view class="pay_type-wrap">
+      <view class="pay-type-item">
+        <view class="pay-type-header mix-bottom">
+          <view class="pay-type-icon">
+            <!-- <image src="../../../resource/images/icon-close.png"></image> -->
+          </view>
+          <view class="pay-type-header-title">支付方式</view>
+          <view class="pay-type-icon" bindtap="closePay">
+            <image src="../../static/images/icon-close.png" />
+          </view>
+        </view>
+        <view class="pay-type-money">支付金额{{total_price}}元</view>
+        <view class="pay-type-list">
+          <view class="pay-type-row mix-bottom" bindtap="selPayType" data-t="1">
+            <view class="pay-type-row-icon">
+              <image src="../../static/images/icon-wx-pay.png" />
+            </view>
+            <view class="pay-type-title">
+              <view class="pay-type-title-txt">微信支付</view>
+            </view>
+            <view class="pay-type-sel" wx:if="{{pay_type==1}}">
+              <image src="../../static/images/icon-selected.png" />
+            </view>
+          </view>
+          <view class="pay-type-row mix-bottom" bindtap="selPayType" data-t="2" wx:if="{{open_balance_pay==1&&origin_total_price<=user.balance}}">
+            <view class="pay-type-row-icon">
+              <image src="../../static/images/icon-pay-balance.png" />
+            </view>
+            <view class="pay-type-title">
+              <view class="pay-type-title-txt">余额支付</view>
+              <view class="pay-type-title-remark">账户余额：{{user.balance}}元</view>
+            </view>
+            <view class="pay-type-sel" wx:if="{{pay_type==2}}">
+              <image src="../../static/images/icon-selected.png" />
+            </view>
+          </view>
+
+        </view>
+        <!-- <view class="pay-type-score" bindtap="selBalance" wx:if="{{origin_total_price>user.balance}}">
+                <view class="pay-type-check">
+                    <image src="../../static/images/icon-wrap-sel.png" wx:if="{{is_use_balance}}"></image>
+                    <image src="../../static/images/icon-wrap.png" wx:else></image>
+                </view>
+                <view class="pay-type-score-txt">使用余额抵扣，共有{{user.balance}}，可抵扣{{user.balance}}元</view>
+            </view>            
+            <view class="pay-type-score" bindtap="selScore">
+                <view class="pay-type-check">
+                    <image src="../../static/images/icon-wrap-sel.png" wx:if="{{is_use_score}}"></image>
+                    <image src="../../static/images/icon-wrap.png" wx:else></image>
+                </view>
+                <view class="pay-type-score-txt">使用积分抵扣，共有{{user.score}}积分，可抵扣{{score_money}}元</view>
+            </view> -->
+        <view class="pay-type-btn">
+          <view class="pay-type-btn-to" bindtap="submitOrder">立即支付</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+  <view class="car-menu-container">
+    <view class="car-menu-wrap">
+      <view class="car-calc"> 总计：￥{{total_price}}</view>
+      <!-- 弹出支付框 -->
+      <view class="car-menu-btn menu-sel" bindtap="payto">立即支付</view>
+      <!-- 直接调用微信支付 -->
+      <!-- <view class="car-menu-btn menu-sel" bindtap="submitOrder">立即支付</view>   -->
+    </view>
+  </view>
+
+
+  <view class="address-box">
+    <view class="address-container" bindtap="selAddr">
+      <view class="address-wrap">
+        <view class="address-item">
+          <view class="address-info">
+            <view class="address-info-top">
+              <view class="address-info-name">收货人：{{addr.name}}</view>
+              <view class="address-info-tel">{{addr.tel}}</view>
+            </view>
+            <view class="address-info-addr">收货地址：{{addr.province}}{{addr.city}}{{addr.strict}}{{addr.addr}}</view>
+          </view>
+          <view class="address-icon">
+            <image src="../../static/images/icon-arrow-right.png" />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="address-bottom">
+      <image src="../../static/images/address-bottom.png" />
+    </view>
+  </view>
+
+
+  <view class="car-container">
+    <view class="car-wrap">
+
+      <view class="car-box" wx:for="{{preOrder}}" wx:for-index="k" wx:for-item="v">
+        <view class="car-mch">
+          <image src="{{v.mch.logo}}" /> {{v.mch.name}}
+        </view>
+        <view class="car-item" wx:for="{{v.goods}}" wx:for-index="k1" wx:for-item="v1">
+          <view class="car-goods-pic">
+            <image src="{{v1.sub_image}}" />
+          </view>
+          <view class="car-goods-info">
+            <view class="car-goods-name">
+              <view class="car-goods-name-txt">{{v1.name}}</view>
+            </view>
+            <view class="car-goods-param">{{v1.attribute}}</view>
+            <view class="car-goods-int">
+              <view class="car-goods-num"> <text>x</text>{{v1.num}} </view>
+              <view class="car-goods-price"> <text>￥</text>{{v1.price}} </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+  </view>
+
+  <view class="yj-coupon-a-container">
+    <view class="yj-form-row-wrap">
+      <view class="yj-form-row-item mix-bottom" style="padding:0 10px;">
+        <view class="yj-form-row-item-content" style="color:#666;">
+          优惠内容
+        </view>
+      </view>
+      <view class="yj-form-row-item" style="padding:0 10px;">
+        <view class="yj-form-row-item-icon">
+          <image src="../../static/images/icon-freight.png" />
+        </view>
+        <view class="yj-form-row-item-content">
+          邮费
+        </view>
+        <view class="yj-form-row-item-content" style="align-items: center;justify-content: flex-end;color: #e1251b;width: 120px;flex: unset;">
+          <text wx:if="{{freight>0}}">{{freight}} </text>
+          <text wx:else="">商家包邮</text>
+        </view>
+        <!-- <view class="yj-form-row-item-sel"></view>                       -->
+      </view>
+    </view>
+  </view>
+
+  <view class="yj-coupon-a-container" wx:if="{{deduction_money>0||coupon.coupon_id}}">
+    <view class="yj-form-row-wrap">
+      <view class="yj-form-row-item mix-bottom" style="padding:0 10px;">
+        <view class="yj-form-row-item-content" style="color:#666;">
+          优惠内容
+        </view>
+      </view>
+
+      <view class="yj-form-row-item" style="padding:0 10px;" wx:if="{{deduction_money>0}}">
+        <view class="yj-form-row-item-icon">
+          <image src="../../../static/images/icon-dikoujin.png" />
+        </view>
+        <view class="yj-form-row-item-content">
+          抵扣金账户
+        </view>
+        <view class="yj-form-row-item-content" style="align-items: center;justify-content: flex-end;color: #e1251b;width: 120px;flex: unset;">
+          <text>抵扣 </text>{{deduction_money}}
+        </view>
+        <view class="yj-form-row-item-sel"></view>
+      </view>
+
+
+      <view class="yj-form-row-item" style="padding:0 10px;" wx:if="{{coupon.coupon_id}}">
+        <view class="yj-form-row-item-icon">
+          <image src="../../../static/images/icon-coupon-text.png" />
+        </view>
+        <view class="yj-form-row-item-content" bindtap="selCoupon">
+          <input class="yj-input" value="{{coupon.name}}" disabled></input>
+        </view>
+        <view class="yj-form-row-item-content" style="align-items: center;justify-content: flex-end;color: #e1251b;width: 120px;flex: unset;">
+          <text>减 </text> {{coupon.amount}}
+        </view>
+        <!-- <view class="yj-form-row-item-sel" wx:if="{{use_coupon&&can_use_coupon}}">
+                      <image src="../../../static/images/icon-circle-selected.png"></image>
+              </view>    
+              <view class="yj-form-row-item-sel"  wx:if="{{!use_coupon&&can_use_coupon}}" bindtap="selCouponYouhui">
+                      <image src="../../../static/images/icon-circle.png"></image>
+              </view>  
+              <view class="yj-form-row-item-sel" wx:if="{{can_use_coupon==false}}">
+                      <image src="../../../static/images/icon-radio-disable.png"></image>
+              </view>   -->
+        <view class="yj-form-row-item-sel">
+          <image src="../../../static/images/icon-arrow-bottom.png" bindtap="openCouponPopup" />
+        </view>
+      </view>
+
+    </view>
+  </view>
+
+
+  <view class="ui-row" style="height:55px;"></view>
+
+  <ui-popup show="{{couponPopup}}" _pid="{{_pid}}">
+    <view>
+      <view class="ui-row ui-row-border-bottom" style="height:40px;">
+        <view class="ui-col valign-middle" style="padding-left: 20px;">
+          <view class="ui-col-content valign-middle">优惠券</view>
+        </view>
+        <view bindtap="closeCouponPopup" class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 40px;">
+          <view class="ui-col-content align-center valign-middle">
+            <span type="x" size="18" color="#FC8950" class="ui-icon icon-x" style="color: #FC8950;font-size: 18px;"></span>
+          </view>
+        </view>
+      </view>
+      <view class="coupon-container">
+        <view class="coupon-wrap">
+          <view class="coupon-item mix-border" wx:for="{{coupon_list}}" wx:for-index="k" wx:for-item="v">
+            <view class="coupon-item-top mix-bottom">
+              <view class="coupon-price">
+                <view class="coupon-price-item {{v.cate==1?'coupon-price-a':'coupon-price-b'}}">
+                  <text class="coupon-price-icon">￥</text>
+                  <text class="coupon-price-value">{{v.amount}}</text>
+                </view>
+                <view class="coupon-price-limit" wx:if="{{v.type==1}}">直减</view>
+                <view class="coupon-price-limit" wx:if="{{v.type==2}}">满{{v.minimum}}减{{v.amount}}</view>
+              </view>
+              <view class="coupon-info">
+                <view class="coupon-title">{{v.name}}</view>
+                <!-- <view class="coupon-valid-time"><text class="coupon-cate">#{{v.cate_name}}</text></view> -->
+                <block>
+                  <view class="coupon-valid-time">{{v.valid_start_time}} - {{v.valid_end_time}}</view>
+                </block>
+              </view>
+              <view class="coupon-status">
+                <view bindtap="selCoupon" data-v="{{v}}" class="coupon-btn {{v.cate==1?'coupon-btn-wait-a':'coupon-btn-wait-b'}}">使用</view>
+              </view>
+            </view>
+
+          </view>
+        </view>
+      </view>
+    </view>
+  </ui-popup>
+
+
+</view>

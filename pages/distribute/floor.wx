@@ -1,0 +1,142 @@
+<template>
+  <view>
+
+<!--pages/erkai/team/team.wxml-->
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+<view class="team-container">
+
+    <view class="team-wrap" wx:for="{{list}}" wx:for-index="k" wx:for-item="v">
+        <view class="team-cate">第{{v.level}}层</view>
+        <view class="team-list">
+
+            <view class="team-item" wx:for="{{v.list}}" wx:for-index="k1" wx:for-item="v1">
+                <view class="team-pic"> <image src="{{v1.avatarUrl}}"></image> </view>
+                <view class="team-name"> <view class="team-name-txt">{{v1.nickName}}</view> </view>
+            </view>
+                                                                                
+        </view>
+    </view>
+
+    
+
+</view>
+
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '我的分销链'
+  },
+  data: {},
+
+  onLoad(){
+      this.initData();
+  },
+
+  onPullDownRefresh: function () {
+    this.initData();
+    wx.stopPullDownRefresh();
+  },  
+
+  initData(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getMyDistributeRelation',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log('------------');
+         console.log(res);
+        that.setData({
+          list:res.data.data.list
+        })
+      }
+    })  
+  },
+
+
+}
+</script>
+
+<style lang="less">
+
+/* pages/erkai/team/team.wxss */
+page{
+  
+}
+
+image{
+  display: block;
+  width: 125rpx;
+  height: 125rpx;
+  border-radius: 4px;
+}
+
+.team-container{
+  display: flex;
+  flex: 1;
+  padding: 15px;
+  flex-direction: column;
+}
+.team-wrap{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  // border-bottom: 1rpx dashed #f2f2f2;
+  background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;  
+}
+
+.team-cate{
+  display: flex;
+  flex: 1;
+  // padding: 20px 0;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.team-list{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.team-item{
+  display: flex;
+  width: 175rpx;
+  flex-direction: column;
+  padding-right: 50rpx;
+  margin-bottom: 30rpx;
+}
+.team-pic{
+  display: flex;
+  flex: 1;
+
+}
+.team-name{
+  display: flex;
+  flex: 1;
+}
+.team-name-txt{
+  width: 100%;
+  font-size: 12px;
+  color: #777;
+  max-height:30px;
+  line-height:30px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;  
+  text-align: center; 
+}
+
+
+</style>

@@ -1,0 +1,81 @@
+<view>
+
+  <view class="ui-row" style="height:10px;"></view>
+
+  <view style="background-color:#fff;">
+    <view vertical-align="middle" class="mix-bottom ui-row" style="height:60px;">
+      <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 40px;">
+        <view class="ui-col-content align-center valign-middle">
+          <image src="../../static/images/icon-nci.png" style="width:25px;height:25px;" />
+        </view>
+      </view>
+      <view class="text ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">
+          <text class="color-main f-w-700">长期订阅</text>
+        </view>
+      </view>
+    </view>
+    <view class="ui-row-list ui-row-list-border-indent" style="">
+      <view wx:for="{{list1}}" class="ui-row" style="height:50px;">
+        <view class="text ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            {{item.name}}
+          </view>
+        </view>
+        <view bindtap="dingyue" data-tplid="{{item.tpl_id}}" wx:if="{{item.remain==0}}" class="ui-col ui-col-align-right align-right valign-middle" style="flex:0 0 50px;">
+          <view class="ui-col-content align-right valign-middle">
+            <image src="../../static/images/icon-switch-close.png" style="width:40px;height:40px;" />
+          </view>
+        </view>
+        <view wx:else="" class="ui-col ui-col-align-right align-right valign-middle" style="flex:0 0 50px;">
+          <view class="ui-col-content align-right valign-middle">
+            <image src="../../static/images/icon-switch-open.png" style="width:40px;height:40px;" />
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="ui-row" style="height:10px;"></view>
+
+  <view style="background-color:#fff;">
+    <view vertical-align="middle" class="mix-bottom ui-row" style="height:60px;">
+      <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 40px;">
+        <view class="ui-col-content align-center valign-middle">
+          <image src="../../static/images/icon-yici.png" style="width:25px;height:25px;" />
+        </view>
+      </view>
+      <view class="text ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">
+          <text class="color-main f-w-700">一次性订阅</text>
+        </view>
+      </view>
+    </view>
+    <view class="ui-row-list ui-row-list-border-indent" style="">
+      <view wx:for="{{list2}}" class="ui-row" style="height:50px;">
+        <view class="text ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            {{item.name}}
+          </view>
+        </view>
+        <view class="text ui-col ui-col-align-right align-right valign-middle" style="">
+          <view class="ui-col-content align-right valign-middle">
+            <text class="f-s-24 color-666">可用数 {{item.remain}}</text>
+          </view>
+        </view>
+        <view bindtap="dingyue" data-tplid="{{item.tpl_id}}" wx:if="{{item.remain==0}}" class="ui-col ui-col-align-right align-right valign-middle" style="flex:0 0 50px;">
+          <view class="ui-col-content align-right valign-middle">
+            <image src="../../static/images/icon-switch-close.png" style="width:40px;height:40px;" />
+          </view>
+        </view>
+        <view bindtap="dingyue" data-tplid="{{item.tpl_id}}" wx:else="" class="ui-col ui-col-align-right align-right valign-middle" style="flex:0 0 50px;">
+          <view class="ui-col-content align-right valign-middle">
+            <image src="../../static/images/icon-increase.png" style="width:25px;height:25px;" />
+          </view>
+        </view>
+      </view>
+
+    </view>
+  </view>
+
+</view>

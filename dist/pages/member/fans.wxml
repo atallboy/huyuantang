@@ -1,0 +1,30 @@
+<view>
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+  <view class="yj-container">
+    <view class="yj-wrap">
+      <view class="yj-item" wx:for="{{list}}" bindtap="detail">
+        <view class="card-info">
+          <view class="card-number">编号：{{item.no}}</view>
+          <view class="card-fee">价值：<text>{{item.fee}}</text> 元</view>
+        </view>
+        <view class="card-user" wx:if="{{item.status==1}}">
+          <view class="card-user-pic">
+            <image src="{{item.avatarUrl}}" />
+          </view>
+          <view class="card-user-name">{{item.nickName}}</view>
+        </view>
+        <view class="card-user card-user-default" wx:else="">
+          <view class="card-user-pic">
+            <image src="../../static/images/icon-user-default.png" />
+          </view>
+          <view class="card-user-name">待兑现</view>
+        </view>
+        <view class="card-time" wx:if="{{item.status==1}}">兑现时间：{{item.use_time}} </view>
+      </view>
+    </view>
+  </view>
+
+</view>

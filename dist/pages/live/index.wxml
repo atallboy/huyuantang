@@ -1,0 +1,21 @@
+<view>
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+  <view class="live-container">
+    <view class="live-wrap">
+      <view class="live-item" wx:for="{{list}}" style="background-image: url('{{item.feeds_img}}');" bindtap="tiRoom" data-roomid="{{item.roomid}}">
+        <view class="live-status">
+          <view class="live-status-ing" wx:if="{{item.live_status==101}}">直播中</view>
+          <view class="live-status-wait" wx:if="{{item.live_status==102}}">待开播</view>
+          <view class="live-status-finish" wx:if="{{item.live_status==103}}">已结束</view>
+          <view class="live-status-finish" wx:if="{{item.live_status==107}}">已过期</view>
+        </view>
+        <view class="live-time">直播时间：{{item.live_start_time}} 至 {{item.live_end_time}}</view>
+        <view class="live-name">{{item.name}}</view>
+      </view>
+    </view>
+  </view>
+
+</view>

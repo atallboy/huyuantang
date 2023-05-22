@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "ui-star": "../../packages/touchui-wx-components/ui-star/dist/index",
+    "ui-popup": "../../packages/touchui-wx-components/ui-popup/dist/index"
+  },
+  "navigationBarTitleText": "评价"
+}

@@ -1,0 +1,789 @@
+<import src="/static/utils/wxParse/wxParse.wxml"/>
+<template>
+  <view>
+
+
+
+    <view class="yj-menu-container mix-top" style="position: fixed;z-index:99;">
+        <view class="yj-menu-wrap">
+            <view class="yj-menu-item" bindtap="toIndex">
+                <view class="yj-menu-item-icon">
+                    <image src="../../static/images/icon-index.png"></image>
+                </view>
+                <view class="yj-menu-item-name">首页</view>
+            </view>
+            <!-- <view class="yj-menu-item">
+                <button open-type="contact">
+                    <view class="yj-menu-item-icon">
+                        <image src="../../../static/images/icon-service.png"></image>
+                    </view>
+                    <view class="yj-menu-item-name">客服</view>
+                </button>
+            </view>                -->
+            <!-- <view class="yj-menu-item">
+                <button open-type="share">
+                    <view class="yj-menu-item-icon">
+                        <image src="../../../static/images/icon-share.png"></image>
+                    </view>
+                    <view class="yj-menu-item-name">分享</view>
+                </button>
+            </view>         -->
+            <view class="yj-menu-item" bindtap="toCar">
+                <view class="yj-menu-item-icon">
+                    <image src="../../static/images/icon-car-2.png"></image>
+                </view>
+                <view class="yj-menu-item-name">购物车</view>
+            </view>                         
+            <!-- <view class="yj-menu-btn-wrap">    
+                <view class="yj-menu-btn" style="background-color:#FBAB07;" bindtap="addCar">加入购物车</view>
+            </view>            
+            <view class="yj-menu-btn-wrap">       
+                <view class="yj-menu-btn bg-color-main" bindtap="submit">立即下单</view>
+            </view>    -->
+            <view class="yj-menu-btn-wrap" wx:if="{{detail.is_open_sale==1&&detail.stock>0}}">       
+                <view class="yj-menu-btn yj-menu-btn-car" bindtap="addCar" data-t="1">加入购物车</view>
+                <view class="yj-menu-btn yj-menu-btn-submit" bindtap="openToast" data-t="1">立即下单</view>
+            </view>   
+            <view class="yj-menu-btn-wrap" wx:if="{{detail.can_buy<1}}">       
+                <view class="yj-menu-btn yj-menu-btn-open-sale" bindtap="noOpenSale">{{detail.can_buy_msg}}</view>
+            </view>         
+            <view class="yj-menu-btn-wrap" wx:if="{{detail.stock==0}}">       
+                <view class="yj-menu-btn yj-menu-btn-open-sale" bindtap="noOpenSale">缺货</view>
+            </view>                                          
+        </view>
+    </view>  
+
+    <view class="yj-swiper">
+      <swiper autoplay="{{false}}" interval="3000" duration="500" circular="{{true}}" bindchange="bindchange" indicator-dots>
+        <block wx:for="{{detail.images}}" wx:key="*this">
+          <swiper-item wx:if="{{item.type==1}}">
+            <image src="{{item.src}}" style="display: block;width: 100%;height: 100%;" bindtap="previewPic" data-v="{{item}}"></image>
+          </swiper-item>
+          <swiper-item wx:if="{{item.type==2}}">
+              <video 
+                style="width:100%;height:100%;"
+                src="{{item.src}}"                 
+                show-center-play-btn='{{true}}' 
+                show-play-btn="{{true}}" 
+                controls
+                enable-play-gesture="{{true}}"              
+              ></video>
+          </swiper-item>          
+        </block>
+      </swiper>
+      <view class="swiper-number"> 
+        <text class="swiper-current-number">{{current+1}}</text> <text class="swiper-number-division">/</text> <text class="swiper-total-number">{{bannerCount}}</text> 
+      </view>
+    </view>      
+
+    <view class="price-wrap">
+        <view class="price-info">              
+          <view class="sale-price" wx:if="{{detail.fight_status_ing==1}}"> <image src="../../../static/images/icon-xsqg-1.png"></image> <text>￥</text>{{detail.fight_price}} </view>
+          <view class="sale-price" wx:else> <text>￥</text>{{detail.price}} </view>
+          <view class="old-price" wx:if="{{detail.old_price>0}}"> <text>￥</text>{{detail.old_price}} </view>
+          <view class="fight-time">
+              <text>{{detail.start_date}} {{detail.start_time}}</text>
+              <text>{{detail.end_date}} {{detail.end_time}}</text>
+          </view>
+        </view>        
+
+        <view class="pri-item" bindtap="toCollect">
+            <block wx:if="{{detail.is_collect==1}}">
+              <view class="pri-item-icon">
+                <image src="../../static/images/icon-love-selected.png"></image>
+              </view>
+              <view class="pri-item-name pri-item-name-active">收藏</view>
+            </block>
+            <block wx:else>
+              <view class="pri-item-icon">
+                <image src="../../static/images/icon-love.png"></image>
+              </view>
+              <view class="pri-item-name">收藏</view>
+            </block>
+        </view>   
+        <view class="pri-item">
+          <button open-type="share">
+            <view class="pri-item-icon">
+              <image src="../../static/images/icon-share.png"></image>
+            </view>
+            <view class="pri-item-name">转发</view>
+          </button>            
+        </view>             
+    </view>
+
+    <view class="info">
+        <view class="info-title"> <text class="goods-origin" wx:if="{{detail.mch_id==0}}">自营</text> {{detail.name}}</view>
+    </view>
+    <view wx:if="{{detail.sub_name}}" style="padding:0 10px 10px;font-size:13px;color:#444;background-color: #fff;">{{detail.sub_name}}</view>
+    <view class="goods-brief">
+      <view class="goods-brief-item"> <image src="../../static/images/icon-love.png"></image> {{detail.operate_data.collect+detail.base_collect}}人收藏 </view>
+      <view class="goods-brief-item goods-brief-item-l"> 已售{{detail.operate_data.sale+detail.base_sale}}件 </view>
+    </view>
+
+
+    <block wx:for="{{detail.character}}" wx:for-index="idx" wx:for-item="v">
+        <view class="info mix-top">
+            <view class="info-character">{{v.name}}</view>
+        </view>
+        <view class="info" wx:for="{{v.list}}">
+            <view class="info-label">{{item.label}}</view>
+            <view class="info-value"> <text>{{item.detail}}</text> </view>
+        </view>
+    </block>
+
+
+    <view class="evaluation-container">
+        <view class="evaluation-header">
+            <view class="evaluation-header-label">评价 <text>({{evaluation_total}}条)</text> </view>
+            <!-- <view class="evaluation-header-quatity">98%好评</view> -->
+        </view>
+        <view class="evaluation-wrap">
+          <view class="evaluation-item" wx:for="{{evaluation_list}}" wx:for-index="k" wx:for-item="v">
+              <view class="evaluation-user">
+                <view class="evaluation-user-pic">
+                    <image src="{{v.avatarUrl}}"></image>
+                </view>
+                <view class="evaluation-user-name">{{v.nickName}}</view>
+                <view class="evaluation-time">{{v.create_time}}</view>
+              </view>
+              <view class="evaluation-product">
+                <view class="evaluation-score">
+                  <image wx:for="{{v.score_stars}}" wx:for-index="k1" wx:for-item="v1" src="{{v1}}"></image>
+                </view>
+                <view class="evaluation-product-name">{{v.product_name}}</view>
+              </view>
+              <view class="evaluation-content">
+                <view class="evaluation-txt"> <text>{{v.content}}</text> </view>
+              </view>
+            <view class="evaluation-attachment">
+              <block wx:for="{{v.attachment}}" wx:for-index="k1" wx:for-item="v1">
+                  <view class="evaluation-attachment-item" wx:if="{{k1==1||k1==4||k1==7}}" style="margin-left:3.5vw;margin-right:3.5vw;">
+                    <view class="evaluation-video" wx:if="{{v1.attachment_type==1}}">
+                      <video src="{{v1.src}}" show-center-play-btn='{{true}}' show-play-btn="{{true}}" controls></video>
+                    </view>            
+                    <view class="evaluation-pic" wx:if="{{v1.attachment_type==2}}">
+                        <image src="{{v1.src}}" bindtap="preImg" data-src="{{v1.src}}"  data-srcarr="{{v.pic}}"></image>
+                    </view>
+                  </view>
+                  <view class="evaluation-attachment-item" wx:else>
+                    <view class="evaluation-video" wx:if="{{v1.attachment_type==1}}">
+                      <video src="{{v1.src}}" show-center-play-btn='{{true}}' show-play-btn="{{true}}" controls></video>
+                    </view>            
+                    <view class="evaluation-pic" wx:if="{{v1.attachment_type==2}}">
+                        <image src="{{v1.src}}" bindtap="preImg" data-src="{{v1.src}}"  data-srcarr="{{v.pic}}"></image>
+                    </view>
+                  </view>                    
+              </block>
+            </view>             
+          </view>
+        </view>  
+        <view class="evaluation-more">
+          <view class="evaluation-more-btn" wx:if="{{evaluation_list[0]}}" bindtap="moreEvaluation">查看全部评价</view>
+          <view class="evaluation-more-btn" wx:if="{{!evaluation_list[0]}}">暂无评价</view>
+        </view>   
+    </view>
+
+
+    <!-- <view class="info" wx:if="{{detail.price_type==2}}">
+        <view class="info-label">订金价格</view>
+        <view class="info-value">{{detail.pre_price}}元</view>
+    </view>
+
+    <view class="info" wx:if="{{detail.price_type==2}}">
+        <view class="info-label">尾款价格</view>
+        <view class="info-value">{{detail.final_price}}元</view>
+    </view>    
+
+    <view class="achieve">
+       <view class="achieve-cont mix-bottom">成交 <text>{{detail.show_sale}}</text> 单</view>
+    </view> -->
+
+    <!-- <view class="coupon">
+        <view class="coupon-label">优惠券</view>
+        <view class="coupon-sel">满20减5</view>
+        <view class="icon">
+          <ui-icon type="arrow-right"></ui-icon>
+        </view>
+    </view> -->
+
+    <view class="goods-content">
+        <view>
+            <image src="../../static/images/goods-detail.png" style="width:100%;height:80rpx;"></image>
+        </view>          
+        <view class="goods-content-text">
+            <!-- <rich-text nodes="{{content}}"></rich-text> -->
+                <import src="../..//static/utils/wxParse/wxParse.wxml"/>
+             <template is="wxParse" data="{{wxParseData:article.nodes}}"></template>
+        </view>        
+    </view>
+
+
+<ui-popup show="{{ attributeToast }}" height="500" background="transparent">
+    <view class="become-toast">
+        <view style="display:flex;height:100px;">
+          <ui-row height="100" border-bottom>
+              <ui-col vertical-align="middle" space-left="20" width="80">
+                <image src="{{detail.sub_image_src}}" style="width:50px;height:50px;"></image>
+              </ui-col>
+              <ui-col vertical-align="middle" space-left="20">
+                <view style="font-size:15px;font-weight:650;">{{detail.name}}</view>
+                <view style="font-size:13px;color:#E51C23;margin-top:5px;">{{price}}元  <text style="margin-left:20px;color:#666;">库存：{{stock}}件</text> </view>
+              </ui-col>            
+              <ui-col width="40" vertical-align="middle" align="center" bindtap="closeAttributeToast">
+                  <ui-icon type="x" size="18" color="#FC8950"></ui-icon>
+              </ui-col>
+          </ui-row>
+        </view>
+        <view class="toast-param">
+          <view class="attribute-wrap" wx:if="{{attribute_list[0]}}">
+              <!-- <view class="attribute-row" wx:for="{{attribute_list}}" wx:for-index="k" wx:for-item="v">
+                  <view class="attribute-label">{{v.cate}}</view>
+                  <view class="attribute-list">
+                      <view class="attribute-item {{v1.selected}}" wx:for="{{v.list}}" wx:for-index="k1" wx:for-item="v1" bindtap="selAttribute" data-k="{{k}}" data-k1="{{k1}}">{{v1.attribute_name}}</view>
+                  </view>
+              </view> -->
+              <view class="attribute-row">
+                  <view class="attribute-label">规格</view>
+                  <view class="attribute-list">
+                      <view class="attribute-item {{v.selected}}" wx:for="{{attribute_list}}" wx:for-index="k" wx:for-item="v" bindtap="selAttribute" data-k="{{k}}" data-v="{{v}}">{{v.attribute_name}}</view>
+                  </view>
+              </view>                                    
+          </view>
+          <view class="car-goods-int">
+              <view class="car-goods-price"> 数量 </view>
+              <view class="car-goods-nums">
+                  <view class="car-goods-reduce" bindtap="changeNum" data-k="{{k}}" data-t="1"> - </view>
+                  <view class="car-goods-num">
+                    <input type="number" value="{{num}}" bindinput="numInput">
+                  </view>
+                  <view class="car-goods-add" bindtap="changeNum" data-k="{{k}}" data-t="2"> + </view>
+              </view>
+          </view> 
+        </view>       
+        <view style="display:flex;height:50px;">
+          <ui-row height="50">
+              <ui-col space-left="10" space-right="20" vertical-align="middle">
+                  <view class="yj-menu-btn-wrap">       
+                      <view class="yj-menu-btn yj-menu-btn-car" bindtap="addCar" data-t="0">加入购物车</view>
+                      <view class="yj-menu-btn yj-menu-btn-submit" data-t="0" bindtap="submit">立即下单</view>
+                  </view>   
+              </ui-col>
+          </ui-row>
+        </view>
+
+    </view>
+</ui-popup>
+    
+
+
+  </view>
+</template>
+
+<script>
+var WxParse = require('../../static/utils/wxParse/wxParse.js');
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '',
+    "enablePullDownRefresh": true 
+  },
+  data: {
+    banner:[],
+    id:'',
+    current:0,
+    attributeToast:false,
+    attribute_list:[],
+    attribute_id:0,
+    price:'',
+    num:1,
+    into_type:1,
+    play_btn_position:"center",
+    stock:'',
+    evaluation_list:[],
+    share_id:0,
+  },
+
+  onLoad(e){
+    if(e.id)this.setData({
+      id:e.id,
+      // id:1,
+      })
+    if(e.share_id){this.setData({share_id:e.share_id})}
+    if(e.scene){this.setData({id:decodeURIComponent(e.scene)})}    
+    if(e.into_type){this.setData({into_type:e.into_type})}
+ 
+  },
+
+  moreEvaluation(){wx.navigateTo({url:'../evaluation/product_evaluation?data_type=1&product_id='+this.data.id})},
+  getProductEvaluation(e){
+    console.log(e);
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getProductEvaluation',
+      data:{
+          token:wx.getStorageSync('token'),
+          product_id:that.data.id,   
+          data_type:1,     
+          length:3,
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+              evaluation_list:res.data.data.list,
+              evaluation_total:res.data.data.total,
+        })
+
+      }
+    })  
+  },  
+
+  onShow(){
+    if(!wx.getStorageSync('token')){wx.navigateTo({url: '../login/login?share_id='+share_id,})}    
+    this.getUserInfo();
+    this.getProductEvaluation();
+  },
+
+  onPullDownRefresh: function () {
+    this.getDetail();
+    wx.stopPullDownRefresh();
+  },   
+
+  openToast(){
+    this.setData({attributeToast:true})
+  },
+
+  getUserInfo(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetUserInfo',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log(res);
+        if(res.data.data==-1){
+          // wx.navigateTo({url: '../login/login',});
+        }
+        that.setData({
+          user:res.data.data
+        })
+        wx.setStorageSync('user', res.data.data);
+        that.getDetail();
+      }
+    })  
+  },  
+
+  selAttribute(e){
+    console.log(e);
+    let k = e.currentTarget.dataset.k;
+    let v = e.currentTarget.dataset.v;
+    let arr = this.data.attribute_list;
+    for(let i=0;i<arr.length;i++){
+        if(k==i){
+            arr[i].selected='attribute-item-selected';
+            this.setData({
+              price:v.price,
+              attribute_id:v.id,
+              stock:v.stock,
+              })
+        }else{
+            arr[i].selected='';
+        }
+    }
+    this.setData({attribute_list:arr})
+
+  },
+
+  closeAttributeToast(){
+    this.setData({attributeToast:false})
+  },
+
+  toIndex(){
+    wx.switchTab({
+      url:'../index/index'
+    })
+  },
+
+  numInput(e){
+    let n = e.detail.value;
+    if(n<this.data.detail.can_buy_min){
+      wx.showToast({title:'最低'+this.data.detail.can_buy_min+'件起购',icon:'none'});return ;
+    }
+    if(n>this.data.detail.can_buy_max){
+      wx.showToast({title:'单次最多可买'+this.data.detail.can_buy_max+'件',icon:'none'});return ;
+    }    
+    this.setData({
+      num:n
+    })
+    console.log(e);
+  },
+
+  submit(e){
+    let t = e.currentTarget.dataset.t;
+    if(!wx.getStorageSync('token')){wx.navigateTo({url: '../login/login',});return ;}    
+    if(this.data.attribute_list.length>0){
+        if(t==1){
+          this.setData({attributeToast:true})
+          return ;
+        }
+        if(this.data.attribute_id==0){
+          wx.showToast({title:'请选择规格',icon:'none'})
+          this.setData({attributeToast:true});
+          return ;
+        }    
+    }
+
+    if(this.data.num<1){
+        wx.showToast({title:'请输入下单数量',icon:'none'})
+        return ;      
+    }
+
+    if(this.data.num>this.data.stock){
+        wx.showToast({title:'下单数量超过商品库存',icon:'none'})
+        return ;      
+    }
+
+    if(this.data.num<this.data.detail.can_buy_min){
+      wx.showToast({title:'最低'+this.data.detail.can_buy_min+'件起购',icon:'none'});return ;
+    }
+    if(this.data.num>this.data.detail.can_buy_max){
+      wx.showToast({title:'单次最多可买'+this.data.detail.can_buy_max+'件',icon:'none'});return ;
+    }  
+
+      this.setData({attributeToast:false});
+      wx.navigateTo({
+        url:'../order/submit?type=1&product_num='+this.data.num+'&product_id='+this.data.id+'&attribute_id='+this.data.attribute_id+'&into_type='+this.data.into_type
+      })
+
+  },
+
+  toCar(){
+    if(!wx.getStorageSync('token')){wx.navigateTo({url: '../login/login',});return ;}     
+    wx.switchTab({url:'../car/index'})
+  },
+
+  getDetail(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getProductDetail',
+      data:{
+          token:wx.getStorageSync('token'),   
+          id: this.data.id,
+        },
+      success(res) {
+        console.log(res);
+        wx.setNavigationBarTitle({
+          title: res.data.data.name
+        })        
+        that.setData({
+          price:res.data.data.price,
+          attribute_list:res.data.data.attribute_list,
+          imgs:res.data.data.images,
+          bannerCount:res.data.data.images.length,
+          detail:res.data.data, 
+          content: res.data.data.detail,
+          stock:res.data.data.stock,
+          num:res.data.data.can_buy_min,
+          })  
+          
+           WxParse.wxParse('article', 'html', res.data.data.detail, that, 5); 
+      }
+    }) 
+  },  
+
+  addCar(e){
+    let t = e.currentTarget.dataset.t;
+    if(this.data.attribute_list.length>0){
+        if(t==1){
+          this.setData({attributeToast:true})
+          return ;
+        }        
+        if(this.data.attribute_id==0){ 
+          wx.showToast({title:'请选择规格',icon:'none'})
+          this.setData({attributeToast:true});
+          return ;
+        }   
+    }
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/addcar',
+      data:{
+          token:wx.getStorageSync('token'),
+          product_id:that.data.id,
+          type:1,
+          attribute_id:this.data.attribute_id,
+          num:this.data.num,
+        },
+      success(res) {
+        console.log(res);
+        if(res.data.data>0){
+          wx.showToast({title:'已加入购物车'})
+        }
+      }
+    })  
+  },
+
+
+  toCollect(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/collectProduct',
+      data:{
+          token:wx.getStorageSync('token'),
+          id:that.data.id,
+        },
+      success(res) {
+        console.log(res);
+        that.getDetail();
+      }
+    })  
+  },
+
+  bindchange(e){
+    this.setData({
+      current:e.detail.current
+    })
+  },
+
+  changeNum(e){
+    let t = e.currentTarget.dataset.t;
+    let num =this.data.num;
+    if(t==1){
+        if(num==1){
+          wx.showToast({title: '无法再减',icon:'none'})
+          return ;
+        }
+        num=(parseInt(num))-1;        
+    }else{
+      num=(parseInt(num))+1;
+    }
+    if(num<this.data.detail.can_buy_min){
+      wx.showToast({title:'最低'+this.data.detail.can_buy_min+'件起购',icon:'none'});return ;
+    }
+    if(num>this.data.detail.can_buy_max){
+      wx.showToast({title:'单次最多可买'+this.data.detail.can_buy_max+'件',icon:'none'});return ;
+    }         
+    this.setData({
+      num:num
+    })
+  },
+
+  previewPic(e){
+    console.log(e);
+    wx.previewImage({
+      current:e.currentTarget.dataset.v.src,
+      urls:this.data.detail.banner,
+    })
+  },
+
+
+  onShareAppMessage: function () {
+    let path = '/pages/product/detail?share_id='+wx.getStorageSync('user').id+'&id='+this.data.detail.id;
+    console.log(path);
+    return {
+        title: this.data.detail.name,
+        // desc: '我赠送你一张'+this.data.detail.name+'卡，快来领取吧',
+        path: path
+    }    
+  },
+
+  onShareTimeline: function () {
+
+  },
+
+
+}
+</script>
+
+<style lang="less">
+@import "../../static/utils/wxParse/wxParse.wxss";
+  page{background-color: var(--defaultBgColor);}
+
+.yj-menu-container{}
+
+.become-toast{
+  // width: 95%;
+  background-color:#fff;
+  height:100%;  
+  margin:0 auto;
+  border-radius:5px;
+  overflow:hidden; 
+  z-index: 99999; 
+  display: flex;flex-direction: column;
+}
+
+.toast-param{display: flex;flex-direction: column;flex: 1;justify-content: flex-end;}
+
+.attribute-wrap{padding: 10px;display: flex;flex:1;}
+.attribute-row{width: 100%;}
+.attribute-label{font-size: 15px;padding: 10px;}
+.attribute-list{padding:0 10px 5px;display: flex;flex-wrap: wrap;}
+.attribute-item{padding: 5px 12px;border: 1rpx solid #ddd;color: #666;border-radius: 100px;margin-right: 10px;margin-bottom: 10px;}
+.attribute-item-selected{background-color: var(--ColorMain);color: #fff;}
+
+
+button{
+    margin: 0;
+    font-size: 12px;
+    line-height: normal;
+    background-color: #fff;
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;    
+  }
+
+
+  .yj-swiper{
+    position: relative;
+  }
+  swiper{width:100%;height:100vw;}
+  .swiper-number{
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+    color: #fff;
+  }
+  .swiper-current-number{
+    font-size: 16px;
+  }   
+  .swiper-number-division{
+    font-size: 13px;
+    margin: 0 2px;
+  }   
+  .swiper-total-number{
+    font-size: 14px;
+  }
+
+
+  .yj-menu-btn-car{border-top-left-radius: 100px;border-bottom-left-radius: 100px;background-color:#35BB9A;}
+  .yj-menu-btn-submit{border-top-right-radius: 100px;border-bottom-right-radius: 100px;background-color: var(--ColorMain);}
+  .yj-menu-btn-open-sale{border-radius: 100px;background-color:#d0d0d0;}
+  
+  .bg-color-plain{
+    background-color:#35BB9A;
+  }
+
+  .price-wrap{display: flex;padding: 10px;background-color: #fff;}
+  .price-info{display: flex;flex: 1;align-items: center;}
+  .sale-price{color: #E51C23;font-size: 20px;font-weight: 650;align-items: center;display: flex;}
+  .sale-price text{font-size: 15px;}
+  .sale-price image{width: 30px;height: 30px;margin-right: 5px;}
+  .fight-time{display: flex;flex-direction: column;margin-left: 15px;font-size: 12px;color: #FBAB07;}
+  .old-price{text-decoration: line-through;color: #999;margin-left: 10px;}
+  .pri-item{display: flex;width: 50px;flex-direction: column;align-items: center;justify-content: center;}
+  .pri-item-icon{width: 20px;height: 20px;}
+  .pri-item-icon image{width: 100%;height: 100%;}
+  .pri-item-name{color: #666;font-size: 13px;}
+  .pri-item-name-active{color: #E51C23;}
+
+  .goods-origin{padding: 0px 4px;font-size: 11px;background-color: #E8341F;color: #fff;margin-right: 5px;border-radius: 4px;height: 20px;line-height: 20px;}
+
+  .goods-brief{display: flex;padding: 0 10px 10px;background-color: #fff;}
+  .goods-brief-item{display: flex;flex: 1;color: #888;font-size: 12px;align-items: center;}
+  .goods-brief-item image{width: 13px;height: 13px;margin-right: 2px;}
+  .goods-brief-item-l{justify-content: flex-end;}
+
+  .goods-content{margin: 6px 0 70px;background-color: #fff;}
+  .goods-content-text{max-width: 100%;}
+  .goods-content-text image{max-width: 100%;}
+  .goods-content-text img{max-width: 100%;}
+
+  .achieve{
+    display: flex;
+    flex: 1;
+    padding: 0 10px;
+    font-size: 12px;
+    color: #555;
+    background-color: #fff;
+  }
+
+  .info{display: flex;flex: 1;  background-color: #fff;padding: 10px;}
+  .info-title{display: flex;flex: 1;color: #000;font-weight: 700;font-size: 17px;align-items: center;}  
+  .info-price{display: flex;flex: 1;align-items: center;color: #e02433;}  
+  .info-price text{font-size:16px;font-weight:650;margin-right:2px;}
+  .info-character{display: flex;color:#333;font-weight: 700;}    
+  .info-label{display: flex;width: 70px;color:#8a8a8a;}
+  .info-value{display: flex;flex: 1;align-items: center;color: #000;}  
+  .info-sel{display: flex;flex: 1;color: #111;}
+
+  .collect-btn{display: flex;width: 40px;justify-content: center;align-items: center;}
+  .collect-btn image{width: 20px;height: 20px;}
+
+
+
+  .achieve-cont{display: flex;flex: 1;    padding: 10px 0;}
+  .achieve text{color: #111;}
+  .coupon{display: flex;flex: 1;  background-color: #fff;padding: 10px;}
+  .coupon-label{display: flex;width: 80px;}
+  .coupon-sel{display: flex;flex: 1;color: #e02433;}
+  .icon{display: flex;width: 50px;justify-content: center;align-items: flex-end;}
+
+  .about{
+    margin-top: 10px;
+    margin-bottom: 70px;
+  }
+
+
+
+.car-goods-int{
+  display: flex;
+  height: 80px;
+  padding: 20px 10px;
+  width: 100%;
+}
+.car-goods-price{
+  display: flex;  
+  flex: 1;
+  font-size: 15px;
+  align-items: center;
+  padding-left: 10px;
+}
+.car-goods-price text{
+  font-size: 11px;
+}
+.car-goods-nums{
+  display: flex;  
+  flex: 1;
+  background-color: #f7f7f7;
+  color: #555;
+  border-radius: 2px;
+}
+.car-goods-reduce{
+  display: flex;  
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+.car-goods-num{
+  display: flex;  
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.car-goods-num input{
+  text-align: center;
+  height: 100%;
+}
+.car-goods-add{
+  display: flex;  
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.evaluation-container{margin-top: 10px;margin-bottom: 10px;background-color: #fff;}
+.evaluation-header{display: flex;background-color: #fff;padding: 10px;}
+.evaluation-header-label{display: flex;flex: 1;font-weight: 700;align-items: flex-end;}
+.evaluation-header-label text{font-size: 12px;font-weight: normal;margin-left: 2px;}
+.evaluation-header-quatity{display: flex;flex: 1;justify-content: flex-end;font-size: 12px;color: #888;align-items: flex-end;}
+.evaluation-item{padding-left: 10px !important;padding-right: 10px !important;}
+.evaluation-more{display: flex;align-items: center;justify-content: center;background-color: #fff;padding-bottom: 10px;}
+.evaluation-more-btn{display: flex;width: 120px;font-size: 12px; border-radius: 100px;border: 1rpx solid #ccc;justify-content: center;align-items: center;padding: 4px 0;}
+
+</style>

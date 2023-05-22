@@ -1,0 +1,230 @@
+<template>
+  <view>
+
+<view>
+
+  <view class='topExpress'>
+
+    <view class='topExpress-left'>
+      <image src='{{detail.logo}}' style='width:80rpx;height:80rpx;border-radius:50%;'></image>
+    </view>
+    <view class='topExpress-right'>
+      <view class='topExpress-right-top'>快递公司：{{detail.expName}}</view>
+      <view class='topExpress-right-middle'>运单号：{{detail.number}}</view>
+      <view class='topExpress-right-bottom'>官方电话 {{detail.expPhone}}</view>
+    </view>
+
+  </view>
+
+  <view class='express-container'>
+
+
+    <view class='express-item' wx:for="{{detail.list}}" wx:key="*this">
+
+      <view class='express-left-date'>
+        <view>{{item.date}}</view>
+        <view>{{item.time}}</view>
+      </view>
+
+      <!-- 左边子容器 -->
+      <view class='express-middle-axis'>
+        <!-- 显示顶部收的圆点 -->
+        <!-- <view class='dot-shou' wx:if="{{index==0}}">收</view> -->
+        <!-- 正在进行的时间轴上半个时间线 -->
+        <view class='online-top-closing'></view>
+        <!-- 正在进行的时间轴点 -->
+        <view class='dot-closing'></view>
+        <!-- 正在进行的时间轴下半个时间线 -->
+        <view class='online-bottom'></view>
+        <!-- 显示尾部的圆点 -->
+        <view class='dot-closing' wx:if="{{index==list.length - 1}}"></view>
+      </view>
+
+      <!-- 右边子容器 -->
+      <view class='express-right'>
+        <view class='express-statusing main-color'>{{item.status}}</view>
+        <!-- <view class='express-status-address'>【{{item.areaName}}】{{item.context}}</view> -->
+      </view>
+
+    </view>
+
+
+
+
+  </view>
+
+</view>
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: ''
+  },
+  data: {},
+
+  onLoad(e){
+    this.setData({order_id:e.order_id})
+    if(!wx.getStorageSync('token')){wx.navigateTo({url:'../login/login'})}
+  },
+
+  onPullDownRefresh: function () {
+    this.initData();
+    wx.stopPullDownRefresh();
+  },   
+
+  onShow(){
+    this.initData();
+  },
+
+  initData(e){
+    console.log(e);
+    let that = this; 
+    app.util.request({
+      'url': 'entry/wxapp/getDeliverDetail',
+      data:{
+          token:wx.getStorageSync('token'),    
+          order_id:this.data.order_id,
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          detail:res.data.data,
+        })
+      }
+    })  
+  },  
+
+
+}
+</script>
+
+<style lang="less">
+
+
+/* lincec_store_share/pages/deliver/index.wxss */
+page {
+  font-size: 0.8rem;
+}
+
+.topExpress {
+  /* width: 720rpx; */
+  height: 180rpx;
+  background: #f7f7f7;
+  /* margin: 10rpx auto; */
+  display: flex;
+  border-radius: 5px;
+}
+
+.topExpress-left {
+  width: 100rpx;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.topExpress-right {
+  color: #333;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20rpx 10rpx;
+}
+
+.topExpress-right-middle {
+  font-size: 0.8rem;
+}
+
+.topExpress-right-bottom {
+  color: #666;
+}
+
+.express-container {
+  width: 720rpx;
+  margin: 10rpx auto;
+  /* background: whitesmoke; */
+  border-radius: 5px;
+  padding: 10rpx 0;
+  background-color: #fff;
+}
+
+.express-item {
+  display: flex;
+  width: 100%;
+  justify-content: start;
+  padding: 10px 0;
+}
+
+.express-middle-axis {
+  display: flex;
+  width: 48rpx;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.express-left-date {
+  display: flex;
+  width: 200rpx;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.online-top-closing {
+  width: 1px;
+  height: 80rpx;
+  background: #d7d7d7;
+}
+
+.dot-closing {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  margin-top: 6rpx;
+  margin-bottom: 6rpx;
+  background: #fe4f33;
+}
+
+.dot-shou {
+  width: 30rpx;
+  height: 30rpx;
+  border-radius: 50%;
+  background: #999;
+  font-size: 18rpx;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.online-bottom {
+  width: 1px;
+  height: 80rpx;
+  background: #999;
+}
+
+.express-right {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 0 20rpx;
+  justify-content: center;
+}
+
+
+.express-statusing{
+  display: flex;
+}
+.express-status-address{
+  display: flex;
+}
+
+
+</style>

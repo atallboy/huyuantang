@@ -1,0 +1,113 @@
+<template>
+  <view>
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+    <view class="yj-container">
+      <view class="yj-wrap">
+        <view class="yj-item" wx:for="{{list}}" bindtap="detail">
+            <view class="card-info">
+                <view class="card-number">编号：{{item.no}}</view>
+                <view class="card-fee">价值：<text>{{item.fee}}</text> 元</view>
+            </view>
+            <view class="card-user" wx:if="{{item.status==1}}">
+                <view class="card-user-pic">
+                    <image src="{{item.avatarUrl}}"></image>
+                </view>
+                <view class="card-user-name">{{item.nickName}}</view>
+            </view>
+            <view class="card-user card-user-default" wx:else>
+                <view class="card-user-pic">
+                    <image src="../../static/images/icon-user-default.png"></image>
+                </view>
+                <view class="card-user-name">待兑现</view>
+            </view>            
+            <view class="card-time" wx:if="{{item.status==1}}">兑现时间：{{item.use_time}} </view>            
+        </view>
+      </view>
+    </view>    
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '粉丝奖励'
+  },
+  data: {
+    list:[],
+    id:0,
+    page:0,
+  },
+
+  onLoad(e){
+    this.setData({id:e.id})
+    this.initData();
+  },
+
+  onPullDownRefresh: function () {
+    this.initData();
+    wx.stopPullDownRefresh();
+  },
+
+  detail(e){
+   
+  },
+
+  initData(){  
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getFansRecord',
+      data:{
+        token:wx.getStorageSync('token'),
+        id:this.data.id,
+        page:this.data.page,
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          list:that.data.list.concat(res.data.data),
+        })
+      }
+    })  
+  }, 
+
+  onReachBottom: function() {
+      // 页面触底时执行
+      this.setData({
+        page:this.data.page+1
+      })
+      this.initData();
+    },  
+
+}
+</script>
+
+<style lang="less">
+
+page{ background-color: var(--defaultBgColor);}
+
+.yj-container{padding: 10px;}
+.yj-wrap{display: flex;flex-direction: column;}
+.yj-item{display: flex;margin-bottom: 15px;background-size: 100% 100%;
+          background-color: #fff;
+            flex-direction: column;padding: 10px;border-radius: 4px;}
+
+.card-info{display: flex;height: 35px;align-items: center;}
+.card-number{display: flex;flex: 1;}            
+.card-fee{display: flex;justify-content: flex-end;}
+.card-fee text{color: var(--ColorMain);font-weight: 650;margin-right: 3px;}
+.card-user{display: flex;padding: 10px 0;}
+.card-user-pic{display: flex;width: 50px;height: 50px;}
+.card-user-pic image{width: 100%;height: 100%;border-radius: 100px;}
+.card-user-name{display: flex;flex: 1;align-items: center;margin-left: 10px;}
+.card-user-default .card-user-name{color: #666;}
+.card-time{display: flex;color: #666;}
+.card-time text{margin-left: 50px;}
+
+
+
+</style>

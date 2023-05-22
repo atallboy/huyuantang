@@ -1,0 +1,142 @@
+<view>
+
+
+  <!-- <view class="search">      
+      <ui-row height="40">
+        <ui-col vertical-align="middle" align="center">
+            <view class="search-wrap">
+                <ui-row height="30">                          
+                  <ui-col vertical-align="middle" align="center" bindtap="toSearch">
+                      <view style="color:#666;font-size:12px;">
+                          <ui-icon type="magnifier" size="13" color="#333"></ui-icon>  请输入关键字
+                      </view>
+                  </ui-col>      
+                </ui-row>                       
+            </view>
+        </ui-col>                                 
+      </ui-row>                    
+    </view>     -->
+
+  <view class="yj-swiper">
+    <swiper autoplay="{{true}}" interval="3000" duration="500" circular="{{true}}" indicator-dots style="height:210px;" indicator-active-color="#00B26A">
+      <block wx:for="{{banner}}" wx:key="*this">
+        <swiper-item>
+          <image src="{{item.sub_image}}" style="display: block;width: 100%;height: 100%;" />
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+
+  <block wx:if="{{menu[0]}}">
+    <view class="menu-cate-container" wx:if="{{menu_row_num==3}}">
+      <view class="menu-row ui-row" style="">
+        <view wx:for="{{menu}}" class="menu-item ui-col ui-col-4 ui-col-align-center align-center valign-middle" bindtap="cate" data-item="{{item}}" style="flex: 0 0 33.33333333333333%;">
+          <view class="ui-col-content align-center valign-middle">
+            <view class="menu-icon">
+              <image src="{{item.icon}}" />
+            </view>
+            <view class="menu-name">{{item.name}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="menu-cate-container" wx:if="{{menu_row_num==4}}">
+      <view class="menu-row ui-row" style="">
+        <view wx:for="{{menu}}" class="menu-item ui-col ui-col-3 ui-col-align-center align-center valign-middle" bindtap="cate" data-item="{{item}}" style="flex: 0 0 25%;">
+          <view class="ui-col-content align-center valign-middle">
+            <view class="menu-icon">
+              <image src="{{item.icon}}" />
+            </view>
+            <view class="menu-name">{{item.name}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="menu-cate-container" wx:if="{{menu_row_num==5}}">
+      <view class="menu-row">
+        <view wx:for="{{menu}}" class="menu-item-five" bindtap="cate" data-item="{{item}}">
+          <view class="menu-icon">
+            <image src="{{item.icon}}" />
+          </view>
+          <view class="menu-name">{{item.name}}</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+
+
+  <view class="image-magic">
+    <block wx:for="{{magic}}">
+      <view class="image-magic-item" style="margin-bottom:10px;" bindtap="cate" data-item="{{item}}">
+        <image src="{{item.pic}}" style="width:{{item.width}};height:{{item.height}};" />
+      </view>
+    </block>
+  </view>
+
+
+  <view class="goods-col-container" wx:if="{{product_list[0]}}">
+    <view style="font-weight: 700;font-size: 15px;padding-top:10px;">推荐产品</view>
+    <view class="goods-col-goods">
+      <view class="goods-col-goods-wrap" wx:for="{{product_list}}">
+        <view class="goods-col-goods-item">
+          <view class="goods-col-goods-pic" bindtap="goodsDetail" data-id="{{item.id}}">
+            <image src="{{item.sub_image}}" />
+            <image wx:if="{{item.fight_status_ing==1}}" src="../../../static/images/icon-xxqg-2.png" class="goods-xsqg" />
+          </view>
+          <view class="goods-col-goods-name">
+            <view class="goods-col-goods-name-txt">{{item.name}}</view>
+          </view>
+          <view class="goods-col-goods-info">
+            <view class="goods-col-goods-price"> <text>￥</text>{{item.price}}</view>
+            <view class="goods-col-goods-detail" bindtap="addcar" data-v="{{item}}" data-id="{{item.id}}">
+              <image src="../../static/images/icon-car-2.png" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+  <view class="mch-list-container" wx:if="{{mch_list}}">
+    <view class="mch-list-wrap">
+      <view class="mch-header">
+        <view class="ui-row" style="height:40px;">
+          <view class="ui-col ui-col-align-right align-right valign-middle" style="">
+            <view class="ui-col-content align-right valign-middle">
+              <view class="circle"></view>
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 100px;">
+            <view class="ui-col-content valign-middle">
+              <view class="mch-header-name"> 入驻商户 <view class="relative-bg"></view>
+              </view>
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <view class="circle"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mch-list">
+        <view class="mch-list-c" wx:for="{{mch_list}}">
+          <view class="mch-list-item" bindtap="mchDetail" data-id="{{item.id}}">
+            <view class="mch-list-item-pic">
+              <image src="{{item.store_img}}" />
+            </view>
+            <view class="mch-list-item-name">{{item.mch_name}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="mch-more">
+        <view class="mch-more-btn" bindtap="mchMore">查看更多</view>
+      </view>
+    </view>
+  </view>
+
+
+
+</view>

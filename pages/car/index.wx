@@ -1,0 +1,475 @@
+<template>
+  <view>
+
+<!--lincec_store_share/pages/mall/car/index.wxml-->
+
+
+<view class="container">
+
+<view class="car-menu-container">
+    <view class="car-menu-wrap">
+         <view class="sel-item selected" wx:if="{{is_all_sel}}" bindtap="selAll" data-d="0"></view>
+         <view class="sel-item" wx:else  bindtap="selAll" data-d="1"></view>
+         <view class="sel-txt">全选</view>
+         <view class="car-calc"> 总计：￥{{total_price}}</view>
+         <block wx:if="{{is_del}}">
+            <view class="car-menu-btn menu-sel" wx:if="{{is_sel}}" bindtap="delCarGoods">删除</view>
+            <view class="car-menu-btn menu-default" wx:else>删除</view>
+         </block>         
+         <block wx:else>
+            <view class="car-menu-btn menu-sel" wx:if="{{is_sel}}" bindtap="submit">去结算</view>
+            <view class="car-menu-btn menu-default" wx:else>去结算</view>
+         </block>
+         
+    </view>
+</view>
+
+
+    <view class="behavior-container">
+        <view class="behavior-txt">商品库存有限，请尽快下单</view>
+        <view class="behavior-btn" bindtap="edittype" wx:if="{{is_del}}">完成</view>
+        <view class="behavior-btn" bindtap="edittype" wx:else>管理</view>
+    </view>
+
+    <!-- <view class="all-sel">
+        <view class="sel-item"></view> 
+        <view class="sel-txt">全选</view>
+    </view> -->
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+  <view class="car-container">
+      <view class="car-wrap">
+          <view class="car-item" wx:for="{{list}}" wx:for-index="k" wx:for-item="item">
+              <view class="sel-item selected" wx:if="{{item.is_sel==1}}" bindtap="sel" data-k="{{k}}" data-d="0"></view>
+              <view class="sel-item" wx:else bindtap="sel" data-k="{{k}}" data-d="1"></view>
+              <view class="car-goods-pic">
+                  <image src="{{item.sub_image}}"></image>
+              </view>
+              <view class="car-goods-info">
+                  <view class="car-goods-name">
+                      <view class="car-goods-name-txt">{{item.name}}</view>
+                  </view>
+                  <view class="car-goods-param">{{item.attribute}}</view>
+                  <view class="car-goods-int">
+                      <view class="car-goods-price"> <text>￥</text>{{item.price}} </view>
+                      <view class="car-goods-nums">
+                          <view class="car-goods-reduce" bindtap="doit" data-k="{{k}}" data-t="1"> - </view>
+                          <view class="car-goods-num">{{item.num}}</view>
+                          <view class="car-goods-add" bindtap="doit" data-k="{{k}}" data-t="2"> + </view>
+                      </view>
+                  </view>
+              </view>
+          </view>
+          <!-- <view class="car-item">
+              <view class="sel-item selected"></view>
+              <view class="car-goods-pic">
+                  <image src="../../../resource/images/logo.png"></image>
+              </view>
+              <view class="car-goods-info">
+                  <view class="car-goods-name">asdgrg</view>
+                  <view class="car-goods-param">1</view>
+                  <view class="car-goods-int">
+                      <view class="car-goods-price"> <text>￥</text>13.66 </view>
+                      <view class="car-goods-nums">
+                          <view class="car-goods-reduce"> - </view>
+                          <view class="car-goods-num">3</view>
+                          <view class="car-goods-add"> + </view>
+                      </view>
+                  </view>
+              </view>
+          </view>         -->
+      </view>
+  </view>
+
+</view>
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '购物车'
+  },
+  data: {
+    is_del:false,
+    is_sel:false,
+    total_price:0.00    
+  },
+
+  onShow: function () {
+    if(!wx.getStorageSync('token')){
+      wx.navigateTo({
+        url: '../../login/login',
+      })            
+    }  
+    this.setData({
+      is_del:false,
+      is_sel:false,
+      is_all_sel:false,
+      total_price:0.00,      
+    })
+    this.getCar();
+  },
+
+  onPullDownRefresh: function () {
+    this.getCar();
+    wx.stopPullDownRefresh();
+  },   
+
+  delCarGoods(){
+     let p = [];
+     let list = this.data.list;
+     for(let i=0;i<list.length;i++){
+       if(list[i].is_sel==1){
+          p.push(list[i].car_id);
+       }
+     }
+
+     let that = this;
+     app.util.request({
+       'url': 'entry/wxapp/delCarProduct',
+       method:'POST',
+       data:{
+         token:wx.getStorageSync('token'),
+         p:p.join('&'),
+        },
+       success(res) {
+          that.getCar();
+       }
+     })      
+  },
+
+
+  submit(){
+     let p = [];
+     let list = this.data.list;
+     let c = '';
+     for(let i=0;i<list.length;i++){
+       if(list[i].is_sel==1){
+          p.push(list[i].car_id);
+       }
+     }
+     let that = this;
+     app.util.request({
+       'url': 'entry/wxapp/SubmitCarProduct',
+       method:'POST',
+       data:{
+         token:wx.getStorageSync('token'),
+         p:p.join('&'),
+         total_price:this.data.total_price
+        },
+       success(res) {
+         if(res.data.errno==0){ 
+          wx.navigateTo({
+            url: '../order/submit?into_type=2&type=2&car_order_id='+res.data.data,
+          })
+         }
+       }
+     })      
+  },
+
+
+  getCar(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getCarInfo',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+          that.setData({
+            list:res.data.data,
+          })
+      }
+    }) 
+  },
+
+  sel(e){
+    let k = e.currentTarget.dataset.k;
+    let d = e.currentTarget.dataset.d;
+    let a = 'list['+k+'].is_sel';
+    this.setData({
+      [a]:d
+    })
+    this.checkSel();
+  },
+
+  selAll(e){
+    let d = e.currentTarget.dataset.d;
+    let list = this.data.list;
+    for(let i=0;i<list.length;i++){
+      let a = 'list['+i+'].is_sel';
+      this.setData({
+        [a]:d
+      })
+    }
+
+    this.checkSel();
+  },
+
+  doit(e){
+    let k = e.currentTarget.dataset.k;
+    let t = e.currentTarget.dataset.t;
+    let product_id = this.data.list[k].id;
+    let attribute_id = this.data.list[k].attribute_id;
+    let num =this.data.list[k].num;
+    let n = 'list['+k+'].num';
+    if(t==1){
+        if(num==1){
+          wx.showToast({
+            title: '无法再减',
+          })
+          return ;
+        }
+        num=(parseInt(num))-1;
+        this.addCar(2,product_id,attribute_id);
+    }else{
+      num=(parseInt(num))+1;
+       this.addCar(1,product_id,attribute_id);
+    }
+    this.setData({
+      [n]:num
+    })
+    this.checkSel();
+  },
+
+  addCar(type,product_id,attribute_id){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/addCar',
+      data:{
+          token:wx.getStorageSync('token'),
+          product_id:product_id,
+          attribute_id:attribute_id,
+          type:type,
+        },
+      success(res) {
+        console.log(res);
+      },
+      complete(){
+        that.getCar();
+      }
+    })  
+  },  
+
+
+
+  checkSel(){
+    let is_all_sel=true;
+    let is_sel=false;
+    let total_price=0;
+    let list = this.data.list;
+    for(let i=0;i<list.length;i++){
+        if(list[i].is_sel==1){
+           is_sel=true;
+           total_price=Math.floor(parseFloat(total_price)*100+parseFloat(list[i].price)*parseInt(list[i].num)*100)/100;
+        }else{
+          is_all_sel=false;
+        }
+    }
+    this.setData({
+      is_sel:is_sel,
+      is_all_sel:is_all_sel,
+      total_price:total_price
+    })
+  },
+
+
+  edittype(){
+      this.setData({
+        is_del:!this.data.is_del
+      })
+  },
+
+
+
+}
+</script>
+
+<style lang="less">
+
+/* lincec_store_share/pages/mall/car/index.wxss */
+
+page{
+  background-color: #f7f7f7;
+}
+
+.car-menu-container{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 99999;
+  border-top: 1rpx solid #e2e2e2;
+}
+.car-menu-wrap{
+  flex: 1;
+  align-items: center;
+  padding-left: 10px;
+}
+.car-calc{
+  color: #ff5857;
+  font-size: 14px;
+  flex: 1;
+  margin-left: 10px;
+}
+.car-menu-btn{
+  width: 125px;
+  color: #fff;
+  padding: 15px 0;
+  justify-content: center;
+}
+.menu-default{
+  background-color: #989898;
+}
+.menu-sel{
+  background-color: #ff5857;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+}
+.container view{
+  display: flex;
+}
+.behavior-container{
+  padding: 10px;
+  font-size: 13px;
+  background-color: #fff;
+  margin-bottom: 10px;
+}
+.behavior-txt{
+  color: #999;
+  flex: 1;
+}
+.behavior-btn{
+  color: #555;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+
+.all-sel{
+  background-color: #fff;
+  padding: 10px;
+  font-size: 13px;
+  border-bottom: 1rpx solid #f1f1f1;
+  align-items: center;
+}
+.sel-item{
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  /* margin-left: 24rpx; */
+  background-color: white;
+  border: 1rpx solid #e2e2e2;  
+  margin-right: 10px;
+}
+.selected{
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background-repeat: repeat;
+  background-size: 100% 100%;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAhFBMVEUAAAD/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFxw13bLAAAAK3RSTlMA8vjn496KOC7q2HYT78kf0D8mGhYN7Lq2sKxWUEcpIgijfW1nM5eUYIGAWqlCygAAAXJJREFUOMuNlNlygzAMRa/Z90ATwhYo2dPq//+vuEk8OAbDeRIzhzuSEcYnblgnPmNmcgw9aPFOAY0INL5bkkKRTaqRQ5M436r75dMMhhL+MGieUHYPJFi0G1rgDMGWFmnfbm/RMpuX/EsrqJ7ujlZxAKdeJ5vcjbRKaorSHeSLzrWxEfVxkFOdmwM7cVY5vjVusONra9OLB86a3H5wOxLUOM66Fs9t49GwSOZcP+KLK09rzeVuBzczpNfBSOB4TM71JJcYxLNxArb2ONcl+pD3ouRZG3/Ub0wyMQJR7/n0kckrntupY6AggenyvIAY/5+vpvqN4HxueF9deT+kkqCVunLxJDNJxQGk4zF4B2qu2NG7fDyu6FdtGfBIwvCQM5riMsjKBz/ZNEnO5ZZWccc/1RrXel+gq28CTrPs3iBwltwSI256NxHicnYtqfq7xoFCVsy0cMAUoamq8Q9m6JtSVosmh4YuLFM7Zmxvp9W5g8wf9UjmyN2BHX8AAAAASUVORK5CYII=);
+  
+  }
+  
+.sel-txt{
+  color: #555;
+  font-size: 15px;
+}
+
+
+.car-container{
+  background-color: #fff;
+  margin-bottom: 60px;
+}
+.car-wrap{
+  flex-direction: column;
+  flex: 1;
+}
+.car-item{
+  padding: 15px 10px 20px;
+  border-bottom: 1rpx solid #f1f1f1;
+  align-items: center;
+}
+.car-goods-pic{
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+}
+.car-goods-pic image{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.car-goods-info{
+  flex: 1;
+  flex-direction: column;
+}
+.car-goods-name{
+  flex: 1; 
+  height: 20px;
+  margin-bottom: 10px;  
+}
+.car-goods-name-txt{
+  // height: 30px;
+  /* line-height: 30px; */
+  overflow: hidden;
+  color: #333;
+  font-size: 13px;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;   
+}
+.car-goods-param{
+  flex: 1;
+  height: 20px;
+  color: #666;
+}
+.car-goods-int{
+  flex: 1;
+  height: 30px;
+}
+.car-goods-price{
+  flex: 1;
+  color: #ff5857;
+  font-size: 14px;
+  line-height: 30px;
+}
+.car-goods-price text{
+  font-size: 11px;
+}
+.car-goods-nums{
+  flex: 1;
+  background-color: #f7f7f7;
+  color: #555;
+  border-radius: 2px;
+}
+.car-goods-reduce{
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+.car-goods-num{
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.car-goods-add{
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+
+</style>

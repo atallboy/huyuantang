@@ -1,0 +1,175 @@
+<template>
+  <view>
+
+
+
+<form catchsubmit="formSubmit" catchreset="formReset">
+
+
+  <view class="form" style="background-color:#fff;padding:0 10px;">
+    <view class="mix-bottom">
+      <ui-row height="50">
+          <ui-col width="16" vertical-align="middle">
+            <image src="../../static/images/xing.png" class="xing"></image>
+          </ui-col>
+          <ui-col width="80" vertical-align="middle"> <text class="f-s-26">团队名称</text> </ui-col>
+          <ui-col vertical-align="middle">
+              <input class="weui-input" name="name" placeholder="请输入团队名称" value="{{detail.name}}" placeholder-style="font-size:12px;" />
+          </ui-col>
+      </ui-row>   
+    </view>   
+
+
+  </view>     
+
+
+
+  <ui-row height="75"><ui-col></ui-col></ui-row>
+  
+  <view class="submit-wrap">
+    <button form-type="submit" class="submit-btn">保存</button>
+  </view>
+  
+</form>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '编辑'
+  },
+  data: {
+
+  },
+
+  onLoad(e){   
+    this.initData();
+  },
+
+  onShow(){
+    
+  },
+
+  initData(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getMyTeamInfo',
+      data:{
+        token:wx.getStorageSync('token'),
+        team_id:wx.getStorageSync('user').team_id,
+      },
+      success(res) {
+        console.log('------------');
+         console.log(res);
+        that.setData({
+          detail:res.data.data,
+        })
+      }
+    })  
+  },
+
+  formSubmit(e) {
+    console.log('form发生了submit事件，携带数据为：', e.detail.value)
+
+
+    if(e.detail.value.name==''){wx.showToast({title:'请输入团队名称'});return ;} 
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/editTeamInfo',
+      data:{
+          team_id:this.data.detail.id,
+          token:wx.getStorageSync('token'), 
+          name:e.detail.value.name,   
+        },
+      success(res) {
+        console.log(res);        
+        wx.navigateBack();       
+      }
+    }) 
+
+ 
+  }, 
+
+
+
+
+}
+</script>
+
+<style lang="less">
+.l-active{width: 100%;height: 2rpx;background-color: #FA5C37;}
+.l-default{width: 100%;height: 2rpx;background-color: #F9DBD0;}
+.line{width: 100%;height: 2rpx;background-color: #F9DBD0;}
+.n-active{background-color:#FA5C37;color:#fff;width: 16px;height: 16px;line-height: 16px;font-size: 11px;border-radius: 100px;}
+.n-default{background-color: #F9DBD0;color: #fff;width: 16px;height: 16px;line-height: 16px;font-size: 11px;border-radius: 100px;}
+.t-active{color: #FA5C37;}
+.t-default{color: #CFCFCF;}
+.placeholderClass{font-size: 12px;}
+.xing{width: 7px;height: 7px;}
+.sel-icon{width: 20px;height: 20px;}
+.yj-form-row-pick-content{display: flex;}
+.picker-input{display: flex;flex: 1;}
+.yj-form-row-item-sel{display: flex;width: 50px;justify-content: center;align-items: center;}
+
+.submit-wrap{position: fixed;left: 0;right: 0;bottom: 0;background-color: #fff;z-index:99999;}
+.submit-btn{color:#fff;background-color: var(--ColorMain);border-radius: 2rpx;width: 92%;margin: 0 auto;margin-top: 20px;margin-bottom: 20px;}
+
+
+.image-upload-container{
+  display: flex;
+  // padding: 10px;
+  flex-direction: column;
+
+  .image-upload-wrap{
+    display: flex;
+    flex: 1;
+    background-color: #fff;
+    padding: 20px 0;
+  }
+  
+  .image-upload-item{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;align-items: center;
+  }
+
+  .image-upload-preview{
+    display: flex;
+    flex: 1;
+  }
+  .image-upload-preview image{
+    width: 120px;
+    height: 120px;
+  }
+  .image-upload-btn{
+    display: flex;
+    flex: 1;
+  }
+  .image-upload-select{
+      width: 100px;
+      padding: 6px 0;
+      text-align: center;
+      background-color: #ddd;
+      border-radius: 6px;
+      margin-top: 10px;
+  }
+}
+
+.unit{color: #FA5C37;}
+.price{
+  font-size: 30px;
+  color: #FA5C37;
+}
+
+  .msg{
+    padding: 10px;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 16px;
+  }
+
+</style>

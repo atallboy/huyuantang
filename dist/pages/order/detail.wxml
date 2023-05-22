@@ -1,0 +1,102 @@
+<view>
+
+  <view class="order-g-container">
+    <view class="order-g-wrap">
+      <view class="order-g-item">
+        <view class="order-status">
+          <text wx:if="{{data.status==0}}">待付款</text>
+          <text wx:if="{{data.status==1}}">待发货</text>
+          <text wx:if="{{data.status==2}}">待收货</text>
+          <text wx:if="{{data.status==3}}">已签收</text>
+          <text wx:if="{{data.status==4}}">已完成</text>
+          <text wx:if="{{data.status==5}}">已取消</text>
+          <text wx:if="{{data.status==6}}">申请退款中</text>
+          <text wx:if="{{data.status==7}}">已退款</text>
+        </view>
+        <view class="order-g-address">
+          <view class="order-g-address-info">
+            <view class="order-g-address-t">
+              <text class="order-g-address-name">{{data.snap.name}}</text>
+              <text class="order-g-address-tel">{{data.snap.tel}}</text>
+              <!-- <text class="order-g-address-tel-call" bindtap="call">一键拨打</text> -->
+            </view>
+            <view class="order-g-address-detail">{{data.snap.province}}{{data.snap.city}}{{data.snap.district}}{{data.snap.address}}</view>
+          </view>
+          <view class="order-g-icon" bindtap="openLocation">
+            <image src="../../../static/images/icon-address.png" class="ercode_pic" />
+          </view>
+        </view>
+        <view class="address-bottom">
+          <image src="../../../static/images/address-bottom.png" />
+        </view>
+        <view class="order-g-detail">
+          <view class="order-g-goods">
+            <view class="order-g-goods-item" wx:for="{{data.productArr}}" wx:for-index="k1" wx:for-item="v1">
+              <view class="order-g-goods-pic">
+                <image src="{{v1.sub_image}}" class="ercode_pic" />
+              </view>
+              <view class="order-g-goods-info">
+                <view class="order-g-goods-name">{{v1.name}}</view>
+                <view class="order-g-goods-param">
+                  <view class="order-g-goods-param-both">
+                    <text class="order-g-goods-param-name">--</text>
+                    <text class="order-g-goods-price">￥{{v1.price}}</text>
+                  </view>
+                  <view class="order-g-goods-param-num">x{{v1.num}}</view>
+                </view>
+
+              </view>
+            </view>
+          </view>
+          <view class="order-g-total-info">
+            <view class="order-g-deliver">
+              <text>商家配送</text>
+            </view>
+            <view class="order-g-calc">
+              <text class="order-g-num">共{{data.goods_num}}件商品</text>
+              <text class="order-g-total-price">合计：{{data.product_money}}</text>
+            </view>
+          </view>
+          <view class="order-g-about">
+            <view class="order-g-about-label">邮费：</view>
+            <view class="order-g-about-value">{{data.freight}}</view>
+          </view>
+          <view class="order-g-about">
+            <view class="order-g-about-label">订单总额：</view>
+            <view class="order-g-about-value">{{data.total_money}}</view>
+          </view>
+          <view class="order-g-about">
+            <view class="order-g-about-label">订单号：</view>
+            <view class="order-g-about-value">{{data.order_no}}</view>
+          </view>
+          <view class="order-g-about">
+            <view class="order-g-about-label">订单时间：</view>
+            <view class="order-g-about-value">{{data.create_time}}</view>
+          </view>
+          <view class="order-g-remark"> 备注：{{data.remark}} </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+
+  <view class="btn-container">
+    <view class="btn-wrap">
+      <!-- <view class="btn-left">更多</view> -->
+      <view class="btn-right">
+        <view class="btn-item" wx:if="{{data.eva==0}}" bindtap="toEva">去评价</view>
+        <view class="btn-item" wx:if="{{data.eva==1}}" bindtap="toEva">我的评价</view>
+        <view class="btn-item" wx:if="{{data.status==0}}" bindtap="cancel">取消订单</view>
+        <view class="btn-item" wx:if="{{data.status==0}}" bindtap="pay">订单支付</view>
+        <view class="btn-item" wx:if="{{data.status==1}}" bindtap="cancel">取消订单</view>
+        <view class="btn-item btn-complete" wx:if="{{data.status==2||data.status==3}}" bindtap="refund">申请退款</view>
+        <!-- <view class="btn-item" wx:if="{{into_type==1&&data.status==2}}" bindtap="sendGoods">修改物流</view> -->
+        <view class="btn-item" wx:if="{{data.status==2}}" bindtap="checkDeliver">查看物流</view>
+        <!-- <view class="btn-item" wx:if="{{into_type==1&&data.status==1}}" bindtap="sendGoods">订单发货</view> -->
+        <view class="btn-item btn-complete" wx:if="{{data.status==2}}" bindtap="confirm">订单完成</view>
+      </view>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,74 @@
+<view>
+
+  <form catchsubmit="formSubmit" catchreset="formReset">
+
+    <view class="ui-row" style="height:40px;">
+      <view class="wrap-label ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">账号信息</view>
+      </view>
+    </view>
+
+    <view class="form" style="background-color:#fff;padding:0 10px;">
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">登录账号</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="account" value="{{account_info.account}}" placeholder="请输入后台登录账号" confirm-type="next" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">登录密码</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="password" value="" placeholder="后台登录密码,不更改不输入即可" confirm-type="next" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+
+    <view class="ui-row" style="height:50px;">
+      <view style="font-size:14px;color:#666;" class="ui-col ui-col-align-center align-center valign-middle">
+        <view class="ui-col-content align-center valign-middle">后台登录地址：{{host}}/login</view>
+      </view>
+    </view>
+    <view vertical-align="middle" class="ui-row" style="height:30px;">
+      <view class="ui-col ui-col-align-center align-center" style="">
+        <view class="ui-col-content align-center">
+          <view style="background-color:#07c160;color:#fff;padding:7px 20px;border-radius:4px;" bindtap="copy">一键复制</view>
+        </view>
+      </view>
+    </view>
+
+
+    <view class="ui-row" style="height:75px;">
+      <view class="ui-col" style="">
+        <view class="ui-col-content"></view>
+      </view>
+    </view>
+
+    <view class="submit-wrap">
+      <button form-type="submit" class="submit-btn">保存</button>
+    </view>
+
+  </form>
+
+</view>

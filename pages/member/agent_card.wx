@@ -1,0 +1,87 @@
+<template>
+  <view>
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+    <view class="level-list-container">
+      <view class="level-list-wrap">
+        <view class="level-item" wx:for="{{list}}">
+            <view class="level-pic">
+                <image src="{{item.pic}}"></image>
+            </view>
+            <view class="level-info">
+                  <view class="level-name">{{item.name}}</view>
+                  <view class="level-card-num">x {{item.num}}张</view>             
+            </view>
+            <view class="level-btn-wrap">
+              <view class="level-btn" bindtap="become" data-item="{{item}}">查看</view>
+            </view>            
+        </view>
+      </view>
+    </view>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '我的代理卡'
+  },
+  data: {
+    list:[]
+  },
+
+  onShow(){
+    this.getList();
+  },
+
+  onPullDownRefresh: function () {
+    this.getList();
+    wx.stopPullDownRefresh();
+  },
+
+  become(e){
+    wx.navigateTo({url:'agent_card_detail?id='+e.currentTarget.dataset.item.level_id})
+  },
+
+  getList(e){
+    console.log(e);
+    let that = this; 
+    app.util.request({
+      'url': 'entry/wxapp/getMyLevelCard',
+      data:{
+          token:wx.getStorageSync('token'),    
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          list:res.data.data,
+        })
+      }
+    })  
+  },  
+
+}
+</script>
+
+<style lang="less">
+
+page{ background-color: var(--defaultBgColor);}
+
+.level-list-container{padding: 10px;}
+.level-item{width: 100%;margin-bottom: 10px;border-radius: 5px;display: flex;background-color: #fff;padding: 10px;}
+.level-pic{display: flex;width: 140px;}
+.level-pic image{width: 96%;height: 80px;border-radius: 4px;}
+.level-info{display: flex;flex: 1;flex-direction: column;padding-left: 8px;}
+.level-name{font-weight: 700;font-size: 16px;}
+.level-card-num{color: #999;margin-top: 6px;display: flex;align-items: flex-end;flex: 1;}
+.level-btn-wrap{display: flex;align-items: center;justify-content: center;}
+.level-btn{font-size: 13px;padding: 4px 16px;color: var(--ColorMain);border: 1rpx solid var(--ColorMain);border-radius: 100px;}
+
+
+
+
+</style>

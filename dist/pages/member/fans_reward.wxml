@@ -1,0 +1,26 @@
+<view>
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+  <view class="yj-container">
+    <view class="yj-wrap">
+      <view class="yj-item" wx:for="{{list}}">
+        <view class="name">{{item.num}}个粉丝奖励名额 </view>
+        <view class="brief">
+          已兑现：{{item.use_num}} /{{item.num}}
+        </view>
+        <view class="brief">
+          单个粉丝兑现金额：{{item.fee}} 元
+        </view>
+        <view class="time">{{item.create_time}}</view>
+        <view class="btn mix-top" bindtap="detail" data-id="{{item.id}}">
+          <view class="btn-txt">查看兑现记录</view>
+          <view class="btn-icon">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

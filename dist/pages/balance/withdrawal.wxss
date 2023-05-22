@@ -1,0 +1,143 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+/* lincec_store_share/pages/balance/recharge.wxss */
+page {
+  background-color: #f7f7f7;
+}
+view {
+  display: flex;
+}
+image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.bar-container {
+  padding: 15px 0;
+  align-items: center;
+}
+.bar-container .bar {
+  width: 4px;
+  height: 15px;
+  /* background-color: #ff4544; */
+  margin-right: 10px;
+}
+.bar-container .label {
+  font-size: 12px;
+  color: #666666;
+}
+.pant-wrap {
+  padding: 20px;
+  align-items: center;
+  background-image: url(https://thm.lincec.top/web/statics/img/app/mall/icon-balance-recharge-bg.png);
+  background-size: 100% 100%;
+  flex: 1;
+  color: #333;
+}
+.pant-icon {
+  width: 50px;
+  height: 50px;
+}
+.pant-name {
+  font-size: 21px;
+  flex: 1;
+  margin-left: 10px;
+}
+.pant-value {
+  font-size: 21px;
+  width: 100px;
+}
+.recharge-container {
+  padding: 40px 0 20px;
+}
+.recharge-wrap {
+  display: flex;
+  background-color: #fff;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px;
+}
+.recharge-form {
+  /* border-radius: 6px; */
+  flex: 1;
+  padding: 5px 10px;
+  align-items: center;
+}
+.recharge-form input {
+  height: 45px;
+  width: 100%;
+  text-align: center;
+}
+.recharge-btn {
+  flex: 1;
+  border-radius: 100px;
+  /* background-color: #ff4544; */
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-top: 30px;
+}
+.tixan-btn {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  color: #999;
+  font-size: 13px;
+  margin-top: 20px;
+}
+.pick-name {
+  width: 80px;
+  color: #555;
+  font-size: 14px;
+}
+.pick-value {
+  flex: 1;
+  color: #555;
+  justify-content: center;
+  font-size: 14px;
+  padding: 12px;
+}
+.pick-btn {
+  width: 50px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+}
+.pick-btn image {
+  width: 30px;
+  height: 30px;
+}
+.placeholder {
+  font-size: 14px;
+}
+.regular {
+  font-size: 14px;
+  line-height: 20px;
+}

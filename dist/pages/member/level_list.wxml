@@ -1,0 +1,62 @@
+<view>
+
+  <view class="level-list-container">
+    <view class="level-list-wrap">
+      <view class="level-item" wx:for="{{list}}">
+        <view class="level-pic" bindtap="detail" data-item="{{item}}">
+          <image src="{{item.pic}}" />
+        </view>
+        <view class="level-info">
+          <view class="level-name">{{item.name}}</view>
+          <view class="level-remark">
+            <view class="level-remark-txt">{{item.desc}}</view>
+          </view>
+          <view class="level-btn-wrap">
+            <view class="level-btn" bindtap="become" data-item="{{item}}">获取</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <ui-popup show="{{ becomeToast }}" height="500" background="transparent" _pid="{{_pid}}">
+    <view class="become-toast">
+      <view class="ui-row ui-row-border-bottom" style="height:40px;">
+        <view class="ui-col valign-middle" style="padding-left: 20px;">
+          <view class="ui-col-content valign-middle">可通过以下方式获得 {{detail.name}} 身份</view>
+        </view>
+        <view bindtap="closeBecomeToast" class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 40px;">
+          <view class="ui-col-content align-center valign-middle">
+            <span type="x" size="18" color="#FC8950" class="ui-icon icon-x" style="color: #FC8950;font-size: 18px;"></span>
+          </view>
+        </view>
+      </view>
+      <view class="condition-wrap">
+        <radio-group bindchange="radioChange">
+          <scroll-view scroll-y="{{true}}" style="height: 380px;">
+            <view class="condition-item" wx:for="{{detail.condition}}" wx:for-index="k" wx:for-item="item">
+              <view class="condition-item-radio">
+                <radio value="{{k}}" color="#00B26A">
+                </radio>
+              </view>
+              <view class="condition-info mix-bottom">
+                <text class="condition-info-type-name">{{item.name}}</text> -
+                <text class="condition-info-type-msg" wx:if="{{item.type==1}}">支付{{item.price}}元</text>
+                <text class="condition-info-type-msg" wx:if="{{item.type==2}}">{{item.product_name}}</text>
+              </view>
+            </view>
+          </scroll-view>
+        </radio-group>
+      </view>
+      <view class="ui-row" style="height:50px;">
+        <view class="ui-col valign-middle" style="padding-left: 10px;padding-right: 20px;">
+          <view class="ui-col-content valign-middle">
+            <button type="primary" bindtap="toBecome">确定</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </ui-popup>
+
+
+</view>

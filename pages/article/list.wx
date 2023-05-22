@@ -1,0 +1,138 @@
+<template>
+  <view>
+
+<view class="tab-container">
+  <ui-tabs index="{{ current }}"  bindchange="handleChange" tab-style="{{tab_style}}">
+      <ui-tab wx:for="{{cate}}">{{item.name}} <text wx:if="{{c_ready}}" style="color:#FBF0EE;">1</text> </ui-tab>
+  </ui-tabs>
+</view>    
+
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+    <view class="article-list-container">
+      <view class="article-list-wrap">
+          <view class="article-item mix-bottom" wx:for="{{list}}" bindtap="detail" data-id="{{item.id}}">
+              <view class="article-header" wx:if="{{item.sub_image}}">
+                  <view class="article-title">{{item.title}}</view>
+                  <view class="article-pic">
+                    <image src="{{item.sub_image}}"></image>
+                  </view>
+              </view>
+              <view class="article-title" wx:else>{{item.title}}</view>
+              <view class="article-info">
+                 <view class="article-time">{{item.update_time}}</view>
+                 <view class="article-score" wx:if="{{item.is_read==0}}">+{{item.score}}积分</view>
+                 <view class="article-watch" wx:else>{{item.read_num}}次浏览</view>
+              </view>
+          </view>
+      </view>
+    </view>  
+
+
+
+  </view> 
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '文章列表'  
+  },
+  data: {
+    tab_style:{
+      'min-width':'120px',
+    },     
+    inkBarStyle:{
+      // 'width': '20%',
+    },        
+    cate:[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+    list:[],
+    current:0,
+    c_ready:true,
+    cate_id:0,
+  },
+
+  onShow(){
+    this.getCate();
+    
+  },
+
+  onPullDownRefresh: function () {
+    this.getCate();
+    wx.stopPullDownRefresh();
+  },  
+
+  detail(e){
+    wx.navigateTo({url:'detail?id='+e.currentTarget.dataset.id})
+  },
+
+  handleChange(e){
+    console.log(e);
+    this.setData({cate_id:this.data.cate[e.detail.index].id})
+    this.getList();
+  },  
+
+  getCate(e){
+    console.log(e);
+    let that = this; 
+    app.util.request({
+      'url': 'entry/wxapp/getArticleCate',
+      data:{
+          token:wx.getStorageSync('token'),        
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          cate:res.data.data,
+          c_ready:false,
+          cate_id:res.data.data[0].id
+        })
+        that.getList();
+      }
+    })  
+  }, 
+
+  getList(e){
+    console.log(e);
+    let that = this; 
+    app.util.request({
+      'url': 'entry/wxapp/getArticleList',
+      data:{
+          token:wx.getStorageSync('token'),    
+          cate_id:this.data.cate_id,   
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          list:res.data.data,
+        })
+      }
+    })  
+  },  
+
+
+}
+</script>
+
+<style lang="less">
+                 
+page{background-color:#fff;}
+
+.tab-container{background-color:#FBF0EE;}
+
+.article-list-container{padding:15px;}                 
+.article-list-wrap{display:flex;flex-direction:column;}
+.article-item{display:flex;padding:20px 0;flex-direction:column;}
+.article-header{display:flex;}
+.article-title{display:flex;font-size:16px;font-weight:600;color:#222;flex:1;}
+.article-pic{display:flex;width:100px;height:70px;padding-left:10px;}
+.article-pic image{width:100%;height:100%;border-radius:2px;}
+.article-info{display:flex;margin-top:15px;}
+.article-time{display:flex;flex:1;align-items:center;color:#666;}
+.article-score{display:flex;flex:1;align-items:center;justify-content:flex-end;color:#ff4500;}
+.article-watch{display:flex;flex:1;align-items:center;justify-content:flex-end;color: #666;}
+
+</style>

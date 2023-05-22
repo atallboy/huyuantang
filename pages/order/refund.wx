@@ -1,0 +1,365 @@
+<template>
+  <view>
+
+<!--lincec_store_share/pages/order/refund/apply.wxml-->
+
+<view class="container">
+  <view class="wrap">
+        <picker bindchange="bindTkyyChange" value="{{tkyy_index}}" range="{{tkyy}}" class="pick">
+              <view class="row mix-bottom">
+                  <view class="label">退款原因</view>
+                  <view class="value">
+                      <input placeholder="点击选择申请原因" disabled value="{{tkyy[tkyy_index]}}" placeholder-class="plc"></input>
+                  </view>
+                  <view class="icon"> <ui-icon type="arrow-right" size="13" color="#000000"></ui-icon> </view>
+              </view>
+        </picker>     
+      
+  </view>
+
+  <view class="wrap" style="margin-top:10px;">
+          <view class="row mix-bottom"> 
+              <view class="label">退款金额</view>
+              <view class="value">
+                  <input type="number" placeholder="不能超过订单金额：{{order.pay_money}}元" bindinput="moneyInput" value="" placeholder-class="plc"></input>
+              </view>
+          </view>      
+  </view>
+
+  <view class="wrap" style="margin-top:10px;padding-top:5px;">
+          <textarea bindinput="smInput" placeholder="退款说明（详细退款原因）" />    
+  </view>
+        <view class="yj-row-file">
+          <view class="yj-file">
+              <view class="yj-file-add" bindtap="chooseImg">
+                  <image src="../../../static/images/add.png"></image>
+              </view>
+
+              <view class="yj-file-add" bindtap="doimg" wx:for="{{imgs}}" wx:for-index="k" wx:for-item="v" data-k="{{k}}">
+                  <image src="{{site}}{{v}}"></image>
+              </view>
+                                          
+          </view>
+        </view>
+
+
+
+</view>
+
+
+<view class="btn-container">
+    <view class="btn bg-color-main" bindtap="submit">提交申请</view>
+</view>
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+let siteinfo = getApp().siteInfo;
+export default {
+  config: {
+    navigationBarTitleText: '退款'
+  },
+  data: {
+    tklx:['请选择退款原因','服务未开始','服务质量不满意','其它'],
+    tklx_index:0,
+    tkyy:['请选择退款原因','不想要了','卖家发错货','做工瑕疵','破损','质量问题'],
+    tkyy_index:0,    
+    shzt:['未收到货','已收到货'],
+    shzt_index:0,
+    money:'',
+    remark:'',
+    order:[],
+    site:siteinfo.site,
+    imgs:[],
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    this.setData({
+      id:options.order_id,
+      // id:12
+    })
+
+    this.initData();
+  },
+
+  initData(e){
+    console.log(e);
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getOrderDetail',
+      data:{token:wx.getStorageSync('token'),id:this.data.id},
+      success(res) {
+        console.log(res);
+        that.setData({
+          order:res.data.data,
+        })
+      }
+    })  
+  },
+
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+
+  },
+
+  submit(){
+    let that = this;
+
+    if(this.data.tkyy_index==0){ wx.showToast({title:'请选择退款原因'});return ;}
+    if(this.data.money==''||this.data.money>this.data.order.pay_money){ wx.showToast({title:'请输入有效退款金额'});return ;}
+
+    app.util.request({
+      'url': 'entry/wxapp/submitRefund',
+      data:{
+        token:wx.getStorageSync('token'),
+        order_id:this.data.id,
+        reason:this.data.tkyy[this.data.tkyy_index],
+        // tkyy:this.data.tkyy_index,
+        remark:this.data.remark,
+        // shzt:this.data.shzt_index,
+        money:this.data.money,
+        // imgs:this.data.imgs.join('&')
+      },
+      success(res) {
+        wx.showToast({
+          title: '已提交申请',
+        })
+        setTimeout(function(){
+          wx.navigateBack({
+            delta: 1,
+          })
+      },1000);        
+
+      }
+    }) 
+  },
+
+
+  bindTklxChange(e){
+      this.setData({
+        tklx_index:e.detail.value
+      })
+  },
+
+  bindTkyyChange(e){
+    this.setData({
+      tkyy_index:e.detail.value
+    })
+},
+
+  
+  bindShztChange(e){
+    this.setData({
+      shzt_index:e.detail.value
+    })
+},
+
+moneyInput(e){
+  this.setData({
+    money:e.detail.value
+  })
+},
+
+smInput(e){
+  this.setData({
+    remark:e.detail.value
+  })
+},
+
+
+  chooseImg(){
+
+    let that = this;
+    
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success (res) {
+        // tempFilePath可以作为img标签的src属性显示图片
+        const tempFilePaths = res.tempFilePaths
+        // var url = app.util.url('entry/wxapp/uploadPic');
+        wx.uploadFile({
+          // url:url,
+          url: siteinfo.site+"/app/index.php?i="+siteinfo.uniacid+"&c=entry&a=wxapp&do=UploadPic&m=jzfw_lincec",
+          filePath: tempFilePaths[0],
+          name: 'file',
+          success (res){
+            console.log(res.data)
+            //do something
+            let imgs = that.data.imgs;
+            imgs.push(res.data);
+            that.setData({
+              imgs:imgs
+            })
+
+          }
+        })
+
+
+      }
+    })
+  },
+
+
+  doimg(e){
+
+    console.log(e)
+    let k = e.currentTarget.dataset.k;
+    let arr = [];
+    let that = this;
+    wx.showActionSheet({
+      itemList: ['删除'],
+      success (res) {
+        if(res.tapIndex==0){
+          for(let i=0;i<that.data.imgs.length;i++){
+            console.log(that.data.imgs[i])
+          
+              if(i!=k){
+                console.log(i,k)
+                arr.push(that.data.imgs[i]);
+              }
+          }
+          console.log(k)
+          console.log(arr)
+          that.setData({
+            imgs:arr
+          })
+        }
+      }
+    })
+  },
+
+
+
+}
+</script>
+
+<style lang="less">
+
+/* lincec_store_share/pages/order/refund/apply.wxss */
+page{
+  background-color: #f7f7f7;
+}
+.container{
+  display: flex;
+  flex-direction: column;
+}
+.wrap{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-left: 10px;
+  background-color: #fff;
+}
+.row{
+  display: flex;
+  flex: 1;
+  padding: 15px 0;
+}
+.pick{
+  /* display: flex;
+  flex-direction: row;
+  flex: 1; */
+}
+.label{
+  display: flex;
+  width: 90px;
+  font-size: 14px;
+  color: #333;
+}
+.value{
+  display: flex;
+  flex: 1;
+}
+.icon{
+  display: flex;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+}
+.icon image{
+  display: flex;
+  width: 20px;
+  height: 20px;
+}
+
+.plc{
+  color: #999;
+  font-size: 13px;
+}
+input{
+  color: #333;
+  font-size: 14px;
+  width: 100%;
+}
+textarea{
+  width: 100%;
+  height: 100px;
+}
+
+.btn-container{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+}
+
+.btn{
+  display: flex;
+  flex: 1;
+  padding: 10px;
+  font-size: 15px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-radius: 4px;
+}
+
+
+
+
+.yj-row-file{
+  display: flex;
+  flex: 1;
+  padding: 10px;
+  background-color: #fff;
+}
+.yj-file{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.yj-file-add{
+  display: flex;
+  width: 80px;
+  height: 80px;
+  padding: 5px;
+}
+.yj-file-add image{
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+
+</style>

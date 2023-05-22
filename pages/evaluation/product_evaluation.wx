@@ -1,0 +1,257 @@
+<template>
+  <view>
+
+    <block wx:if="{{show_add_btn}}">
+      <view class="mix-bottom" style="padding:15px 10px;position:fixed;left:0;right:0;top:0;background-color:#fff;z-index:99999;"> 
+        <view class="evaluation-btn" bindtap="addEva">添加评价</view>
+      </view>
+      <view style="width:100%;height:65px;"></view>
+    </block>
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+    <view class="evaluation-container">
+        <view class="evaluation-wrap">
+          <view class="evaluation-item" wx:for="{{list}}" wx:for-index="k" wx:for-item="v">
+              <view class="evaluation-user">
+                <view class="evaluation-user-pic">
+                    <image src="{{v.avatarUrl}}"></image>
+                </view>
+                <view class="evaluation-user-name">{{v.nickName}}</view>
+                <view class="evaluation-time">{{v.create_time}}</view>
+                <view class="evaluation-sheet"  wx:if="{{show_add_btn||data_type==2}}" bindtap="toSheet" data-id="{{v.id}}">
+                  <image src="../../static/images/icon-sheet.png"></image>
+                </view>
+              </view>
+              <view class="evaluation-product">
+                <view class="evaluation-score">
+                  <image wx:for="{{v.score_stars}}" wx:for-index="k1" wx:for-item="v1" src="{{v1}}"></image>
+                </view>
+                <view class="evaluation-product-name">{{v.attribute_name}}</view>
+              </view>
+              <view class="evaluation-content">
+                <view class="evaluation-txt">{{v.content}}</view>
+              </view>
+            <view class="evaluation-attachment">
+              <block wx:for="{{v.attachment}}" wx:for-index="k1" wx:for-item="v1">
+                  <view class="evaluation-attachment-item" wx:if="{{k1==1||k1==4||k1==7}}" style="margin-left:3.5vw;margin-right:3.5vw;">
+                    <view class="evaluation-video" wx:if="{{v1.attachment_type==1}}">
+                      <video src="{{v1.src}}" show-center-play-btn='{{true}}' show-play-btn="{{true}}" controls></video>
+                    </view>            
+                    <view class="evaluation-pic" wx:if="{{v1.attachment_type==2}}">
+                        <image src="{{v1.src}}" bindtap="preImg" data-src="{{v1.src}}"  data-srcarr="{{v.pic}}"></image>
+                    </view>
+                  </view>
+                  <view class="evaluation-attachment-item" wx:else>
+                    <view class="evaluation-video" wx:if="{{v1.attachment_type==1}}">
+                      <video src="{{v1.src}}" show-center-play-btn='{{true}}' show-play-btn="{{true}}" controls></video>
+                    </view>            
+                    <view class="evaluation-pic" wx:if="{{v1.attachment_type==2}}">
+                        <image src="{{v1.src}}" bindtap="preImg" data-src="{{v1.src}}"  data-srcarr="{{v.pic}}"></image>
+                    </view>
+                  </view>                    
+              </block>
+
+
+            </view>  
+            <view class="evaluation-menu">
+                <view wx:if="{{v.is_zan}}" class="evaluation-menu-item evaluation-menu-item-selected" bindtap="zc" data-id="{{v.id}}" data-type="1">
+                  {{v.zan}} <image src="../../static/images/icon-zan-selected.png"></image>
+                </view>    
+                <view wx:else class="evaluation-menu-item" bindtap="zc" data-id="{{v.id}}" data-type="1">
+                  {{v.zan}} <image src="../../static/images/icon-zan.png"></image>
+                </view>   
+                <view wx:if="{{v.is_cai}}" class="evaluation-menu-item evaluation-menu-item-selected" bindtap="zc" data-id="{{v.id}}" data-type="2">
+                  {{v.cai}} <image src="../../static/images/icon-cai-selected.png"></image>
+                </view>                                                  
+                <view wx:else class="evaluation-menu-item" bindtap="zc" data-id="{{v.id}}" data-type="2">
+                  {{v.cai}} <image src="../../static/images/icon-cai.png"></image>
+                </view>              
+            </view>
+            <view wx:if="{{v.reply_list[0]}}" class="evaluation-reply mix-top">
+              <view wx:for="{{v.reply_list}}" wx:for-index="kr" wx:for-item="vr" class="evaluation-reply-item" style="margin-bottom:8px;">
+                  {{vr.content}}
+              </view> 
+            </view>            
+          </view>
+        </view>
+    </view>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: ''
+  },
+  data: {
+    data_type:0,
+    show_add_btn:false,
+  },
+  onLoad(e){
+    this.setData({product_id:e.product_id,data_type:e.data_type})
+    if(e.show_add_btn){this.setData({show_add_btn:true})}
+    if(e.data_type==1){
+        wx.setNavigationBarTitle({title:'商品评价'})
+    }else{
+        wx.setNavigationBarTitle({title:'我的评价'})
+    }
+  },
+
+  onShow(){
+    this.initData();
+  },
+
+  initData(e){
+    console.log(e);
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getProductEvaluation',
+      data:{
+          token:wx.getStorageSync('token'),
+          product_id:that.data.product_id,   
+          data_type:this.data.data_type,     
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+              list:res.data.data.list,
+        })
+
+      }
+    })  
+  },
+
+  addEva(){wx.navigateTo({url:'construct?product_id='+this.data.product_id})},
+
+  toSheet(e){
+    let id = e.currentTarget.dataset.id;
+      let that = this;
+      wx.showActionSheet({
+        itemList: ['删除', '下架'],
+        success (res) {
+          console.log(res.tapIndex)
+          if(res.tapIndex==0){that.delEvaluation(id);}
+          if(res.tapIndex==1){that.downEvaluation(id);}
+        }
+      })      
+  },
+
+  delEvaluation(id){
+    let that = this;
+    wx.showModal({
+      title: '提示',
+      content: '确定删除吗？',
+      success (res) {
+        if (res.confirm) {
+          app.util.request({
+            'url': 'entry/wxapp/delEvaluation',
+            data:{
+                token:wx.getStorageSync('token'),
+                evaluation_id:id,       
+              },
+            success(res) {
+              console.log(res);
+              that.initData();
+            }
+          })  
+        }
+      }
+    })    
+  },
+
+  downEvaluation(id){
+    let that = this;
+    wx.showModal({
+      title: '提示',
+      content: '确定下架该评论吗？',
+      success (res) {
+        if (res.confirm) {
+          app.util.request({
+            'url': 'entry/wxapp/downEvaluation',
+            data:{
+                token:wx.getStorageSync('token'),
+                evaluation_id:id,       
+              },
+            success(res) {
+              console.log(res);
+              that.initData();
+            }
+          })  
+        }
+      }
+    })    
+  },  
+
+  zc(e){
+    console.log(e);
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/czProductEvaluation',
+      data:{
+          token:wx.getStorageSync('token'),
+          evaluation_id:e.currentTarget.dataset.id,  
+          type:e.currentTarget.dataset.type,      
+        },
+      success(res) {
+        console.log(res);
+        that.initData();
+      }
+    })  
+  },  
+
+  preImg(e){
+    let src = e.currentTarget.dataset.src;
+    let arr = e.currentTarget.dataset.srcarr;
+    console.log(src)
+    wx.previewImage({
+      current:src,
+      urls:arr,
+    })    
+  },  
+
+}
+</script>
+
+<style lang="less">
+
+.evaluation-btn{color:var(--ColorMain);border:1rpx solid var(--ColorMain);border-radius: 100px;width:100%;padding:6px 0;text-align:center;}
+
+
+.evaluation-container{
+  // padding: 3vw 0;
+
+  .evaluation-wrap{display: flex;flex-direction: column;}
+  .evaluation-item{display: flex;flex: 1;flex-direction: column;background-color: #fff;margin-bottom: 10px;border-radius: 4px;padding: 2vw 5vw;}
+  .evaluation-user{display: flex;align-items: center;}
+  .evaluation-user-pic{display: flex;width: 40px;}
+  .evaluation-user-pic image{width: 30px;height: 30px;border-radius: 100px;}
+  .evaluation-user-name{display: flex;flex: 1;}
+  .evaluation-time{display: flex;width: 100px;justify-content: flex-end;font-size: 13px;color:#666;}
+  .evaluation-sheet{display: flex;width: 30px;align-items: center;justify-content: flex-end;}
+  .evaluation-sheet image{width: 12px;height: 12px;}
+  .evaluation-product{display: flex;margin: 4px 0;align-items: center;padding: 0 1vw;}
+  .evaluation-score{display: flex;width: 90px;}
+  .evaluation-score image{width: 16px;height: 16px;margin-right: 2px;}
+  .evaluation-product-name{margin-left: 14px;color: #666;font-size: 13px;}
+  .evaluation-content{margin-bottom: 0px;padding: 0 1vw;}
+  .evaluation-txt{font-size: 14px;color: #333;}
+  .evaluation-attachment{display:flex;flex-wrap:wrap;padding-left: 1.5vw;padding: 0 1vw;}
+  .evaluation-attachment-item{display:flex;width: 27vw;height: 27vw;margin-top: 3.5vw;}
+  .evaluation-video{width: 100%;height: 100%;}
+  .evaluation-video video{width: 100%;height: 100%;}
+  .evaluation-pic{width: 100%;height: 100%;}
+  .evaluation-pic image{width: 100%;height: 100%;border-radius: 10px;}
+  .evaluation-menu{display: flex;justify-content: flex-end;padding: 10px;color: #333;}
+  .evaluation-menu-item{display: flex;width: 40px;align-items: center;justify-content: flex-end;}
+  .evaluation-menu-item-selected{color: #d81e06;}
+  .evaluation-menu-item image{width: 18px;height: 18px;margin-left: 3px;}
+  .evaluation-reply{font-size: 13px;color: #666;padding: 10px 1vw 0;}
+
+}
+
+
+</style>

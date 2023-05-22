@@ -1,0 +1,209 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+/* pages/erkai/balance/balance.wxss */
+page {
+  background-color: #f7f7f7;
+}
+.header {
+  display: flex;
+  background-image: url("http://distribute.shop.lincec.top/static/images/ubg.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px 0 10px;
+}
+.title {
+  display: flex;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.money {
+  display: flex;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+}
+.menu-cont {
+  width: 90%;
+  display: flex;
+  padding: 20px;
+}
+.menu-wrap {
+  display: flex;
+  background-color: #fff;
+  flex: 1;
+  border-radius: 10px;
+  height: 60px;
+  padding: 10px;
+}
+.menu-item {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.menu-txt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600px;
+}
+.menu-sub-txt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 13px;
+}
+.border-r {
+  border-right: 1rpx solid #f7f7f7;
+}
+.imgtab {
+  display: flex;
+  width: 100%;
+  height: 65px;
+  margin-top: 40px;
+}
+.imgtab image {
+  width: 100%;
+  height: 100%;
+}
+.icon-time {
+  width: 15px;
+  height: 15px;
+  margin-right: 6px;
+}
+.search-container {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  flex-direction: row;
+  padding: 10px;
+  background-color: #f8f8f8;
+}
+.search-wrap {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  height: 30px;
+  align-items: center;
+}
+.search-time {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+.search-picker {
+  color: #8A8A8A;
+  font-size: 14px;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+.pick {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+.search-split {
+  display: flex;
+  width: 22px;
+  justify-content: center;
+  align-items: center;
+}
+.search-btn {
+  display: flex;
+  width: 40px;
+  justify-content: flex-end;
+  align-items: center;
+  color: #07c160;
+}
+.balance-container {
+  display: flex;
+  padding: 10px;
+}
+.balance-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+}
+.balance-item {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  padding: 15px 15px 15px 0;
+  border-bottom: 1rpx solid #eee;
+}
+.balance-l {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.balance-r {
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+}
+.balance-name {
+  font-size: 16px;
+  color: #000;
+  display: flex;
+  flex: 1;
+}
+.balance-time {
+  font-size: 13px;
+  color: #777;
+  display: flex;
+  flex: 1;
+}
+.balance-money {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.balance-now {
+  color: #777;
+  font-size: 13px;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.add {
+  color: #E4AE44;
+}

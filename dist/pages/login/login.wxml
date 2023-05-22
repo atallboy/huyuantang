@@ -1,0 +1,21 @@
+<view>
+
+  <view class="login">
+    <view class="logo">
+      <image src="{{system_info.logo}}" />
+    </view>
+    <view class="tip mix-top">
+      <view class="des">申请获取以下权限</view>
+      <view class="desc color-666">获取您的公开信息，如昵称、头像等。</view>
+    </view>
+
+    <!-- <view class="login-btn bg-color-main color-fff border-radius-10">授权登录</view> -->
+    <button style="background-color:#38B935;margin-top:100rpx;" class="weui-btn p-t-10 p-b-10 border-radius-100 m-t-50" type="primary" bindtap="updateUserInfo">授权登录</button>
+
+    <button style="background-color:#bbb;margin-top:40rpx;" class="weui-btn p-t-10 p-b-10 border-radius-100 m-t-50" type="primary" bindtap="toBack">返回</button>
+
+
+  </view>
+
+
+</view>

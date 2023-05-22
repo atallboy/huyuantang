@@ -1,0 +1,82 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+/* pages/erkai/team/team.wxss */
+image {
+  display: block;
+  width: 125rpx;
+  height: 125rpx;
+  border-radius: 4px;
+}
+.team-container {
+  display: flex;
+  flex: 1;
+  padding: 15px;
+  flex-direction: column;
+}
+.team-wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+.team-cate {
+  display: flex;
+  flex: 1;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.team-list {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.team-item {
+  display: flex;
+  width: 175rpx;
+  flex-direction: column;
+  padding-right: 50rpx;
+  margin-bottom: 30rpx;
+}
+.team-pic {
+  display: flex;
+  flex: 1;
+}
+.team-name {
+  display: flex;
+  flex: 1;
+}
+.team-name-txt {
+  width: 100%;
+  font-size: 12px;
+  color: #777;
+  max-height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  text-align: center;
+}

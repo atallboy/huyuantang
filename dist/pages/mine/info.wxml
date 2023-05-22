@@ -1,0 +1,124 @@
+<view>
+
+
+
+  <form catchsubmit="formSubmit" catchreset="formReset">
+
+
+    <view class="ui-row" style="height:40px;">
+      <view style="padding-left:10px;" class="ui-col valign-middle">
+        <view class="ui-col-content valign-middle"> {{user.level_info.name}} 身份信息</view>
+      </view>
+    </view>
+
+    <view class="form" style="background-color:#fff;padding:0 10px;">
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">姓名</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="name" placeholder="请输入" value="{{user.user_level_info.name}}" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">电话</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="tel" placeholder="请输入" value="{{user.user_level_info.tel}}" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">定位</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <view class="yj-form-row-pick-content" bindtap="chooseLocation">
+                <view class="picker-input">
+                  <input class="weui-input" name="input" value="{{dingwei}}" placeholder="点击选择定位" disabled placeholder-style="font-size:12px;"></input>
+                </view>
+                <view class="yj-form-row-item-sel">
+                  <image class="sel-icon" src="../../static/images/icon-addr.png" />
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">省市区</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="input" placeholder="请点击上方获取定位" disabled value="{{user.user_level_info.province}}{{user.user_level_info.city}}{{user.user_level_info.district}}" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">详细位置</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="address" placeholder="请输入" value="{{user.user_level_info.address}}" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+
+
+
+    <view class="ui-row" style="height:75px;">
+      <view class="ui-col" style="">
+        <view class="ui-col-content"></view>
+      </view>
+    </view>
+
+    <view class="submit-wrap">
+      <button form-type="submit" class="submit-btn">保存</button>
+    </view>
+
+  </form>
+
+</view>

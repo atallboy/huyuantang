@@ -1,0 +1,146 @@
+<template>
+  <view>
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+<view class="record-container">
+    <view class="record-wrap">
+        <view class="record-item" wx:for="{{list}}">
+            <view class="record-info">
+                <view class="record-type">{{item.type_msg}} <text>{{item.status_msg}}</text> </view>
+                <view class="record-cate" wx:if="{{item.type==2}}">支付宝账户：{{item.zfb_account}}</view>
+                <view class="record-cate" wx:if="{{item.type==3}}">银行：{{item.bank}}</view>
+                <view class="record-cate" wx:if="{{item.type==3}}">银行账号：{{item.bank_card_account}}</view>
+                <view class="record-cate">提现时间：{{item.create_time}}</view>
+                <view class="record-cate" wx:if="{{item.status!=0}}">审核时间：{{item.deal_time}}</view>
+                <view class="record-cate" wx:if="{{item.status!=0}}">审核说明：{{item.deal_remark}}</view>
+            </view>
+            <view class="record-money">
+              <view class="withdrawal-money">￥{{item.withdrawal_money}}</view>
+              <view class="withdrawal-tax-money">税额:{{item.withdrawal_tax_money}}</view>
+            </view>
+        </view>
+    </view>
+</view>
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '提现记录'
+  },
+  data: {},
+
+  onLoad: function (options) {
+    if(!wx.getStorageSync('token')){
+      wx.showModal({title: '提示',content: '登录后才可以操作哦',success (res) {if (res.confirm) {wx.navigateTo({url: '../login/login',})} else if (res.cancel) {wx.navigateBack({delta: 1,})}}})
+    } 
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+      this.getList();
+  },
+
+  onPullDownRefresh: function () {
+    this.getList();
+    wx.stopPullDownRefresh();
+  },    
+
+  getList(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getWithdrawalRecord',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log(res);
+        that.setData({
+          list:res.data.data.list,
+        })
+      }
+    })  
+}, 
+
+
+
+}
+</script>
+
+<style lang="less">
+
+/* lincec_store_share/pages/tixian/record.wxss */
+
+page{
+  background-color: #f7f7f7;
+}
+
+
+.record-container{
+  display: flex;
+  padding: 10px;
+}
+.record-wrap{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.record-item{
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+.record-info{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.record-type{
+  display: flex;
+  padding: 6px 0;
+  align-items: center;
+}
+.record-type text{
+  margin-left: 10px;
+  font-size: 12px;
+  padding: 0 10rpx;
+  border-radius: 20px;
+  color: #ff4544;
+  border: 1px solid #ff4544;
+}
+
+.record-cate{
+  display: flex;
+  font-size: 13px;
+  color: #555;
+  padding: 4px 0;
+}
+
+.record-money{
+  display: flex;
+  width: 100px;
+  align-items: center;
+  justify-content: flex-end; 
+  flex-direction: column;
+}
+.withdrawal-money{  font-size: 18px;font-weight: 700;}
+.withdrawal-tax-money{font-size: 13px;color: #666;margin-top: 10px;}
+
+
+</style>

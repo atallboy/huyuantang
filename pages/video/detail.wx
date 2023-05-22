@@ -1,0 +1,174 @@
+<template>
+  <view>
+
+
+<view class="page-body">
+  <view class="video-container">
+    <video 
+      id="myVideo" 
+      src="{{detail.play_url}}" 
+      binderror="videoErrorCallback" 
+      show-center-play-btn='{{false}}' 
+      show-play-btn="{{true}}" 
+      controls
+      bindenterpictureinpicture='bindVideoEnterPictureInPicture'
+      bindleavepictureinpicture='bindVideoLeavePictureInPicture'
+      bindplay="bindplay"
+    ></video>
+  </view>
+</view>
+
+<view class="info mix-bottom"> 
+  <view class="title">{{detail.title}}</view>
+  <view class="sub-title">{{detail.summary}}</view>
+</view>
+
+<view class="recommend">推荐</view>
+
+<view class="video-list-a-container">
+  <view class="video-list-a-wrap">
+    <view class="video-list-a-item mix-bottom" wx:for="{{recommend}}" bindtap="detail" data-id="{{item.id}}">
+        <view class="video-list-a-pic">
+          <image src="{{item.sub_image}}"></image>
+        </view>
+        <view class="video-list-a-info">
+            <view class="video-list-a-title">{{item.title}}</view>
+            <view class="video-list-a-summary">
+              <view class="video-list-a-summary-col"> <image src="../../static/images/icon-duration.png"></image> {{item.duration}}</view>
+              <view class="video-list-a-summary-col"> <image src="../../static/images/icon-video-play.png"></image> {{item.watch_num}}</view>
+              <!-- <view class="video-list-a-summary-col"> <image src="../../static/images/icon-score-a.png"></image> {{item.score}}</view> -->
+            </view>
+        </view>
+    </view>
+  </view>
+</view>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+let timeout,videoContext;
+export default {
+  config: {
+    navigationBarTitleText: '',
+    navigationBarBackgroundColor: '#000000',  
+       navigationBarTextStyle: 'white'  
+  },
+  data: {
+    id:1,
+    detail:{},
+    recommend:[],
+    cate_id:0,
+  },
+
+  onLoad(e){
+    if(e.id){this.setData({id:e.id})}
+    this.getDetail();
+    this.getList();
+  },   
+
+  onShow(){  
+
+  },
+
+  onPullDownRefresh: function () {
+    this.getDetail();
+    this.getList();
+    wx.stopPullDownRefresh();
+  },   
+
+  onReady (res) {
+    this.videoContext = wx.createVideoContext('myVideo')
+  },  
+
+  bindplay(e){
+    console.log(e)
+    
+  },
+
+
+
+  detail(e){
+    this.setData({id:e.currentTarget.dataset.id})
+    this.getDetail();
+    this.getList();
+  },
+
+  getDetail(e){
+    console.log(e);
+    let that = this; 
+    app.util.request({
+      'url': 'entry/wxapp/getVideoDetail',
+      data:{
+          token:wx.getStorageSync('token'),    
+          id:this.data.id,    
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          detail:res.data.data,
+        })
+      }
+    })  
+  },  
+
+  getList(e){
+    console.log(e);
+    let that = this; 
+    app.util.request({
+      'url': 'entry/wxapp/getVideoList',
+      data:{
+          token:wx.getStorageSync('token'),    
+          video_id:this.data.id,  
+
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          recommend:res.data.data,
+        })
+      }
+    })  
+  },   
+
+  onHide(){
+    console.log('pause')
+    this.videoContext.pause()
+  },
+
+  onUnload(){
+      console.log('timeout')
+      clearTimeout(timeout);
+
+    //  videoContext.exitBackgroundPlayback();
+     this.videoContext.pause()
+    
+ },
+
+
+}
+</script>
+
+<style lang="less">
+.video-container{}
+video{width: 100%;}
+.info{padding: 10px 10px 20px;}
+.title{font-size: 16px;font-weight: 700;}
+.sub-title{color: #666;font-size: 12px;margin-top: 6px;}
+
+.recommend{padding: 10px 10px 0;font-size: 15px;}
+
+.video-list-a-container{padding: 10px;}
+.video-list-a-wrap{display: flex;flex-direction: column;}
+.video-list-a-item{display: flex;padding: 15px 0;}
+.video-list-a-pic{display: flex;width: 120px;height: 80px;}
+.video-list-a-pic image{width: 100%;height: 100%;border-radius: 4px;}
+.video-list-a-info{display: flex;flex: 1;flex-direction: column;padding-left: 6px;}
+.video-list-a-title{height: 50px;}
+.video-list-a-summary{display: flex;flex: 1;}
+.video-list-a-summary-col{display: flex;flex: 1;font-size: 12px;color: #666;align-items: flex-end;padding-left: 3px;}
+.video-list-a-summary-col image{width: 18px;height: 18px;margin-right: 3px;}
+
+
+</style>

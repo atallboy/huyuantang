@@ -1,0 +1,385 @@
+<template>
+  <view>
+
+    <view style="padding:10px;">
+
+      <view style="margin:30px 0 10px;position: relative;" wx:for="{{product_list}}" wx:for-index="k" wx:for-item="item">
+        <view style="background-color: #fff;padding-bottom: 10px;border-bottom: 1rpx dashed #f7f7f7;border-radius: 10px;padding:10px;">
+            <view style="display:flex;flex:1;flex-direction:column;">
+              <view style="display:flex;align-items:center;justify-content:center;height: 50px;">
+                  <image src="{{item.sub_image}}" style="width:80px;height:80px;position: absolute;top: -20px;background-color: #fff;border-radius: 4px;"></image>
+              </view>
+              <view style="display:flex;align-items:center;justify-content:center;">
+                  <view style="line-height:20px;">{{item.name}}</view>
+              </view>
+            </view>
+            <view class="star-demo-bottom" style="margin-bottom:0;margin-top: 10px;">
+                <ui-row height="35">
+                    <ui-col vertical-align="middle" width="60" style="font-weight:bold;">产品打分</ui-col>
+                    <ui-col vertical-align="middle" align="left">
+                        <ui-star data="{{item.stars}}" half="{{true}}" value="{{item.score}}" readonly="{{status}}"  bindchange="productScore" data-k="{{k}}"></ui-star>
+                    </ui-col>
+                </ui-row>
+            </view> 
+        </view>
+        <view  style="background-color: #fff;border-radius: 10px;padding:10px;">
+            <view class="txt-wrap" wx:if="{{!status}}">
+                <textarea class="txt-content" placeholder="请输入评价内容,从多个角度评价宝贝，可以帮助更多想买的人" value="{{item.content_1}}" disabled="{{status}}" bindinput="detailInput"  data-k="{{k}}" />  
+            </view>
+            <view style="display:flex;flex-wrap:wrap;">
+              <view wx:for="{{item.video}}"  wx:for-index="k1" wx:for-item="v1" style="display:flex;width:120px;margin: 0 10px 10px 0;position: relative;border-radius: 4px;">
+                <video 
+                  style="width:120px;height:80px;"
+                  id="myVideo" 
+                  src="{{v1}}" 
+                  show-center-play-btn='{{false}}' 
+                  show-play-btn="{{true}}" 
+                  controls
+                  bindenterpictureinpicture='bindVideoEnterPictureInPicture'
+                  bindleavepictureinpicture='bindVideoLeavePictureInPicture'
+                  bindplay="bindplay"
+                ></video>
+                <image wx:if="{{!status}}" src="../../static/images/icon-close-circle.png" bindtap="delVideo" data-k="{{k}}" data-k1="{{k1}}" style="width:20px;height:20px;position:absolute;top:-7px;right:-7px;"></image>
+              </view>            
+              <view wx:for="{{item.pic}}"  wx:for-index="k1" wx:for-item="v1" style="display:flex;width:80px;margin: 0 16px 10px 0;position: relative;border-radius: 4px;">
+                  <image src="{{v1}}" bindtap="preImg" data-src="{{v1}}"  data-srcarr="{{item.pic}}" style="width:80px;height:80px;"></image>
+                  <image wx:if="{{!status}}" src="../../static/images/icon-close-circle.png" bindtap="delPic" data-k="{{k}}" data-k1="{{k1}}" style="width:20px;height:20px;position:absolute;top:-7px;right:-7px;"></image>
+              </view>
+            </view>
+            <view wx:if="{{!status}}"  style="display:flex;flex-direction:column;border: 1px solid #ccc;border-radius: 4px;padding: 15px;"> 
+              <view style="display:flex;align-items:center;justify-content:center;margin-bottom: 10px;">
+                   <view bindtap="selPic" data-k="{{k}}" data-pic="{{item.pic}}" data-video="{{item.video}}" style="display: flex;width:100px;align-items: center;justify-content: center;">
+                      <image src="../../static/images/icon-upload-pic.png" style="width:40px;height:34px;"></image>
+                   </view> 
+                   <view bindtap="selVideo" data-k="{{k}}" data-pic="{{item.pic}}" data-video="{{item.video}}" style="display: flex;width:100px;align-items: center;justify-content: center;">
+                      <image src="../../static/images/icon-upload-video.png" style="width:40px;height:40px;"></image>
+                   </view> 
+              </view>
+              <view style="display:flex;align-items:center;justify-content:center;"> 发图/视频能帮助他人更真实地了解商品 </view>
+            </view>
+        </view>
+      </view>
+
+      <view style="padding:10px;margin-top:10px;background-color:#fff;">
+          <view class="star-demo-bottom">
+              <ui-row height="35">
+                  <ui-col vertical-align="middle" align="center">平台评价</ui-col>
+              </ui-row>
+          </view>          
+          <view class="star-demo-bottom">
+              <ui-row height="35">
+                  <ui-col vertical-align="middle" width="50" style="font-weight:bold;">服务</ui-col>
+                  <ui-col vertical-align="middle" align="left">
+                      <ui-star data="{{evaluation.stars}}" value="{{evaluation.service}}" readonly="{{status}}"  bindchange="serviceScore"></ui-star>
+                  </ui-col>
+              </ui-row>
+          </view>
+          <view class="star-demo-bottom">
+              <ui-row height="35">
+                  <ui-col vertical-align="middle" width="50" style="font-weight:bold;">物流</ui-col>
+                  <ui-col vertical-align="middle" align="left">
+                      <ui-star data="{{evaluation.stars}}" value="{{evaluation.deliver}}" readonly="{{status}}"  bindchange="deliverScore"></ui-star>
+                  </ui-col>
+              </ui-row>
+          </view>
+      </view>
+
+      <view class="btn-wrap" wx:if="{{!status}}">
+          <view class="btn bg-color-main" bindtap="submit">提交评价</view>
+      </view>
+
+
+    </view>
+
+
+
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+let siteinfo = getApp().siteInfo;
+export default {
+  config: {
+    navigationBarTitleText: '评价'
+  },
+    data:{
+        starResult1: '感觉怎么样，打个分吧',
+        title:'来给我们评个分吧',
+        star:0,
+        star1:0,
+        star2:0,
+        star3:0,
+        status:true,
+        order_id:0,
+        detail:'',
+
+        evaluation:{},
+        product_list:[],
+        imgs:[{},{}],
+    },
+
+  onLoad(e){
+    this.setData({
+      order_id:e.order_id,
+      // order_id:61,
+    })
+    this.initData();
+  },
+
+  detailInput(e){
+    let k = e.currentTarget.dataset.k;
+    let str = 'product_list['+k+'].content_1';
+    this.setData({[str]:e.detail.value}) 
+  },
+  delPic(e){
+      let k = e.currentTarget.dataset.k;
+      let k1 = e.currentTarget.dataset.k1;
+      let arr = [];
+      for(let i=0;i<this.data.product_list[k].pic.length;i++){
+        if(i!=k1){arr.push(this.data.product_list[k].pic[i])}
+      } 
+      let str = 'product_list['+k+'].pic'
+      this.setData({[str]:arr})    
+  },
+  delVideo(e){
+      let k = e.currentTarget.dataset.k;
+      let k1 = e.currentTarget.dataset.k1;
+      let arr = [];
+      for(let i=0;i<this.data.product_list[k].video.length;i++){
+        if(i!=k1){
+          arr.push(this.data.product_list[k].video[i])
+        }
+      } 
+      let str = 'product_list['+k+'].video'
+      this.setData({
+        [str]:arr
+      })    
+  },
+
+  preImg(e){
+    let src = e.currentTarget.dataset.src;
+    let arr = e.currentTarget.dataset.srcarr;
+    console.log(src)
+    wx.previewImage({
+      current:src,
+      urls:arr,
+    })    
+  },
+
+  submit(e){
+    console.log(e);
+    let data = {score:'',content:'',pic:[],video:[]};
+    let arr = [];
+    
+    for(let i=0;i<this.data.product_list.length;i++){
+        if(this.data.product_list[i].score==0){wx.showToast({title:'请对产品打分',icon:'none'});return ;}
+        data = {product_id:this.data.product_list[i].id,score:this.data.product_list[i].score,content:this.data.product_list[i].content_1,pic:this.data.product_list[i].pic.join('&'),video:this.data.product_list[i].video.join('&')};
+        arr.push(data);
+    }
+    if(this.data.evaluation.service==0){wx.showToast({title:'请对服务打分',icon:'none'});return ;}
+    if(this.data.evaluation.deliver==0){wx.showToast({title:'请对物流打分',icon:'none'});return ;}
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/submitOrderEvaluation',
+      data:{
+          token:wx.getStorageSync('token'),
+          order_id:that.data.order_id,  
+          product_evaluation:arr,
+          service:this.data.evaluation.service,
+          deliver:this.data.evaluation.deliver,                
+        },
+      success(res) {
+          console.log(res);
+          that.initData();
+          wx.showToast({
+            title:'评价成功'
+          })
+      }
+    })  
+
+
+  },
+
+
+  initData(e){
+    console.log(e);
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getOrderEvaluation',
+      data:{
+          token:wx.getStorageSync('token'),
+          order_id:that.data.order_id,        
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+              product_list:res.data.data.product_list,
+              evaluation:res.data.data.evaluation,
+        })
+        if(res.data.data.evaluation.service>0){
+           that.setData({status:true})          
+        }else{
+           that.setData({status:false}) 
+        }
+      }
+    })  
+  },
+
+  productScore (e) {
+      let k = e.currentTarget.dataset.k;
+      let str = 'product_list['+k+'].score'
+      let index= e.detail
+      this.setData({[str]:index})
+  },
+
+  serviceScore (e) {
+      let str = 'evaluation.service'
+      this.setData({[str]:e.detail})
+  },
+  deliverScore (e) {
+      let str = 'evaluation.deliver'
+      this.setData({[str]:e.detail})
+  }, 
+
+  selPic(e){
+    console.log(siteinfo);
+    let that = this;
+    wx.chooseImage({
+      count: 9,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],    
+      success (res) {
+        const tempFilePaths = res.tempFilePaths
+        wx.showLoading();
+        for(let i=0;i<tempFilePaths.length;i++){
+          that.toUpload(e,tempFilePaths[i])
+        }
+        wx.hideLoading()
+      }
+    })
+  },  
+
+  selVideo(e){
+      let that = this;
+      wx.chooseVideo({
+        sourceType: ['album','camera'],
+        maxDuration: 60,
+        camera: 'back',
+        success(res) {
+          console.log(res.tempFilePath)
+             wx.showLoading();
+             that.toUpload(e,res.tempFilePath);
+             wx.hideLoading();
+        }
+      })
+  },
+  
+  toUpload(e,file){
+      let that = this;
+      let k = e.currentTarget.dataset.k;
+      let pic = e.currentTarget.dataset.pic;
+      let video = e.currentTarget.dataset.video;            
+        wx.uploadFile({
+          url: siteinfo.siteroot+"/upload?i="+siteinfo.uniacid+'&token='+wx.getStorageSync('token'),
+          filePath: file,
+          name: 'file',
+          formData:{return_type:1},
+          success (res){                           
+              let data = JSON.parse(res.data);          
+              if(data.data.file_type==1){
+                let str = 'product_list['+k+'].pic';         
+                pic.push(data.data.src)          
+                that.setData({
+                  [str]:pic
+                })
+              } 
+              if(data.data.file_type==2){
+                let str = 'product_list['+k+'].video';         
+                video.push(data.data.src)          
+                that.setData({
+                  [str]:video
+                })
+              }                       
+          }
+        })
+  },
+
+
+}
+</script>
+
+<style lang="less">
+
+page{background-color: #f1f1f1;}
+
+.main-star{
+  width: 250px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.star-demo-top {
+  padding-top: 10px;
+  .result {
+    font-size: 14px; 
+    color: #ff5800;
+    text-align: center;
+    line-height: 60px;    
+    font-size: 16px;
+  }
+}
+.star-demo-middle {
+  text-align: center;
+  font-size: 12px;
+  color: #707070;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+.star-demo-bottom {
+  width: 220px;
+  margin: 0 auto;
+  margin-bottom: 10px;  
+  .title {
+    flex: 1;
+    font-size: 14px;
+    height: 36px;
+    line-height: 30px;
+    margin-right: 5px;
+    color: #707070;
+  }
+}
+
+
+  .btn-wrap{
+    // padding: 50px;
+    background-color: #fff;
+    margin: 20px 0;
+  }
+  .btn{
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+  }
+
+.txt-wrap{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;    
+}
+
+.txt-content{
+    width:100%;
+    height:100px;
+    padding: 10px;
+    border-radius: 4px;    
+}
+
+</style>

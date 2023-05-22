@@ -1,0 +1,468 @@
+<template>
+  <view>
+
+    <form catchsubmit="formSubmit" catchreset="formReset">
+
+      <ui-row height="40">
+          <ui-col vertical-align="middle" class="wrap-label">店铺信息</ui-col>
+      </ui-row>  
+
+      <view class="form" style="background-color:#fff;padding:0 10px;">
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">店铺名称</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <input class="weui-input" name="mch_name" value="{{detail.mch_name}}" placeholder="请输入" confirm-type="next" placeholder-style="font-size:12px;" />
+              </ui-col>
+          </ui-row>   
+        </view>
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">店铺客服</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <input class="weui-input" name="mch_tel" value="{{detail.mch_tel}}" placeholder="请输入" confirm-type="next" placeholder-style="font-size:12px;" />
+              </ui-col>
+          </ui-row>   
+        </view>       
+      </view>
+
+      <ui-row height="40">
+          <ui-col vertical-align="middle" class="wrap-label">位置信息</ui-col>
+      </ui-row> 
+
+      <view class="form" style="background-color:#fff;padding:0 10px;">
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">店铺定位</text> </ui-col>
+              <ui-col vertical-align="middle">              
+                  <view class="yj-form-row-pick-content" bindtap="chooseLocation">
+                    <view class="picker-input">
+                      <input class="weui-input" name="input" value="{{location}}" placeholder="点击选择定位" disabled placeholder-style="font-size:12px;" />
+                    </view>
+                    <view class="yj-form-row-item-sel">
+                      <image class="sel-icon" src="../../../static/images/icon-location.png" />
+                    </view>
+                  </view>              
+              </ui-col>
+          </ui-row>   
+        </view>    
+        <view class="mix-bottom" wx:if="{{latitude}}">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">省市区</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <input class="weui-input" name="input" placeholder="请输入" disabled value="{{province}},{{city}},{{district}}" placeholder-style="font-size:12px;" />
+              </ui-col>
+          </ui-row>   
+        </view>
+        <view class="mix-bottom" wx:if="{{latitude}}">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">详细位置</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <input class="weui-input" name="address" placeholder="请输入" value="{{address}}" placeholder-style="font-size:12px;" />
+              </ui-col>
+          </ui-row>   
+        </view>       
+
+      </view>     
+
+      <ui-row height="40">
+          <ui-col vertical-align="middle" class="wrap-label">个人信息</ui-col>
+      </ui-row>  
+
+      <view class="form" style="background-color:#fff;padding:0 10px;">
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">申请人姓名</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <input class="weui-input" name="user_name" value="{{detail.user_name}}" confirm-type="next" placeholder="请输入" placeholder-style="font-size:12px;" />
+              </ui-col>
+          </ui-row>   
+        </view>
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">手机号码</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <input class="weui-input" name="user_tel" value="{{detail.user_tel}}" confirm-type="next" placeholder="请输入" placeholder-class="placeholderClass" />
+              </ui-col>
+          </ui-row>   
+        </view>   
+      </view>
+
+      <!-- <ui-row height="40">
+          <ui-col vertical-align="middle" class="wrap-label">入驻类目</ui-col>
+      </ui-row>   -->
+
+      <!-- <view class="form" style="background-color:#fff;padding:0 10px;">
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">申请类目</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <view class="yj-form-row-item-content">
+                    <picker value="{{cateIndex}}" bindchange="bindChange" class="yj-picker" range="{{cateArr}}" range-key="name">
+                      <view class="yj-form-row-pick-content">
+                        <view class="picker-input">
+                          <input class="yj-input" value="{{cateArr[cateIndex].name}}" disabled placeholder="选择类目" placeholder-class="placeholderClass"></input>
+                        </view>
+                        <view class="yj-form-row-item-sel">
+                          <image class="sel-icon" src="../../../static/images/icon-arrow-bottom.png" />
+                        </view>
+                      </view>
+                    </picker>      
+                  </view>        
+              </ui-col>
+          </ui-row>   
+        </view>
+      </view> -->
+
+      <ui-row height="40">
+          <ui-col vertical-align="middle" class="wrap-label">其它信息</ui-col>
+      </ui-row>  
+
+      <view class="form" style="background-color:#fff;padding:0 10px;">
+        <view class="mix-top">
+          <ui-row height="100">
+              <!-- <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col> -->
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">店铺简介</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <textarea name="remark" value="{{detail.remark}}" style="height: 70px;background: #f7f7f7;padding:10px;width:90%;" placeholder="如具体经营业务等" />
+              </ui-col>
+          </ui-row>   
+        </view>      
+      </view>
+
+        <view style="padding:10px 0 10px 20px;display:flex;align-items:center;"> 
+          <view style=""><checkbox-group bindchange="changDecalation"><checkbox style="transform:scale(0.6,0.6);" value="1" checked="{{agree_declaration}}" /></checkbox-group> </view>
+          <view style="font-size:12px;color:#666;">我已阅读并同意
+            <navigator style="display:inline-block;color:#1e90ff;" url="/pages/article/detail?type=user_service_agreement">《用户服务协议》</navigator>
+            <navigator style="display:inline-block;color:#1e90ff;" url="/pages/article/detail?type=privacy_policy">《隐私政策》</navigator>
+            等协议</view>                
+        </view>
+
+      <ui-row height="75"><ui-col></ui-col></ui-row>
+      
+      <view class="submit-wrap">
+        <button form-type="submit" class="submit-btn">保存</button>
+      </view>
+      
+    </form>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+let siteinfo = getApp().siteInfo;
+var QQMapWX = require('../../../static/utils/qqmap-wx-jssdk.js');
+var qqmapsdk;
+export default {
+  config: {
+    navigationBarTitleText: '商户信息'
+  },
+  data: {
+    mch_id:0,
+    step:1,
+    detail:[],
+    cateArr:[],
+    cateIndex:-1,
+    province:'',
+    city:'',
+    district:'',
+    location:'',
+    address:'',   
+    latitude:'',
+    longitude:'',     
+    mch_cate:[],
+    agree_declaration:false,
+  },
+
+  changDecalation(e){console.log(e); this.setData({agree_declaration:!this.data.agree_declaration})},
+
+  onLoad(e){
+    qqmapsdk = new QQMapWX({
+      key: 'KHABZ-MEULF-GGWJE-NUL5G-4TGFT-4VFT4'
+    });    
+    this.getMchCate();
+    this.getMchDetail();
+  },
+
+  onShow(){ 
+    if(!wx.getStorageSync('token')){wx.navigateTo({url:'../login/login'})}
+
+  },
+
+  selStep(e){
+    // this.setData({step:e.currentTarget.dataset.step})
+  },
+
+  bindChange(e){
+    this.setData({cateIndex:e.detail.value})
+  },
+
+  formSubmit(e) {
+    console.log('form发生了submit事件，携带数据为：', e.detail.value)
+
+    if(e.detail.value.mch_name==''){wx.showToast({title:'请输入店铺名称',icon:'none'});return ;} 
+    if(e.detail.value.mch_tel==''){wx.showToast({title:'请输入店铺客服',icon:'none'});return ;} 
+    if(e.detail.value.user_name==''){wx.showToast({title:'请输入申请人姓名',icon:'none'});return ;} 
+    if(e.detail.value.user_tel==''){wx.showToast({title:'请输入申请人电话',icon:'none'});return ;} 
+    if(this.data.latitude==''){wx.showToast({title:'请选择定位',icon:'none'});return ;}
+    // if(this.data.cateIndex==-1){wx.showToast({title:'请选择类目',icon:'none'});return ;}
+    if(e.detail.value.address==''){wx.showToast({title:'请输入详细位置',icon:'none'});return ;} 
+
+    if(!this.data.agree_declaration){wx.showToast({title:'请阅读并都勾选协议',icon:'none'});return ;}    
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/submitMchApply',
+      data:{
+          id:this.data.detail.id,
+          token:wx.getStorageSync('token'), 
+          opt:'base_info',
+          // cate_id: this.data.cateArr[that.data.cateIndex].id,
+          mch_name:e.detail.value.mch_name,
+          mch_tel:e.detail.value.mch_tel,
+          user_name:e.detail.value.user_name,
+          user_tel:e.detail.value.user_tel,
+          remark:e.detail.value.remark,
+          province:this.data.province,
+          city:this.data.city,
+          district:this.data.district,
+          latitude:this.data.latitude,
+          longitude:this.data.longitude,
+          address:e.detail.value.address,
+          location:this.data.location,          
+        },
+      success(res) {
+        console.log(res);   
+        wx.showToast({title:'保存成功'})     
+        // that.getMchDetail();           
+      }
+    }) 
+
+ 
+  }, 
+
+  getMchDetail(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getMchDetail',
+      data:{
+          token:wx.getStorageSync('token'),      
+        },
+      success(res) {
+        console.log(res);
+        if(res.data.data.step!=1){
+          that.setData({
+            detail:res.data.data.info,
+            step:res.data.data.step,
+            mch_cate:res.data.data.mch_cate,
+            province:res.data.data.info.province,
+            city:res.data.data.info.city,
+            district:res.data.data.info.district,
+            address:res.data.data.info.address,
+            location:res.data.data.info.location,
+            latitude:res.data.data.info.latitude,
+            location:res.data.data.info.location,
+            }) 
+        }
+          
+
+      }
+    }) 
+  },
+
+
+  getMchCate(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getMchCate',
+      data:{
+          token:wx.getStorageSync('token'),      
+        },
+      success(res) {
+        console.log(res);
+        that.setData({cateArr:res.data.data})           
+
+      }
+    }) 
+  },
+
+  chooseLocation(){
+    let vm = this;
+    let str = 'data.address_name';
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userLocation']) {
+          wx.authorize({
+            scope: 'scope.userLocation',
+            success () {
+              wx.chooseLocation({
+                success (res) {
+                    console.log(res);
+                    vm.setData({
+                      latitude:res.latitude,
+                      longitude:res.longitude,
+                    })
+                    vm.getLocal(res.latitude,res.longitude);
+                }
+              })
+            },
+          fail: function (res) {
+            wx.showModal({
+              content:'你拒绝了授权地理位置，或许会出现不能正常使用的情况'
+            })
+          },            
+          })
+        }else{
+              wx.chooseLocation({
+                success (res) {
+                    console.log(res);
+                    vm.setData({
+                      latitude:res.latitude,
+                      longitude:res.longitude,
+                    })    
+                    vm.getLocal(res.latitude,res.longitude);                                  
+                }
+              })          
+        }
+      }
+    })
+  },
+
+  getLocal: function (latitude, longitude) {
+    console.log(latitude)
+    let vm = this;
+    qqmapsdk.reverseGeocoder({
+      location: {
+        latitude: latitude,
+        longitude: longitude
+      },
+      success: function (res) {
+        console.log("getLocal");
+        console.log(res);
+        vm.setData({
+          addr_data:res.result,
+          province:res.result.ad_info.province,
+          city:res.result.ad_info.city,
+          district:res.result.ad_info.district,
+          location:res.result.address_component.street_number,
+          address:res.result.address_component.street_number,
+          })        
+      },
+      fail: function (res) {
+        console.log("fail");
+        console.log(res);
+      },
+      complete: function (res) {
+        // console.log(res);
+      }
+    });
+  },  
+
+}
+</script>
+
+<style lang="less">
+.l-active{width: 100%;height: 2rpx;background-color: #FA5C37;}
+.l-default{width: 100%;height: 2rpx;background-color: #F9DBD0;}
+.line{width: 100%;height: 2rpx;background-color: #F9DBD0;}
+.n-active{background-color:#FA5C37;color:#fff;width: 16px;height: 16px;line-height: 16px;font-size: 11px;border-radius: 100px;}
+.n-default{background-color: #F9DBD0;color: #fff;width: 16px;height: 16px;line-height: 16px;font-size: 11px;border-radius: 100px;}
+.t-active{color: #FA5C37;}
+.t-default{color: #CFCFCF;}
+.placeholderClass{font-size: 12px;}
+.xing{width: 7px;height: 7px;}
+.sel-icon{width: 20px;height: 20px;}
+.yj-form-row-pick-content{display: flex;}
+.picker-input{display: flex;flex: 1;}
+.yj-form-row-item-sel{display: flex;width: 50px;justify-content: center;align-items: center;}
+
+.submit-wrap{position: fixed;left: 0;right: 0;bottom: 0;background-color: #fff;z-index:99999;}
+.submit-btn{color:#fff;background-color: var(--ColorMain);border-radius: 2rpx;width: 92%;margin: 0 auto;margin-top: 20px;margin-bottom: 20px;}
+
+
+.image-upload-container{
+  display: flex;
+  // padding: 10px;
+  flex-direction: column;
+
+  .image-upload-wrap{
+    display: flex;
+    flex: 1;
+    background-color: #fff;
+    padding: 20px 0;
+  }
+  
+  .image-upload-item{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;align-items: center;
+  }
+
+  .image-upload-preview{
+    display: flex;
+    flex: 1;
+  }
+  .image-upload-preview image{
+    width: 120px;
+    height: 120px;
+  }
+  .image-upload-btn{
+    display: flex;
+    flex: 1;
+  }
+  .image-upload-select{
+      width: 100px;
+      padding: 6px 0;
+      text-align: center;
+      background-color: #ddd;
+      border-radius: 6px;
+      margin-top: 10px;
+  }
+}
+
+.unit{color: #FA5C37;}
+.price{
+  font-size: 30px;
+  color: #FA5C37;
+}
+
+  .msg{
+    padding: 10px;
+    text-align: center;
+    padding-top: 100px;
+    font-size: 23px;
+    color: #FA5C37;
+  }
+
+.wrap-label{padding-left: 10px;color: #666;}
+
+
+</style>

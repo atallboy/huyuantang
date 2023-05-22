@@ -1,0 +1,15 @@
+<template>
+  <view></view>
+</template>
+
+<script>
+export default {
+  config: {
+    navigationBarTitleText: '会员中心'
+  },
+  data: {}
+}
+</script>
+
+<style lang="less">
+</style>

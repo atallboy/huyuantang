@@ -1,0 +1,136 @@
+<template>
+  <view>
+
+<view class="tab-container">
+  <ui-tabs index="{{ current }}"  bindchange="handleChange" tab-style="{{tab_style}}">
+      <ui-tab wx:for="{{cate}}">{{item.name}} <text wx:if="{{c_ready}}" style="color:#FBF0EE;">1</text> </ui-tab>
+  </ui-tabs>
+</view>    
+
+    <image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+    <view class="video-list-container">
+      <view class="video-list-wrap">
+          <view class="video-item" wx:for="{{list}}" bindtap="detail" data-id="{{item.id}}">
+              <view class="video-pic">
+                <image src="{{item.sub_image}}"></image>
+              </view>
+              <view class="video-title"> <view class="video-title-txt txt-hidden">{{item.title}}</view> </view>
+              <view class="video-info">
+                 <view class="video-sub-title">{{item.duration}}</view>
+                 <view class="video-score" wx:if="{{item.is_watch==0}}">+{{item.score}}积分</view>
+                 <view class="video-watch" wx:else>{{item.watch_num}}次观看</view>
+              </view>
+          </view>
+      </view>
+    </view>  
+
+
+
+  </view> 
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '',
+    navigationBarBackgroundColor: '#000000',  
+       navigationBarTextStyle: 'white'       
+  },
+  data: {
+    tab_style:{
+      'min-width':'90px',
+    },    
+    inkBarStyle:{
+
+    },         
+    cate:[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+    list:[],
+    current:0,
+    c_ready:true,
+    cate_id:0,
+  },
+
+  onShow(){
+    this.getCate();
+    this.getList();
+  },
+
+  onPullDownRefresh: function () {
+    this.getCate();
+    this.getList();
+    wx.stopPullDownRefresh();
+  }, 
+
+  handleChange(e){
+    console.log(e);
+    this.setData({cate_id:this.data.cate[e.detail.index].id})
+    this.getList();
+  },
+
+  detail(e){
+    wx.navigateTo({url:'detail?id='+e.currentTarget.dataset.id})
+  },
+
+  getCate(e){
+    console.log(e);
+    let that = this; 
+    app.util.request({
+      'url': 'entry/wxapp/getvideoCate',
+      data:{
+          token:wx.getStorageSync('token'),        
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          cate:res.data.data,
+          c_ready:false,
+        })
+      }
+    })  
+  }, 
+
+  getList(e){
+    console.log(e);
+    let that = this; 
+    app.util.request({
+      'url': 'entry/wxapp/getVideoList',
+      data:{
+          token:wx.getStorageSync('token'),    
+          cate_id:this.data.cate_id,    
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          list:res.data.data,
+        })
+      }
+    })  
+  },  
+
+
+}
+</script>
+
+<style lang="less">
+                 
+page{background-color:#f7f7f7;}
+
+.tab-container{background-color:#FBF0EE;}
+
+.video-list-container{}                 
+.video-list-wrap{display:flex;flex-wrap:wrap;}
+.video-item{display:flex;flex-direction:column;width: 47%;margin-left: 2%;background-color:#fff;margin-top: 2vw;}
+.video-pic{display:flex;width:100%;height:130px;;}
+.video-pic image{width:100%;height:100%;border-radius:2px;}
+.video-title{display:flex;font-size:15px;font-weight:600;color:#222;height: 35px;align-items: center;padding-left: 6px;}
+.video-title-txt{}
+.video-info{display:flex;margin-top:0px;padding: 0 6px 10px 6px;}
+.video-sub-title{display:flex;flex:1;align-items:center;color:#666;font-size: 13px;}
+.video-score{display:flex;flex:1;align-items:center;justify-content:flex-end;color:#ff4500;}
+.video-watch{display:flex;flex:1;align-items:center;justify-content:flex-end;color:#666;}
+
+
+</style>

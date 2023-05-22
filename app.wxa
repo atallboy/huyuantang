@@ -1,0 +1,235 @@
+<template>
+  <page></page>
+</template>
+
+<script>
+var util = require('./static/we/util.js')
+import system from './static/utils/system'
+export default {
+  config: {
+    usingComponents: {},
+    pages: [
+      'pages/index/index',
+      'pages/member/level_list',
+      'pages/product/list',
+      'pages/mine/index',
+      'pages/order/list',
+      'pages/article/list',
+      'pages/article/index',
+      'pages/article/detail',
+      'pages/product/detail',
+      'pages/car/index',
+      'pages/login/login',
+      'pages/order/submit',
+      'pages/address/list',
+      'pages/address/edit',
+      'pages/order/detail',
+      'pages/balance/record',
+      'pages/invite/record',
+      'pages/balance/recharge',
+      'pages/live/index',
+      'pages/member/fans',
+      'pages/member/agent_card',
+      'pages/member/fans_reward',
+      'pages/member/center',
+      'pages/balance/withdrawal',
+      'pages/balance/withdrawal_record',
+      'pages/distribute/invite_record',
+      'pages/mine/qrcode',
+      'pages/member/agent_card_detail',
+      'pages/video/list',
+      'pages/video/detail',
+      'pages/distribute/team',
+      'pages/mine/info',
+      'pages/deliver/detail',
+      'pages/order/refund',
+      'pages/distribute/floor',
+      'pages/mch/list',
+      'pages/mch/detail',
+      'pages/distribute/edit_team_info',
+      'pages/mch/register',
+      'pages/mch/console',
+      'pages/mch/info',
+      'pages/mch/order',
+      'pages/mch/order_detail',
+      'pages/mch/manage/console',
+      'pages/mch/info/register',
+      'pages/mch/info/list',
+      'pages/mch/info/detail',
+      'pages/mch/product/edit',
+      'pages/mch/product/cate',
+      'pages/mch/product/list',
+      'pages/mch/info/info_base',
+      'pages/mch/info/info_pic',
+      'pages/mch/info/info_type',
+      'pages/mch/order/list',
+      'pages/mch/order/detail',
+      'pages/mch/info/account',
+      'pages/evaluation/edit',
+      'pages/evaluation/product_evaluation',
+      'pages/subscribe/list',
+      'pages/evaluation/construct',
+      'pages/console/product/list'
+    ],
+    window: {
+      backgroundTextStyle: 'dark',
+      backgroundColor: '#efefef',
+      navigationBarBackgroundColor: '#ffffff',
+      navigationBarTitleText: '',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#8a8a8a',
+      selectedColor: '#00B26A',
+      backgroundColor: '#ffffff',
+      list: [{
+          pagePath: 'pages/index/index',
+          iconPath: 'static/images/icon-hy-index.png',
+          selectedIconPath: 'static/images/icon-hy-index-selected.png',
+          text: '首页'
+        },
+        {
+          pagePath: 'pages/article/list',
+          iconPath: 'static/images/icon-article.png',
+          selectedIconPath: 'static/images/icon-article-selected.png',
+          text: '知识'
+        },
+        {
+          pagePath: 'pages/live/index',
+          iconPath: 'static/images/icon-live.png',
+          selectedIconPath: 'static/images/icon-live-selected.png',
+          text: '直播'
+        },
+        {
+          pagePath: 'pages/car/index',
+          iconPath: 'static/images/icon-hy-car.png',
+          selectedIconPath: 'static/images/icon-hy-car-selected.png',
+          text: '购物车'
+        },
+        {
+          pagePath: 'pages/mine/index',
+          iconPath: 'static/images/icon-hy-mine.png',
+          selectedIconPath: 'static/images/icon-hy-mine-selected.png',
+          text: '我的'
+        }
+      ]
+    },
+    requiredPrivateInfos: ['chooseLocation', 'getLocation'],
+    permission: {
+      'scope.userLocation': {
+        desc: '小程序申请获取你的位置信息'
+      }
+    },
+    networkTimeout: {
+      request: 10000
+    },
+    theme: {
+      'theme-color': '#00B26A'
+    },
+
+    plugins: {
+      'live-player-plugin': {
+        version: '1.3.4',
+        provider: 'wx2b03c6e691cd7370'
+      }
+    }
+  },
+
+  globalData: {},
+  util: util,
+  siteInfo: {
+    uniacid: '1',
+    acid: '1',
+    multiid: '0',
+    version: '1.0',
+    siteroot: 'https://distribute.shop.lincec.top',
+    design_method: '3',
+    model: ''
+  },
+  onLaunch() {
+    system.attachInfo()
+  },
+  onShow() {},
+  onHide() {}
+}
+</script>
+
+<style lang="less">
+@import './static/styles/index.less';
+@import './static/styles/yj.less';
+
+page {
+  --ColorMain: #00B26A; //护元堂  4184F5
+  --defaultBgColor: #f7f7f7;
+}
+
+page {
+  background-color: var(--defaultBgColor);
+}
+
+
+.color-main {
+  color: var(--ColorMain);
+}
+
+.bg-color-main {
+  background-color: var(--ColorMain);
+}
+
+.txt-hidden {
+  .mix-text-overflow();
+}
+
+.mix-border {
+  .mix-1px(1, 1, 1, 1, #ccc);
+}
+
+.mix-top {
+  .mix-1px(1, 0, 0, 0, #ccc);
+}
+
+.mix-bottom {
+  .mix-1px(0, 0, 1, 0, #ccc);
+}
+
+.mix-left {
+  .mix-1px(0, 0, 0, 1, #ccc);
+}
+
+.mix-right {
+  .mix-1px(0, 1, 0, 0, #ccc);
+}
+
+
+.evaluation-container {
+  // padding: 3vw 0;
+
+  .evaluation-wrap{display: flex;flex-direction: column;}
+  .evaluation-item{display: flex;flex: 1;flex-direction: column;background-color: #fff;margin-bottom: 10px;border-radius: 4px;padding: 2vw 5vw;}
+  .evaluation-user{display: flex;align-items: center;}
+  .evaluation-user-pic{display: flex;width: 40px;}
+  .evaluation-user-pic image{width: 30px;height: 30px;border-radius: 100px;}
+  .evaluation-user-name{display: flex;flex: 1;}
+  .evaluation-time{display: flex;width: 100px;justify-content: flex-end;font-size: 13px;color:#666;}
+  .evaluation-sheet{display: flex;width: 50px;align-items: center;justify-content: flex-end;}
+  .evaluation-sheet image{width: 18px;height: 18px;}
+  .evaluation-product{display: flex;margin: 4px 0;align-items: center;padding: 0 1vw;}
+  .evaluation-score{display: flex;width: 90px;}
+  .evaluation-score image{width: 16px;height: 16px;margin-right: 2px;}
+  .evaluation-product-name{margin-left: 14px;color: #666;font-size: 13px;}
+  .evaluation-content{margin-bottom: 0px;padding: 0 1vw;}
+  .evaluation-txt{font-size: 14px;color: #333;}
+  .evaluation-attachment{display:flex;flex-wrap:wrap;padding-left: 1.5vw;padding: 0 1vw;}
+  .evaluation-attachment-item{display:flex;width: 27vw;height: 27vw;margin-top: 3.5vw;}
+  .evaluation-video{width: 100%;height: 100%;}
+  .evaluation-video video{width: 100%;height: 100%;}
+  .evaluation-pic{width: 100%;height: 100%;}
+  .evaluation-pic image{width: 100%;height: 100%;border-radius: 10px;}
+  .evaluation-menu{display: flex;justify-content: flex-end;padding: 10px;color: #333;}
+  .evaluation-menu-item{display: flex;width: 40px;align-items: center;justify-content: flex-end;}
+  .evaluation-menu-item-selected{color: #d81e06;}
+  .evaluation-menu-item image{width: 18px;height: 18px;margin-left: 3px;}
+  .evaluation-reply{font-size: 13px;color: #666;padding: 10px 1vw 0;}
+
+}
+</style>

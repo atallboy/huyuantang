@@ -1,0 +1,72 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+.live-container {
+  padding: 10px;
+}
+.live-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.live-item {
+  display: flex;
+  height: 180px;
+  margin-bottom: 15px;
+  background-size: 100% 100%;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 4px;
+  color: #fff;
+}
+.live-status {
+  display: flex;
+}
+.live-time {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+}
+.live-name {
+  display: flex;
+  height: 30px;
+  align-items: center;
+}
+.live-status-ing {
+  padding: 4px 15px;
+  font-size: 13px;
+  background-color: #fff;
+  border-radius: 100px;
+  color: #07c460;
+}
+.live-status-wait {
+  padding: 4px 15px;
+  font-size: 13px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 100px;
+  color: #fff;
+}
+.live-status-finish {
+  padding: 4px 15px;
+  font-size: 13px;
+  background-color: #f7f7f7;
+  border-radius: 100px;
+  color: #666;
+}

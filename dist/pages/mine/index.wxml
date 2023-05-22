@@ -1,0 +1,439 @@
+<view>
+
+  <view class="header">
+    <block wx:if="{{user.avatarUrl}}">
+      <view class="header-wrap">
+        <ui-blur height="270" url="{{ user.avatarUrl }}" _pid="{{_pid}}">
+          <view style="margin-top:90px;height:100px;" vertical-align="middle" class="ui-row">
+            <view class="ui-col ui-col-align-right align-right valign-middle" style="flex:0 0 100px;">
+              <view class="ui-col-content align-right valign-middle">
+                <image src="{{user.avatarUrl}}" class="headimg border-fff" />
+              </view>
+            </view>
+            <view class="ui-col ui-col-align-left align-left valign-middle" style="">
+              <view class="ui-col-content align-left valign-middle">
+                <view class="nickname">{{user.nickName}}</view>
+                <view class="no" bindtap="toWhere" data-act="toQrcode"> 账号：{{user.id}}
+                  <image src="../../static/images/icon-qrcode-a.png" style=" display: inline-block;margin-left: 5px; width:15px;height:15px;" /> <span type="arrow-right" color="#aaa" size="15" class="ui-icon icon-arrow-right" style="color: #aaa;font-size: 15px;"></span> </view>
+              </view>
+            </view>
+            <view class="ui-col ui-col-align-right align-right valign-middle" style="flex:0 0 120px;">
+              <view class="ui-col-content align-right valign-middle">
+                <view class="header-info-line level" bindtap="toWhere" data-act="toLevelList">
+                  <image src=" {{user.level_info.icon}}" /> {{user.level_info.name}}
+                  <!-- <text bindtap="toWhere" data-act="toLevelList">升级</text>  -->
+                  <span type="arrow-right" size="12" color="#fff" style="margin-left:5px;color: #fff;font-size: 12px;" class="ui-icon icon-arrow-right"></span>
+                </view>
+                <view class="header-info-line area-agent" wx:if="{{user.area_agent_status>0}}">
+                  <text wx:if="{{user.area_agent.type==1}}">省代：</text>
+                  <text wx:if="{{user.area_agent.type==2}}">市代：</text>
+                  <text wx:if="{{user.area_agent.type==3}}">区代：</text>
+                  <text wx:if="{{user.area_agent_status==1}}">{{user.area_agent.name}}</text>
+                  <text wx:if="{{user.area_agent_status==2}}" bindtap="toWhere" data-act="setAreaAgent">未设置 </text>
+                  <text wx:if="{{user.area_agent_status==3}}">审核中 </text>
+                  <span wx:if="{{user.area_agent_status==2}}" type="arrow-right" size="12" color="coral" style="margin-left:5px;color: coral;font-size: 12px;" class="ui-icon icon-arrow-right"></span>
+                </view>
+
+              </view>
+            </view>
+          </view>
+          <view class="ui-row" vertical-align="middle" style="height:80px;">
+            <view bindtap="toWhere" data-act="toMybalance" class="ui-col ui-col-align-center align-center valign-middle" style="">
+              <view class="ui-col-content align-center valign-middle">
+                <view style="font-weight:650;color:#fff;font-size:17px;">{{user.balance}}</view>
+                <view style="font-size:12px;color:#ccc;">余额</view>
+              </view>
+            </view>
+
+            <!-- <ui-col align="center" vertical-align="middle" bindtap="toWhere" data-act="toMyAgentCard">
+                      <view style="font-weight:650;color:#fff;font-size:17px;">{{user.agent_card_num}}</view>
+                      <view style="font-size:12px;color:#ccc;">代理卡</view>
+                    </ui-col>
+                    <ui-col align="center" vertical-align="middle" bindtap="toWhere" data-act="toMyFans">
+                      <view style="font-weight:650;color:#fff;font-size:17px;">{{user.fans_num}}</view>
+                      <view style="font-size:12px;color:#ccc;">粉丝奖励</view>
+                    </ui-col>         -->
+
+            <view bindtap="toWhere" data-act="toMyInvite" class="ui-col ui-col-align-center align-center valign-middle" style="">
+              <view class="ui-col-content align-center valign-middle">
+                <view style="font-weight:650;color:#fff;font-size:17px;">{{user.invite_num}}</view>
+                <view style="font-size:12px;color:#ccc;">邀请</view>
+              </view>
+            </view>
+
+          </view>
+        </ui-blur>
+      </view>
+    </block>
+    <block wx:else="">
+      <view class="header-wrap">
+        <ui-blur height="200" url="{{ system_info.logo }}" bindtap="toLogin" _pid="{{_pid}}">
+          <view style="margin-top:90px;" class="ui-row">
+            <view class="ui-col ui-col-align-center align-center" style="">
+              <view class="ui-col-content align-center">
+                <image src="{{system_info.logo}}" class="headimg border-fff" />
+              </view>
+            </view>
+          </view>
+          <view class="p-t-10 p-b-40 color-fff  ui-row" style="">
+            <view class="f-s-32 ui-col ui-col-align-center align-center" style="">
+              <view class="ui-col-content align-center">点击登录</view>
+            </view>
+          </view>
+        </ui-blur>
+      </view>
+    </block>
+  </view>
+
+
+  <view class="order-conatainer">
+    <view class="order-wrap">
+      <view class="order-header">
+        <view class="order-header-name">我的订单</view>
+        <view class="order-header-more" bindtap="toOrder" data-status="0"> 全部订单
+          <image src="../../static/images/icon-arrow-right.png" />
+        </view>
+      </view>
+      <view class="order-list">
+        <view class="order-item" bindtap="toOrder" data-status="1">
+          <view class="order-item-icon">
+            <ui-badge wx:if="{{order_summary.wait_send}}" text="{{order_summary.wait_send}}" class="badge" custom-style="{{customStyle}}" _pid="{{_pid}}"></ui-badge>
+            <image src="../../static/images/icon-order-wait-pay.png" />
+          </view>
+          <view class="order-item-name">待支付</view>
+        </view>
+        <view class="order-item" bindtap="toOrder" data-status="2">
+          <view class="order-item-icon">
+            <ui-badge wx:if="{{order_summary.wait_send}}" text="{{order_summary.wait_send}}" class="badge" custom-style="{{customStyle}}" _pid="{{_pid}}"></ui-badge>
+            <image src="../../static/images/icon-order-after-sales.png" />
+          </view>
+          <view class="order-item-name">待发货</view>
+        </view>
+        <view class="order-item" bindtap="toOrder" data-status="3">
+          <view class="order-item-icon">
+            <ui-badge wx:if="{{order_summary.wait_receive}}" text="{{order_summary.wait_receive}}" class="badge" custom-style="{{customStyle}}" _pid="{{_pid}}"></ui-badge>
+            <image src="../../static/images/icon-order-wait-receive.png" />
+          </view>
+          <view class="order-item-name">待收货</view>
+        </view>
+        <view class="order-item" bindtap="toOrder" data-status="4">
+          <view class="order-item-icon">
+            <ui-badge wx:if="{{order_summary.complete}}" text="{{order_summary.complete}}" class="badge" custom-style="{{customStyle}}" _pid="{{_pid}}"></ui-badge>
+            <image src="../../static/images/icon-order-evaluate.png" />
+          </view>
+          <view class="order-item-name">已完成</view>
+        </view>
+        <!-- <view class="order-item" bindtap="toOrder" data-status="5">
+                <view class="order-item-icon">
+                  <ui-badge wx:if="{{order_summary.after_sale}}" text="{{order_summary.after_sale}}" class="badge" custom-style="{{customStyle}}"></ui-badge>
+                  <image src="../../static/images/icon-order-after-sales.png"></image>
+                </view>
+                <view class="order-item-name">售后</view>
+              </view>                               -->
+      </view>
+    </view>
+  </view>
+
+
+  <view class="col-menu-container">
+    <view class="col-menu-wrap ui-row-list ui-row-list-border-indent" style="">
+
+      <view bindtap="toWhere" data-act="toMyCollect" class="ui-row" style="height:70px;">
+        <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+          <view class="ui-col-content align-center valign-middle">
+            <image class="col-menu-icon" src="../../static/images/icon-collect-2.png" />
+          </view>
+        </view>
+        <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            我的收藏
+          </view>
+        </view>
+        <view class="ui-col valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+
+      <!-- <ui-row height="70" bindtap="toWhere" data-act="toMyTeam">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-team-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        我的团队
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>   -->
+
+      <view bindtap="toWhere" data-act="toMyDistributeRelation" class="ui-row" style="height:70px;">
+        <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+          <view class="ui-col-content align-center valign-middle">
+            <image class="col-menu-icon" src="../../static/images/icon-team-2.png" />
+          </view>
+        </view>
+        <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            我的分销链
+          </view>
+        </view>
+        <view class="ui-col valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+
+      <!-- <ui-row height="70" bindtap="toWhere" data-act="toMyInvite">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-invite-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        邀请记录
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>     -->
+
+
+      <view bindtap="toWhere" data-act="toWithdrawalRecord" class="ui-row" style="height:70px;">
+        <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+          <view class="ui-col-content align-center valign-middle">
+            <image class="col-menu-icon" src="../../static/images/icon-balance-2.png" />
+          </view>
+        </view>
+        <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            提现记录
+          </view>
+        </view>
+        <view class="ui-col valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+
+      <view bindtap="toWhere" data-act="toUserLevelInfo" wx:if="{{user.level_id>0}}" class="ui-row" style="height:70px;">
+        <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+          <view class="ui-col-content align-center valign-middle">
+            <image class="col-menu-icon" src="../../static/images/icon-info.png" />
+          </view>
+        </view>
+        <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            我的信息
+          </view>
+        </view>
+        <view class="ui-col valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+
+      <view bindtap="toWhere" data-act="toSubscribe" class="ui-row" style="height:70px;">
+        <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+          <view class="ui-col-content align-center valign-middle">
+            <image class="col-menu-icon" src="../../static/images/icon-message.png" />
+          </view>
+        </view>
+        <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            订阅消息
+          </view>
+        </view>
+        <view class="ui-col valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+
+      <!-- <ui-row height="70" bindtap="toWhere" data-act="toMybalance">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <ui-icon type="currency02" color="#222"></ui-icon>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        我的佣金
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>       -->
+
+      <view bindtap="call" class="ui-row" style="height:70px;">
+        <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+          <view class="ui-col-content align-center valign-middle">
+            <image class="col-menu-icon" src="../../static/images/icon-tel-2.png" />
+          </view>
+        </view>
+        <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            客服电话
+          </view>
+        </view>
+        <view class="ui-col valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+
+      <button class="contact-btn" open-type="contact" bindcontact="handleContact">
+        <view class="ui-row" style="height:70px;">
+          <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+            <view class="ui-col-content align-center valign-middle">
+              <image class="col-menu-icon" src="../../static/images/icon-service-2.png" />
+            </view>
+          </view>
+          <view class="f-s-32 f-w-700 ui-col ui-col-align-left align-left valign-middle" style="">
+            <view class="ui-col-content align-left valign-middle">
+              微信客服
+            </view>
+          </view>
+          <view class="ui-col ui-col-align-left align-left valign-middle" style="flex:0 0 25px;">
+            <view class="ui-col-content align-left valign-middle">
+              <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+            </view>
+          </view>
+        </view>
+      </button>
+
+
+
+
+
+    </view>
+  </view>
+
+
+  <view class="col-menu-container" wx:if="{{user.is_manager==1}}">
+    <view class="col-menu-wrap ui-row-list ui-row-list-border-indent" style="">
+      <view bindtap="toWhere" data-act="toConsoleProduct" class="ui-row" style="height:70px;">
+        <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+          <view class="ui-col-content align-center valign-middle">
+            <image class="col-menu-icon" src="../../static/images/icon-team-2.png" />
+          </view>
+        </view>
+        <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            商品评价
+          </view>
+        </view>
+        <view class="ui-col valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- <ui-row-list border-indent class="col-menu-wrap"> 
+                <ui-row height="70" bindtap="toWhere" data-act="toMchConsole">
+                    <ui-col width="35" align="center" vertical-align="middle">
+                        <image class="col-menu-icon" src="../../static/images/icon-team-2.png"></image>
+                    </ui-col>                   
+                    <ui-col class="f-s-32 f-w-700" vertical-align="middle">
+                        商户后台
+                    </ui-col>
+                    <ui-col width="25" vertical-align="middle">
+                        <ui-icon type="arrow-right"></ui-icon>
+                    </ui-col>
+                </ui-row>  
+            </ui-row-list>         -->
+  </view>
+
+  <view class="col-menu-container" wx:if="{{user.level_type==4&&!user.mch_id && system_info.open_mch==1}}">
+    <view class="col-menu-wrap ui-row-list ui-row-list-border-indent" style="">
+      <view bindtap="toWhere" data-act="toRegMch" class="ui-row" style="height:70px;">
+        <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+          <view class="ui-col-content align-center valign-middle">
+            <image class="col-menu-icon" src="../../static/images/icon-collect-2.png" />
+          </view>
+        </view>
+        <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            商户入驻
+          </view>
+        </view>
+        <view class="ui-col valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+  <view class="ui-row" style="height:40px;">
+    <view class="ui-col ui-col-align-center align-center valign-middle" style="">
+      <view class="ui-col-content align-center valign-middle">
+        <view>
+          <view style="line-height:56rpx;float:left;">
+            <image src="{{ system_info.logo }}" style="width:50rpx;height:50rpx;display:inline-block;border-radius:100px;" />
+          </view>
+          <view class="f-l p-l-10 color-333" style="line-height:56rpx;float:left;">{{ system_info.name }}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <ui-popup show="{{ setAreaAgentDialog }}" height="400" background="transparent" _pid="{{_pid}}">
+    <form catchsubmit="submitAreaAgent" wx:if="{{setAreaAgentDialog}}">
+      <view class="are-agent-dialog">
+        <view class="ui-row ui-row-border-bottom" style="height:40px;">
+          <view class="ui-col valign-middle" style="padding-left: 20px;">
+            <view class="ui-col-content valign-middle">区域代理设置</view>
+          </view>
+          <view bindtap="closeAreaAgent" class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 40px;">
+            <view class="ui-col-content align-center valign-middle">
+              <span type="x" size="18" color="#FC8950" class="ui-icon icon-x" style="color: #FC8950;font-size: 18px;"></span>
+            </view>
+          </view>
+        </view>
+        <view class="area-agent-form">
+          <view class="area-agent-form-row">
+            <view class="area-agent-form-label">代理层级</view>
+            <view class="area-agent-form-value mix-bottom">省代</view>
+          </view>
+          <view class="area-agent-form-row">
+            <view class="area-agent-form-label">姓名</view>
+            <view class="area-agent-form-value mix-bottom">
+              <input name="name" placeholder="请输入姓名"></input>
+            </view>
+          </view>
+          <view class="area-agent-form-row">
+            <view class="area-agent-form-label">电话</view>
+            <view class="area-agent-form-value mix-bottom">
+              <input name="tel" placeholder="请输入电话"></input>
+            </view>
+          </view>
+          <view class="area-agent-form-row">
+            <view class="area-agent-form-label">地区</view>
+            <view class="area-agent-form-value mix-bottom">
+              <picker mode="region" bindchange="bindRegionChange" value="{{area_agent_region}}">
+                <view class="picker" wx:if="{{area_agent_region[0]}}">
+                  {{area_agent_region[0]}}，{{area_agent_region[1]}}，{{area_agent_region[2]}}
+                </view>
+                <view wx:else="">请选择</view>
+              </picker>
+            </view>
+          </view>
+        </view>
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="padding-left: 80px;padding-right: 80px;">
+            <view class="ui-col-content valign-middle">
+              <button type="primary" formType="submit">提交</button>
+            </view>
+          </view>
+        </view>
+      </view>
+    </form>
+  </ui-popup>
+
+
+</view>

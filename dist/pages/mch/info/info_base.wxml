@@ -1,0 +1,237 @@
+<view>
+
+  <form catchsubmit="formSubmit" catchreset="formReset">
+
+    <view class="ui-row" style="height:40px;">
+      <view class="wrap-label ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">店铺信息</view>
+      </view>
+    </view>
+
+    <view class="form" style="background-color:#fff;padding:0 10px;">
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">店铺名称</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="mch_name" value="{{detail.mch_name}}" placeholder="请输入" confirm-type="next" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">店铺客服</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="mch_tel" value="{{detail.mch_tel}}" placeholder="请输入" confirm-type="next" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="ui-row" style="height:40px;">
+      <view class="wrap-label ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">位置信息</view>
+      </view>
+    </view>
+
+    <view class="form" style="background-color:#fff;padding:0 10px;">
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">店铺定位</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <view class="yj-form-row-pick-content" bindtap="chooseLocation">
+                <view class="picker-input">
+                  <input class="weui-input" name="input" value="{{location}}" placeholder="点击选择定位" disabled placeholder-style="font-size:12px;"></input>
+                </view>
+                <view class="yj-form-row-item-sel">
+                  <image class="sel-icon" src="../../../static/images/icon-location.png" />
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom" wx:if="{{latitude}}">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">省市区</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="input" placeholder="请输入" disabled value="{{province}},{{city}},{{district}}" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom" wx:if="{{latitude}}">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">详细位置</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="address" placeholder="请输入" value="{{address}}" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+
+    <view class="ui-row" style="height:40px;">
+      <view class="wrap-label ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">个人信息</view>
+      </view>
+    </view>
+
+    <view class="form" style="background-color:#fff;padding:0 10px;">
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">申请人姓名</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="user_name" value="{{detail.user_name}}" confirm-type="next" placeholder="请输入" placeholder-style="font-size:12px;"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="mix-bottom">
+        <view class="ui-row" style="height:50px;">
+          <view class="ui-col valign-middle" style="flex:0 0 16px;">
+            <view class="ui-col-content valign-middle">
+              <image src="../../../static/images/xing.png" class="xing" />
+            </view>
+          </view>
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">手机号码</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <input class="weui-input" name="user_tel" value="{{detail.user_tel}}" confirm-type="next" placeholder="请输入" placeholder-class="placeholderClass"></input>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- <ui-row height="40">
+          <ui-col vertical-align="middle" class="wrap-label">入驻类目</ui-col>
+      </ui-row>   -->
+
+    <!-- <view class="form" style="background-color:#fff;padding:0 10px;">
+        <view class="mix-bottom">
+          <ui-row height="50">
+              <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col>
+              <ui-col width="80" vertical-align="middle"> <text class="f-s-26">申请类目</text> </ui-col>
+              <ui-col vertical-align="middle">
+                  <view class="yj-form-row-item-content">
+                    <picker value="{{cateIndex}}" bindchange="bindChange" class="yj-picker" range="{{cateArr}}" range-key="name">
+                      <view class="yj-form-row-pick-content">
+                        <view class="picker-input">
+                          <input class="yj-input" value="{{cateArr[cateIndex].name}}" disabled placeholder="选择类目" placeholder-class="placeholderClass"></input>
+                        </view>
+                        <view class="yj-form-row-item-sel">
+                          <image class="sel-icon" src="../../../static/images/icon-arrow-bottom.png" />
+                        </view>
+                      </view>
+                    </picker>      
+                  </view>        
+              </ui-col>
+          </ui-row>   
+        </view>
+      </view> -->
+
+    <view class="ui-row" style="height:40px;">
+      <view class="wrap-label ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">其它信息</view>
+      </view>
+    </view>
+
+    <view class="form" style="background-color:#fff;padding:0 10px;">
+      <view class="mix-top">
+        <view class="ui-row" style="height:100px;">
+          <!-- <ui-col width="16" vertical-align="middle">
+                <image src="../../../static/images/xing.png" class="xing"></image>
+              </ui-col> -->
+          <view class="ui-col valign-middle" style="flex:0 0 80px;">
+            <view class="ui-col-content valign-middle"> <text class="f-s-26">店铺简介</text> </view>
+          </view>
+          <view class="ui-col valign-middle" style="">
+            <view class="ui-col-content valign-middle">
+              <textarea name="remark" value="{{detail.remark}}" style="height: 70px;background: #f7f7f7;padding:10px;width:90%;" placeholder="如具体经营业务等">
+              </textarea></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view style="padding:10px 0 10px 20px;display:flex;align-items:center;">
+      <view style="">
+        <checkbox-group bindchange="changDecalation">
+          <checkbox style="transform:scale(0.6,0.6);" value="1" checked="{{agree_declaration}}" color="#00B26A"></checkbox>
+        </checkbox-group>
+      </view>
+      <view style="font-size:12px;color:#666;">我已阅读并同意
+        <navigator style="display:inline-block;color:#1e90ff;" url="/pages/article/detail?type=user_service_agreement">《用户服务协议》</navigator>
+        <navigator style="display:inline-block;color:#1e90ff;" url="/pages/article/detail?type=privacy_policy">《隐私政策》</navigator>
+        等协议
+      </view>
+    </view>
+
+    <view class="ui-row" style="height:75px;">
+      <view class="ui-col" style="">
+        <view class="ui-col-content"></view>
+      </view>
+    </view>
+
+    <view class="submit-wrap">
+      <button form-type="submit" class="submit-btn">保存</button>
+    </view>
+
+  </form>
+
+</view>

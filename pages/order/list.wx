@@ -1,0 +1,190 @@
+<template>
+  <view>
+
+<view class="tab-container">
+  <ui-tabs index="{{ current }}"  bindchange="handleChange" ink-bar ink-bar-style="{{inkBarStyle}}">
+      <ui-tab>全部</ui-tab>
+      <ui-tab>待支付</ui-tab>
+      <ui-tab>待发货</ui-tab>
+      <ui-tab>待收货</ui-tab>
+      <ui-tab>已完成</ui-tab>
+      <ui-tab>售后</ui-tab>
+  </ui-tabs>
+</view>
+
+<image wx:if="{{!list[0]}}"  src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;"></image>
+
+
+<view class="order-g-container">
+  <view class="order-g-wrap">
+    <view class="order-g-item"  wx:for="{{list}}" wx:for-index="k" wx:for-item="v">
+        <view class="order-g-time"> <text>{{v.create_time}}</text> </view>
+        <view class="order-g-detail">
+          <view class="order-g-no">
+            <view class="order-g-order-no">订单号：{{v.order_no}}</view>
+            <view class="order-g-status"> 
+              <text class="color-wait-pay" wx:if="{{v.pay_status==0&&v.status==0}}">待支付</text>
+              <text class="color-wait-pay" wx:if="{{v.pay_status==1&&v.status==1}}">待发货</text>
+              <text class="color-wait-send" wx:if="{{v.pay_status==1&&v.status==2}}">待收货</text>
+              <text class="color-complete" wx:if="{{v.pay_status==1&&v.status==3}}">已签收</text>
+              <text class="color-complete" wx:if="{{v.pay_status==1&&v.status==4}}">已完成</text>
+              <text class="color-complete" wx:if="{{v.status==5}}">已取消</text>
+              <text class="color-after-sales" wx:if="{{v.pay_status==1&&v.status==6}}">申请退款中</text>
+              <text class="color-after-sales" wx:if="{{v.pay_status==1&&v.status==7}}">已退款</text>
+              <text class="color-after-sales" wx:if="{{v.pay_status==1&&v.status==14}}">售后</text>
+            </view>
+          </view>
+          <view class="order-g-goods" bindtap="toDetail" data-id="{{v.id}}">
+            <block wx:if="{{v.productArr}}">
+                <view class="order-g-goods-item" wx:for="{{v.goods}}" wx:for-index="k1" wx:for-item="v1">
+                  <view class="order-g-goods-pic">
+                    <image src="{{v1.sub_image}}" class="ercode_pic"></image>
+                  </view>
+                  <view class="order-g-goods-info">
+                    <view class="order-g-goods-name">{{v1.name}}等{{v.goods_num}}件商品</view>
+                    <view class="order-g-goods-param">
+                        <view class="order-g-goods-param-both">
+                          <text class="order-g-goods-param-name">--</text>                    
+                          <text class="order-g-goods-price">￥{{v1.price}}</text>
+                        </view>
+                        <view class="order-g-goods-param-num">x{{v1.num}}</view>                    
+                    </view>                
+                  </view>
+                </view>              
+            </block>
+            <block wx:else>
+                <view class="order-g-goods-item">
+                  <view class="order-g-goods-pic">
+                    <image src="{{v.snap_image}}" class="ercode_pic"></image>
+                  </view>
+                  <view class="order-g-goods-info">
+                    <view class="order-g-goods-name">{{v.snap_name}}</view>
+                    <view class="order-g-goods-param">
+                        <view class="order-g-goods-param-both">
+                          <!-- <text class="order-g-goods-param-name">--</text>                     -->
+                          <!-- <text class="order-g-goods-price">￥{{v1.price}}</text> -->
+                        </view>
+                        <!-- <view class="order-g-goods-param-num">x{{v1.num}}</view>                     -->
+                    </view>                
+                  </view>
+                </view>                
+            </block>              
+                  
+          </view>
+          <view class="order-g-total-info">
+             <view class="order-g-deliver">
+                <text>商家配送</text>
+             </view>
+             <view class="order-g-calc">
+               <text class="order-g-num">共{{v.goods_num}}件商品</text>
+               <text class="order-g-total-price">合计：{{v.total_money}}</text>
+             </view>
+          </view>
+          <view class="order-g-remark"> 备注：{{v.remark}} </view>
+          <!-- <view class="order-g-address mix-top">
+            <view class="order-g-icon">
+                <image src="../../../static/images/icon-master-location.png" class="ercode_pic"></image>
+            </view>
+            <view class="order-g-address-info">
+                <view class="order-g-address-t">
+                   <text class="order-g-address-name">{{v.address.name}}</text>
+                   <text class="order-g-address-tel">{{v.address.tel}}</text>
+                </view>
+                <view class="order-g-address-detail">{{v.address.province}}{{v.address.city}}{{v.address.strict}}{{v.address.addr}}</view>
+            </view>
+            <view class="order-g-address-btn" bindtap="openLocation" data-k="{{k}}">
+              <text>导航</text>
+            </view>            
+          </view> -->
+        </view>
+    </view>
+  </view>
+</view>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+export default {
+  config: {
+    navigationBarTitleText: '订单列表'
+  },
+    data :{
+        current: 0,
+        inkBarStyle:{
+          'width': '20%',
+        },     
+        list:[],   
+    }, 
+
+  onLoad(e){
+      this.setData({current:e.status})
+  },    
+
+  onShow: function () {
+    if(!wx.getStorageSync('token')){wx.navigateTo({url: '../../login/login',})}    
+    this.getOrderList();
+  },
+
+  onPullDownRefresh: function () {
+    this.getOrderList();
+    wx.stopPullDownRefresh();
+  },    
+
+  getOrderList(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getOrderList',
+      data:{token:wx.getStorageSync('token'),status:this.data.current},
+      success(res) {
+        console.log(res);
+        that.setData({
+          list:res.data.data,
+        })
+      }
+    })  
+  },     
+
+    handleChange (e) {
+        let index = e.detail.index
+        this.setData({
+          current:index
+        })
+        this.getOrderList();
+    },
+
+    toDetail(e){
+      wx.navigateTo({
+        url:'detail?into_type=1&id='+e.currentTarget.dataset.id
+      })
+    },
+
+    openLocation(e){
+      console.log(e)
+        let lat = Number(this.data.list[e.currentTarget.dataset.k].address.latitude);
+        let lon = Number(this.data.list[e.currentTarget.dataset.k].address.longitude);
+        console.log(lat)
+        wx.openLocation({latitude:lat,longitude:lon,scale: 18})      
+    }
+
+}
+</script>
+
+<style lang="less">
+
+page{background-color: var(--defaultBgColor);}
+
+.tab-container{background-color: #fff;}
+
+.order-g-container{
+  padding: 10px;
+  
+
+
+
+}
+
+
+
+</style>

@@ -1,0 +1,82 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+/* lincec_store_share/pages/tixian/record.wxss */
+page {
+  background-color: #f7f7f7;
+}
+.record-container {
+  display: flex;
+  padding: 10px;
+}
+.record-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.record-item {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+.record-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.record-type {
+  display: flex;
+  padding: 6px 0;
+  align-items: center;
+}
+.record-type text {
+  margin-left: 10px;
+  font-size: 12px;
+  padding: 0 10rpx;
+  border-radius: 20px;
+  color: #ff4544;
+  border: 1px solid #ff4544;
+}
+.record-cate {
+  display: flex;
+  font-size: 13px;
+  color: #555;
+  padding: 4px 0;
+}
+.record-money {
+  display: flex;
+  width: 100px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+.withdrawal-money {
+  font-size: 18px;
+  font-weight: 700;
+}
+.withdrawal-tax-money {
+  font-size: 13px;
+  color: #666;
+  margin-top: 10px;
+}

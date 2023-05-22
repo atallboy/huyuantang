@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "ui-v-tabs": "../../../packages/touchui-wx-components/ui-v-tabs/dist/index",
+    "ui-v-tab": "../../../packages/touchui-wx-components/ui-v-tab/dist/index"
+  },
+  "navigationBarTitleText": "商品列表",
+  "disableScroll": true
+}

@@ -1,0 +1,22 @@
+<view>
+
+  <view class="container">
+    <view class="wrap">
+      <view class="user">
+        <view class="headimg">
+          <image src=" {{user.avatarUrl}}" />
+        </view>
+        <view class="info">
+          <view class="name">{{user.nickName}}</view>
+          <view class="level">{{user.level_info.name}}</view>
+        </view>
+      </view>
+      <view class="qrcode">
+        <image src=" {{user.qrcode}}" />
+      </view>
+      <view class="remark">扫一扫上面的二维码，一起玩转商城</view>
+    </view>
+  </view>
+
+
+</view>

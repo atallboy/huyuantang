@@ -1,0 +1,262 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+.list-container-c1 {
+  padding: 10px;
+  display: flex;
+  background-color: var(--defaultBgColor);
+  flex-direction: column;
+}
+.list-container-c1 .list-c1-item {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #fff;
+  padding-left: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-radius: 4px;
+}
+.list-container-c1 .list-c1-header {
+  display: flex;
+  padding: 10px 0;
+}
+.list-container-c1 .list-c1-cate {
+  display: flex;
+  flex: 1;
+  font-size: 15px;
+}
+.list-container-c1 .list-c1-cate image {
+  width: 20px;
+  height: 20px;
+  border-radius: 100px;
+  margin-right: 6px;
+}
+.list-container-c1 .list-c1-more {
+  display: flex;
+  width: 50px;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+.list-container-c1 .list-c1-more image {
+  width: 13px;
+  height: 13px;
+}
+.list-container-c1 .list-c1-goods {
+  display: flex;
+}
+.list-container-c1 .list-c1-goods-item {
+  display: flex;
+  flex-direction: column;
+  width: 33.3%;
+  padding-right: 8px;
+}
+.list-container-c1 .list-c1-goods-pic {
+  width: 100%;
+  height: 28vw;
+}
+.list-container-c1 .list-c1-goods-pic image {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+}
+.list-container-c1 .list-c1-goods-name {
+  font-size: 15px;
+  height: 26px;
+  line-height: 26px;
+}
+.list-container-c1 .list-c1-goods-price {
+  color: #e02433;
+  font-size: 12px;
+}
+.list-container-c1 .list-c1-goods-price text {
+  font-size: 15px;
+  font-weight: 650;
+}
+.list-label-info {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+.list-label-info image {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+.list-label-more {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+}
+.list-label-more image {
+  width: 20px;
+  height: 20px;
+}
+.yj-swiper {
+  position: relative;
+}
+.search-location {
+  border-radius: 100rpx;
+  flex: unset;
+  margin-right: 10px;
+  padding-left: 10px;
+}
+.location-icon {
+  width: 18px;
+  height: 18px;
+}
+.location-name {
+  width: 50px;
+  overflow: hidden;
+  font-size: 13px;
+  height: 30p;
+  line-height: 30px;
+}
+.search {
+  padding: 10rpx;
+  background-color: var(--bgColorMain);
+}
+.search-wrap {
+  background: #fff;
+  border-radius: 100rpx;
+  padding: 0 10rpx;
+  width: 100%;
+}
+.search-inp {
+  text-align: center;
+}
+.search-placeholder {
+  font-size: 26rpx;
+  text-align: center;
+}
+.index-menu-container {
+  display: flex;
+  position: absolute;
+  bottom: -140px;
+  padding: 0 20px;
+  left: 0;
+  right: 0;
+}
+.index-menu-wrap {
+  display: flex;
+  width: 100%;
+  height: 160px;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(26, 26, 26, 0.1);
+}
+.index-menu-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.index-menu-item-icon {
+  display: flex;
+  width: 60px;
+  height: 60px;
+}
+.index-menu-item-name {
+  display: flex;
+  font-weight: 700;
+}
+.index-menu-item-sub-name {
+  display: flex;
+  font-size: 12px;
+}
+.menu-cate-container {
+  padding: 10px 0;
+  background-color: var(--defaultBgColor);
+}
+.menu-row {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  display: flex;
+  background-color: #fff;
+  border-radius: 4px;
+}
+.menu-item {
+  margin-bottom: 10px;
+}
+.menu-icon image {
+  width: 50px;
+  height: 50px;
+}
+.menu-name {
+  font-size: 14px;
+  color: #111;
+  line-height: 30px;
+  font-weight: 650;
+}
+.menu-item-five {
+  display: flex;
+  width: 20%;
+  flex-direction: column;
+  margin-bottom: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.menu-item-five .menu-name {
+  font-size: 13px;
+  color: #111;
+  line-height: 30px;
+  font-weight: 650;
+}
+.second-menu-container {
+  display: flex;
+  padding: 10px 20px;
+}
+.second-menu-container view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.second-menu-wrap {
+  flex: 1;
+}
+.second-menu-item {
+  flex: 1;
+  background-color: #EAEBEC;
+  border-radius: 4px;
+  flex-direction: column;
+  padding: 15px 0;
+}
+.second-menu-item-blk {
+  width: 10px;
+}
+.second-menu-item-info {
+  font-size: 13px;
+  font-weight: 700;
+}
+.second-menu-item-info image {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
+.second-menu-item-remark {
+  font-size: 11px;
+  color: #666;
+  margin-top: 6px;
+}

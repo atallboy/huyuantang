@@ -1,0 +1,84 @@
+<view>
+
+  <block wx:if="{{show_add_btn}}">
+    <view class="mix-bottom" style="padding:15px 10px;position:fixed;left:0;right:0;top:0;background-color:#fff;z-index:99999;">
+      <view class="evaluation-btn" bindtap="addEva">添加评价</view>
+    </view>
+    <view style="width:100%;height:65px;"></view>
+  </block>
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+  <view class="evaluation-container">
+    <view class="evaluation-wrap">
+      <view class="evaluation-item" wx:for="{{list}}" wx:for-index="k" wx:for-item="v">
+        <view class="evaluation-user">
+          <view class="evaluation-user-pic">
+            <image src="{{v.avatarUrl}}" />
+          </view>
+          <view class="evaluation-user-name">{{v.nickName}}</view>
+          <view class="evaluation-time">{{v.create_time}}</view>
+          <view class="evaluation-sheet" wx:if="{{show_add_btn||data_type==2}}" bindtap="toSheet" data-id="{{v.id}}">
+            <image src="../../static/images/icon-sheet.png" />
+          </view>
+        </view>
+        <view class="evaluation-product">
+          <view class="evaluation-score">
+            <image wx:for="{{v.score_stars}}" wx:for-index="k1" wx:for-item="v1" src="{{v1}}" />
+          </view>
+          <view class="evaluation-product-name">{{v.attribute_name}}</view>
+        </view>
+        <view class="evaluation-content">
+          <view class="evaluation-txt">{{v.content}}</view>
+        </view>
+        <view class="evaluation-attachment">
+          <block wx:for="{{v.attachment}}" wx:for-index="k1" wx:for-item="v1">
+            <view class="evaluation-attachment-item" wx:if="{{k1==1||k1==4||k1==7}}" style="margin-left:3.5vw;margin-right:3.5vw;">
+              <view class="evaluation-video" wx:if="{{v1.attachment_type==1}}">
+                <video src="{{v1.src}}" show-center-play-btn="{{true}}" show-play-btn="{{true}}" controls></video>
+              </view>
+              <view class="evaluation-pic" wx:if="{{v1.attachment_type==2}}">
+                <image src="{{v1.src}}" bindtap="preImg" data-src="{{v1.src}}" data-srcarr="{{v.pic}}" />
+              </view>
+            </view>
+            <view class="evaluation-attachment-item" wx:else="">
+              <view class="evaluation-video" wx:if="{{v1.attachment_type==1}}">
+                <video src="{{v1.src}}" show-center-play-btn="{{true}}" show-play-btn="{{true}}" controls></video>
+              </view>
+              <view class="evaluation-pic" wx:if="{{v1.attachment_type==2}}">
+                <image src="{{v1.src}}" bindtap="preImg" data-src="{{v1.src}}" data-srcarr="{{v.pic}}" />
+              </view>
+            </view>
+          </block>
+
+
+        </view>
+        <view class="evaluation-menu">
+          <view wx:if="{{v.is_zan}}" class="evaluation-menu-item evaluation-menu-item-selected" bindtap="zc" data-id="{{v.id}}" data-type="1">
+            {{v.zan}}
+            <image src="../../static/images/icon-zan-selected.png" />
+          </view>
+          <view wx:else="" class="evaluation-menu-item" bindtap="zc" data-id="{{v.id}}" data-type="1">
+            {{v.zan}}
+            <image src="../../static/images/icon-zan.png" />
+          </view>
+          <view wx:if="{{v.is_cai}}" class="evaluation-menu-item evaluation-menu-item-selected" bindtap="zc" data-id="{{v.id}}" data-type="2">
+            {{v.cai}}
+            <image src="../../static/images/icon-cai-selected.png" />
+          </view>
+          <view wx:else="" class="evaluation-menu-item" bindtap="zc" data-id="{{v.id}}" data-type="2">
+            {{v.cai}}
+            <image src="../../static/images/icon-cai.png" />
+          </view>
+        </view>
+        <view wx:if="{{v.reply_list[0]}}" class="evaluation-reply mix-top">
+          <view wx:for="{{v.reply_list}}" wx:for-index="kr" wx:for-item="vr" class="evaluation-reply-item" style="margin-bottom:8px;">
+            {{vr.content}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

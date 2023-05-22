@@ -1,0 +1,120 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+/* lincec_store_share/pages/order/refund/apply.wxss */
+page {
+  background-color: #f7f7f7;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-left: 10px;
+  background-color: #fff;
+}
+.row {
+  display: flex;
+  flex: 1;
+  padding: 15px 0;
+}
+.pick {
+  /* display: flex;
+  flex-direction: row;
+  flex: 1; */
+}
+.label {
+  display: flex;
+  width: 90px;
+  font-size: 14px;
+  color: #333;
+}
+.value {
+  display: flex;
+  flex: 1;
+}
+.icon {
+  display: flex;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+}
+.icon image {
+  display: flex;
+  width: 20px;
+  height: 20px;
+}
+.plc {
+  color: #999;
+  font-size: 13px;
+}
+input {
+  color: #333;
+  font-size: 14px;
+  width: 100%;
+}
+textarea {
+  width: 100%;
+  height: 100px;
+}
+.btn-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+}
+.btn {
+  display: flex;
+  flex: 1;
+  padding: 10px;
+  font-size: 15px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-radius: 4px;
+}
+.yj-row-file {
+  display: flex;
+  flex: 1;
+  padding: 10px;
+  background-color: #fff;
+}
+.yj-file {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.yj-file-add {
+  display: flex;
+  width: 80px;
+  height: 80px;
+  padding: 5px;
+}
+.yj-file-add image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}

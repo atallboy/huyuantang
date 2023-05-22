@@ -1,0 +1,63 @@
+<view>
+
+  <view class="col-menu-wrap ui-row-list ui-row-list-border-indent" style="background-color:#fff;">
+
+    <view bindtap="toWhere" data-act="base_info" class="ui-row" style="height:70px;">
+      <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+        <view class="ui-col-content align-center valign-middle">
+          <image class="col-menu-icon" src="../../static/images/icon-collect-2.png" />
+        </view>
+      </view>
+      <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">
+          基本信息
+        </view>
+      </view>
+      <view class="ui-col valign-middle" style="flex:0 0 25px;">
+        <view class="ui-col-content valign-middle">
+          <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+        </view>
+      </view>
+    </view>
+
+    <view bindtap="toWhere" data-act="pic_info" class="ui-row" style="height:70px;">
+      <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+        <view class="ui-col-content align-center valign-middle">
+          <image class="col-menu-icon" src="../../static/images/icon-team-2.png" />
+        </view>
+      </view>
+      <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">
+          附件信息
+        </view>
+      </view>
+      <view class="ui-col valign-middle" style="flex:0 0 25px;">
+        <view class="ui-col-content valign-middle">
+          <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+        </view>
+      </view>
+    </view>
+
+    <view bindtap="toWhere" data-act="account_info" class="ui-row" style="height:70px;">
+      <view class="ui-col ui-col-align-center align-center valign-middle" style="flex:0 0 35px;">
+        <view class="ui-col-content align-center valign-middle">
+          <image class="col-menu-icon" src="../../static/images/icon-team-2.png" />
+        </view>
+      </view>
+      <view class="f-s-32 f-w-700 ui-col valign-middle" style="">
+        <view class="ui-col-content valign-middle">
+          账号信息
+        </view>
+      </view>
+      <view class="ui-col valign-middle" style="flex:0 0 25px;">
+        <view class="ui-col-content valign-middle">
+          <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+        </view>
+      </view>
+    </view>
+
+
+
+  </view>
+
+</view>

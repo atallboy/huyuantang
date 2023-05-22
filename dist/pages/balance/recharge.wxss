@@ -1,0 +1,131 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+.form-wrap {
+  padding: 10px;
+}
+.form-item {
+  border-bottom: 1px solid #ddd;
+}
+input {
+  width: 100%;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 0;
+  height: 50px;
+  font-size: 25px;
+}
+.placeholderClass {
+  text-align: center;
+  color: #666;
+  font-size: 20px;
+  font-weight: normal;
+}
+.fast-wrap {
+  padding: 10px 10px 0;
+}
+.fast-wrap-label {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 650;
+}
+.fast-wrap-label-dot {
+  display: flex;
+  width: 3px;
+  height: 16px;
+  background-color: var(--ColorMain);
+  margin-right: 10px;
+  border-radius: 100px;
+}
+.fast-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.fast-item-wrap {
+  display: flex;
+  width: 25%;
+}
+.fast-item {
+  width: 90%;
+  text-align: center;
+  padding: 8px 0;
+  border: 1rpx solid #E3E3E3;
+  border-radius: 4px;
+  color: #333;
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+.fast-item-active {
+  color: var(--ColorMain);
+  border: 1rpx solid var(--ColorMain);
+}
+.package-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.package-item {
+  display: flex;
+  width: 30%;
+  padding: 10px 0;
+  text-align: center;
+  flex-direction: column;
+  border: 1rpx solid #F9DBD0;
+  border-radius: 8px;
+  margin: 0 10px 10px 0;
+}
+.price {
+  font-weight: 700;
+}
+.desc {
+  color: #666;
+  font-size: 12px;
+}
+.package-item-active {
+  background-image: linear-gradient(#E6615C, #E8865A);
+}
+.package-item-active .price {
+  color: #fff;
+}
+.package-item-active .desc {
+  color: #eee;
+}
+.submit-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.submit-btn {
+  color: #fff;
+  background-color: var(--ColorMain);
+  border-radius: 2rpx;
+  width: 92%;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.describe {
+  padding: 10px;
+  color: #666;
+  font-size: 13px;
+}

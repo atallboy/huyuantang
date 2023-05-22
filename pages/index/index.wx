@@ -1,0 +1,475 @@
+<template>
+  <view>
+
+
+    <!-- <view class="search">      
+      <ui-row height="40">
+        <ui-col vertical-align="middle" align="center">
+            <view class="search-wrap">
+                <ui-row height="30">                          
+                  <ui-col vertical-align="middle" align="center" bindtap="toSearch">
+                      <view style="color:#666;font-size:12px;">
+                          <ui-icon type="magnifier" size="13" color="#333"></ui-icon>  请输入关键字
+                      </view>
+                  </ui-col>      
+                </ui-row>                       
+            </view>
+        </ui-col>                                 
+      </ui-row>                    
+    </view>     -->
+
+      <view class="yj-swiper">
+        <swiper autoplay="{{true}}" interval="3000" duration="500" circular="{{true}}" indicator-dots style="height:210px;">
+          <block wx:for="{{banner}}" wx:key="*this">
+            <swiper-item>
+              <image src="{{item.sub_image}}" style="display: block;width: 100%;height: 100%;"></image>
+            </swiper-item>
+          </block>
+        </swiper>
+      </view>  
+    
+    <block wx:if="{{menu[0]}}"> 
+      <view class="menu-cate-container" wx:if="{{menu_row_num==3}}">
+          <ui-row class="menu-row">      
+              <ui-col wx:for="{{menu}}" span="4" class="menu-item" align="center" vertical-align="middle" bindtap="cate" data-item="{{item}}">
+                  <view class="menu-icon">
+                      <image src="{{item.icon}}"></image>
+                  </view>
+                  <view class="menu-name">{{item.name}}</view>
+              </ui-col>
+          </ui-row>          
+      </view>  
+      <view class="menu-cate-container" wx:if="{{menu_row_num==4}}">
+          <ui-row class="menu-row">      
+              <ui-col wx:for="{{menu}}" span="3" class="menu-item" align="center" vertical-align="middle" bindtap="cate" data-item="{{item}}">
+                  <view class="menu-icon">
+                      <image src="{{item.icon}}"></image>
+                  </view>
+                  <view class="menu-name">{{item.name}}</view>
+              </ui-col>
+          </ui-row>          
+      </view>
+      <view class="menu-cate-container" wx:if="{{menu_row_num==5}}">
+          <view class="menu-row">      
+              <view wx:for="{{menu}}" class="menu-item-five" bindtap="cate" data-item="{{item}}">
+                  <view class="menu-icon">
+                      <image src="{{item.icon}}"></image>
+                  </view>
+                  <view class="menu-name">{{item.name}}</view>
+              </view>
+          </view>          
+      </view> 
+    </block>
+            
+
+
+<view class="image-magic">
+  <block wx:for="{{magic}}">
+    <view class="image-magic-item" style="margin-bottom:10px;" bindtap="cate" data-item="{{item}}">
+        <image src="{{item.pic}}" style="width:{{item.width}};height:{{item.height}};"></image>
+    </view>    
+  </block>
+</view>
+
+
+<view class="goods-col-container" wx:if="{{product_list[0]}}">     
+    <view style="font-weight: 700;font-size: 15px;padding-top:10px;">推荐产品</view>
+    <view class="goods-col-goods">         
+         <view class="goods-col-goods-wrap" wx:for="{{product_list}}">
+            <view class="goods-col-goods-item">
+                <view class="goods-col-goods-pic" bindtap="goodsDetail" data-id="{{item.id}}">
+                    <image src="{{item.sub_image}}"></image>
+                    <image wx:if="{{item.fight_status_ing==1}}" src="../../../static/images/icon-xxqg-2.png" class="goods-xsqg"></image>
+                </view>
+                <view class="goods-col-goods-name">
+                    <view class="goods-col-goods-name-txt">{{item.name}}</view>
+                </view>
+                <view class="goods-col-goods-info">
+                    <view class="goods-col-goods-price"> <text>￥</text>{{item.price}}</view>
+                    <view class="goods-col-goods-detail" bindtap="addcar" data-v="{{item}}" data-id="{{item.id}}"> <image src="../../static/images/icon-car-2.png"></image> </view>
+                </view>
+            </view>
+         </view>
+    </view>
+</view>
+
+
+    <view class="mch-list-container" wx:if="{{mch_list}}">
+        <view class="mch-list-wrap">
+            <view class="mch-header">
+                <ui-row height="40">                          
+                  <ui-col vertical-align="middle" align="right">
+                     <view class="circle"></view>               
+                  </ui-col>                     
+                  <ui-col vertical-align="middle" width="100">
+                     <view class="mch-header-name"> 入驻商户 <view class="relative-bg"></view> </view>               
+                  </ui-col>    
+                  <ui-col vertical-align="middle">
+                     <view class="circle"></view>               
+                  </ui-col>                                               
+                </ui-row>                
+            </view>   
+            <view class="mch-list">
+              <view class="mch-list-c" wx:for="{{mch_list}}">
+                <view class="mch-list-item" bindtap="mchDetail" data-id="{{item.id}}">
+                  <view class="mch-list-item-pic">
+                      <image src="{{item.store_img}}"></image>
+                  </view>
+                  <view class="mch-list-item-name">{{item.mch_name}}</view>
+                </view>                                              
+              </view>                          
+            </view>
+            <view class="mch-more">
+                <view class="mch-more-btn" bindtap="mchMore">查看更多</view>
+            </view>     
+        </view>
+    </view>
+    
+
+
+  </view>
+</template>
+ 
+<script>
+var app = getApp();
+var QQMapWX = require('../../static/utils/qqmap-wx-jssdk.js');
+var city = require('../../static/data/city.js');
+var qqmapsdk;
+// let hostUrl = getApp().globalData.host;
+export default {
+  config: {
+    "enablePullDownRefresh": true 
+  },
+  data: { 
+    region:[],
+    menu:[],
+    banner:[],
+    system_info:{},
+    menu_row_num:4,
+  },
+
+  onLoad(){
+
+    // this.getLocation();
+    qqmapsdk = new QQMapWX({
+      key: 'KHABZ-MEULF-GGWJE-NUL5G-4TGFT-4VFT4'
+    });  
+     this.refreshFunc();     
+  }, 
+
+
+
+  onShow(){
+      let city = wx.getStorageSync('city');
+      if(city){
+        this.setData({
+          selCity:city
+        })
+      }
+  },
+
+  refreshFunc(){
+    this.getSettingInfo();
+    this.getBannerList();
+    this.getMenuList();
+    this.getGoodsList();
+    this.getImageMagic();
+  },
+
+  onPullDownRefresh: function () {
+    this.refreshFunc();
+    wx.stopPullDownRefresh();
+  },  
+
+  cate(e){
+    let url_type = e.currentTarget.dataset.item.url_type;
+    let url = e.currentTarget.dataset.item.url;
+    console.log(url_type);
+    if(url_type=='navigate')wx.navigateTo({url:url});
+    if(url_type=='redirect')wx.redirectTo({url:url});
+    if(url_type=='switch')wx.switchTab({url:url});
+  },
+
+  getSettingInfo(e){
+    console.log(e);
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getSettingInfo',
+      data:{
+          token:wx.getStorageSync('token'),        
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          system_info:res.data.data,
+        })
+        wx.setNavigationBarTitle({title:res.data.data.name})
+        wx.setStorageSync('system_info',res.data.data);
+      }
+    })  
+  },
+
+  getBannerList(e){
+    console.log(e);
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getBannerList',
+      data:{
+          token:wx.getStorageSync('token'),        
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          banner:res.data.data,
+        })
+      }
+    })  
+  },
+
+  getMenuList(){  
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getMenuList',
+      success(res) {
+        console.log(res);
+        that.setData({
+          menu:res.data.data,
+        })
+      }
+    })  
+  },    
+  getImageMagic(){  
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getImageMagic',
+      success(res) {
+        console.log(res);
+        that.setData({
+          magic:res.data.data,
+        })
+      }
+    })  
+  },  
+
+  goodsDetail(e){
+    wx.navigateTo({url:'../product/detail?id='+e.currentTarget.dataset.id})
+  },
+
+  getGoodsList(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/getProductList',
+      data:{
+        token:wx.getStorageSync('token'),
+        recommend:1,
+        },
+      success(res) {
+        console.log(res);
+        that.setData({
+          product_list:res.data.data.list,
+        })
+      }
+    })  
+  },
+
+  addcar(e){
+    if(!wx.getStorageSync('token')){wx.navigateTo({url: '../../login/login',});return ;}    
+    let v = e.currentTarget.dataset.v;
+    if(v.attribute_list.length>0){
+      wx.navigateTo({url:'../product/detail?id='+e.currentTarget.dataset.id})
+      return ;
+    }    
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/addcar',
+      data:{
+          token:wx.getStorageSync('token'),
+          product_id:e.currentTarget.dataset.id,
+          type:1,
+        },
+      success(res) {
+        console.log(res);
+        if(res.data.data>0){
+          wx.showToast({title:'已加入购物车'})
+        }
+      }
+    })  
+  },
+
+ 
+
+  getLocation(){
+    let vm = this;
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userLocation']) {
+          wx.authorize({
+            scope: 'scope.userLocation',
+            success () {
+              wx.getLocation({
+                success (res) {
+                    console.log(res);
+                    vm.getLocal(res.latitude,res.longitude);
+                }
+              })
+            },
+          fail: function (res) {
+            wx.showModal({
+              content:'你拒绝了授权地理位置，或许会出现不能正常使用的情况'
+            })
+          },            
+          })
+        }else{
+              wx.getLocation({
+                success (res) {
+                    console.log(res);
+                    wx.setStorageSync('lng',res);
+                    vm.getLocal(res.latitude,res.longitude);
+                }
+              })          
+        }
+      }
+    })
+  },
+
+
+  // 获取当前地理位置
+  getLocal: function (latitude, longitude) {
+    let vm = this;
+    qqmapsdk.reverseGeocoder({
+      location: {
+        latitude: latitude,
+        longitude: longitude
+      },
+      success: function (res) {
+        console.log("getLocal");
+        console.log(res);
+        vm.setData({selCity:res.result.ad_info.city})
+        wx.setStorageSync('city',res.result.ad_info.city);  
+        wx.setStorageSync('location',res);        
+      },
+      fail: function (res) {
+        console.log("fail");
+        console.log(res);
+      },
+      complete: function (res) {
+        // console.log(res);
+      }
+    });
+  },
+
+  onShareAppMessage: function () {
+    
+  },
+
+  onShareTimeline: function () {
+
+  },
+
+  
+}
+</script>  
+
+<style lang="less">
+
+
+// 商品列表样式c1 start
+.list-container-c1{
+  padding:10px;
+  display:flex;
+  background-color:var(--defaultBgColor);
+  flex-direction:column;
+  .list-c1-item{display:flex;flex-direction:column;flex:1;background-color:#fff;padding-left:8px;margin-bottom:10px;padding-bottom:10px;border-radius:4px;}
+  .list-c1-header{display:flex;padding:10px 0;}
+  .list-c1-cate{display:flex;flex:1;font-size:15px;}
+  .list-c1-cate image{width:20px;height:20px;border-radius:100px;margin-right:6px;}
+  .list-c1-more{display:flex;width:50px;align-items: center;justify-content: center;color:#666;}
+  .list-c1-more image{width:13px;height:13px;}
+  .list-c1-goods{display:flex;}
+  .list-c1-goods-item{display:flex;flex-direction:column;width:33.3%;padding-right:8px;}
+  .list-c1-goods-pic{width:100%;height:28vw;}
+  .list-c1-goods-pic image{width:100%;height:100%;border-radius:6px;}
+  .list-c1-goods-name{font-size:15px;height:26px;line-height:26px;}
+  .list-c1-goods-price{color:#e02433;font-size:12px;}
+  .list-c1-goods-price text{font-size:15px;font-weight:650;}
+
+}
+
+// 商品列表样式c1 end
+
+
+.list-label-info{display: flex;flex: 1;align-items: center;}
+.list-label-info image{width: 20px;height: 20px;margin-right: 5px;}
+.list-label-more{display: flex;flex: 1;align-items: center;justify-content: flex-end;}
+.list-label-more image{width: 20px;height: 20px;}
+
+.yj-swiper{position:relative;}
+
+.search-location{
+    border-radius: 100rpx;
+    // background: #fff;
+    flex: unset;
+    margin-right: 10px;
+    padding-left: 10px;
+}
+.location-icon{width: 18px;height: 18px;}
+.location-name{
+  width: 50px;overflow: hidden;font-size: 13px;
+    height: 30p;
+    line-height: 30px;  
+  }
+
+
+
+.search{
+  padding: 10rpx;
+  background-color: var(--bgColorMain);   //洗咚咚  4184F5
+}
+.search-wrap{
+  background: #fff;
+  border-radius: 100rpx;
+  padding: 0 10rpx;
+  width: 100%;
+}
+.search-inp{
+  text-align: center;
+}
+.search-placeholder{
+  font-size: 26rpx;
+  text-align: center;
+}
+
+
+
+.index-menu-container{display:flex;position:absolute;bottom:-140px;padding:0 20px;left:0;right:0;}
+.index-menu-wrap{display:flex;width:100%;height:160px;background-color:#fff;border-radius:6px;box-shadow: 0 1px 3px rgba(26, 26, 26, .1);}
+.index-menu-item{display:flex;flex:1;flex-direction:column;justify-content: center;align-items: center;}
+.index-menu-item-icon{display:flex;width:60px;height:60px;}
+.index-menu-item-name{display:flex;font-weight:700;}
+.index-menu-item-sub-name{display:flex;font-size:12px;}
+
+.menu-cate-container{padding:10px 0;background-color:var(--defaultBgColor);}
+
+.menu-row{justify-content: flex-start;flex-wrap: wrap;padding-top: 10px;display:flex;background-color:#fff;border-radius: 4px;}
+.menu-item{margin-bottom: 10px;}
+.menu-icon image{width: 50px;height: 50px;}
+.menu-name{font-size: 14px;color: #111;line-height: 30px;font-weight: 650;}  
+.menu-item-five{display:flex;width:20%;flex-direction: column;margin-bottom: 10px;justify-content: center;align-items: center;}
+.menu-item-five .menu-name{font-size: 13px;color: #111;line-height: 30px;font-weight: 650;}
+
+
+.second-menu-container{display:flex;padding:10px 20px;}
+.second-menu-container view{display:flex;justify-content: center;align-items: center;}
+.second-menu-wrap{flex:1;}
+.second-menu-item{flex:1;background-color:#EAEBEC;border-radius:4px;flex-direction:column;padding:15px 0;}
+.second-menu-item-blk{width:10px;}
+.second-menu-item-info{font-size:13px;font-weight:700;}
+.second-menu-item-info image{width:15px;height:15px;margin-right:5px;}
+.second-menu-item-remark{font-size:11px;color:#666;margin-top:6px;}
+
+
+
+
+</style>

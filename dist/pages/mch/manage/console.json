@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "ui-badge": "../../../packages/touchui-wx-components/ui-badge/dist/index"
+  },
+  "navigationBarBackgroundColor": "#006BFF",
+  "navigationBarTextStyle": "white",
+  "navigationBarTitleText": "商户中心"
+}

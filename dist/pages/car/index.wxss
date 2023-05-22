@@ -1,0 +1,190 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+/* lincec_store_share/pages/mall/car/index.wxss */
+page {
+  background-color: #f7f7f7;
+}
+.car-menu-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 99999;
+  border-top: 1rpx solid #e2e2e2;
+}
+.car-menu-wrap {
+  flex: 1;
+  align-items: center;
+  padding-left: 10px;
+}
+.car-calc {
+  color: #ff5857;
+  font-size: 14px;
+  flex: 1;
+  margin-left: 10px;
+}
+.car-menu-btn {
+  width: 125px;
+  color: #fff;
+  padding: 15px 0;
+  justify-content: center;
+}
+.menu-default {
+  background-color: #989898;
+}
+.menu-sel {
+  background-color: #ff5857;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.container view {
+  display: flex;
+}
+.behavior-container {
+  padding: 10px;
+  font-size: 13px;
+  background-color: #fff;
+  margin-bottom: 10px;
+}
+.behavior-txt {
+  color: #999;
+  flex: 1;
+}
+.behavior-btn {
+  color: #555;
+  flex: 1;
+  justify-content: flex-end;
+}
+.all-sel {
+  background-color: #fff;
+  padding: 10px;
+  font-size: 13px;
+  border-bottom: 1rpx solid #f1f1f1;
+  align-items: center;
+}
+.sel-item {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  /* margin-left: 24rpx; */
+  background-color: white;
+  border: 1rpx solid #e2e2e2;
+  margin-right: 10px;
+}
+.selected {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background-repeat: repeat;
+  background-size: 100% 100%;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAhFBMVEUAAAD/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFz/XFxw13bLAAAAK3RSTlMA8vjn496KOC7q2HYT78kf0D8mGhYN7Lq2sKxWUEcpIgijfW1nM5eUYIGAWqlCygAAAXJJREFUOMuNlNlygzAMRa/Z90ATwhYo2dPq//+vuEk8OAbDeRIzhzuSEcYnblgnPmNmcgw9aPFOAY0INL5bkkKRTaqRQ5M436r75dMMhhL+MGieUHYPJFi0G1rgDMGWFmnfbm/RMpuX/EsrqJ7ujlZxAKdeJ5vcjbRKaorSHeSLzrWxEfVxkFOdmwM7cVY5vjVusONra9OLB86a3H5wOxLUOM66Fs9t49GwSOZcP+KLK09rzeVuBzczpNfBSOB4TM71JJcYxLNxArb2ONcl+pD3ouRZG3/Ub0wyMQJR7/n0kckrntupY6AggenyvIAY/5+vpvqN4HxueF9deT+kkqCVunLxJDNJxQGk4zF4B2qu2NG7fDyu6FdtGfBIwvCQM5riMsjKBz/ZNEnO5ZZWccc/1RrXel+gq28CTrPs3iBwltwSI256NxHicnYtqfq7xoFCVsy0cMAUoamq8Q9m6JtSVosmh4YuLFM7Zmxvp9W5g8wf9UjmyN2BHX8AAAAASUVORK5CYII=);
+}
+.sel-txt {
+  color: #555;
+  font-size: 15px;
+}
+.car-container {
+  background-color: #fff;
+  margin-bottom: 60px;
+}
+.car-wrap {
+  flex-direction: column;
+  flex: 1;
+}
+.car-item {
+  padding: 15px 10px 20px;
+  border-bottom: 1rpx solid #f1f1f1;
+  align-items: center;
+}
+.car-goods-pic {
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+}
+.car-goods-pic image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.car-goods-info {
+  flex: 1;
+  flex-direction: column;
+}
+.car-goods-name {
+  flex: 1;
+  height: 20px;
+  margin-bottom: 10px;
+}
+.car-goods-name-txt {
+  /* line-height: 30px; */
+  overflow: hidden;
+  color: #333;
+  font-size: 13px;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.car-goods-param {
+  flex: 1;
+  height: 20px;
+  color: #666;
+}
+.car-goods-int {
+  flex: 1;
+  height: 30px;
+}
+.car-goods-price {
+  flex: 1;
+  color: #ff5857;
+  font-size: 14px;
+  line-height: 30px;
+}
+.car-goods-price text {
+  font-size: 11px;
+}
+.car-goods-nums {
+  flex: 1;
+  background-color: #f7f7f7;
+  color: #555;
+  border-radius: 2px;
+}
+.car-goods-reduce {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+.car-goods-num {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.car-goods-add {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}

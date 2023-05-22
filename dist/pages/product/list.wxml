@@ -1,0 +1,30 @@
+<view>
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+  <view class="goods-col-container">
+    <view class="goods-col-goods">
+      <view class="goods-col-goods-wrap" wx:for="{{list}}">
+        <view class="goods-col-goods-item">
+          <view class="goods-col-goods-pic" bindtap="detail" data-id="{{item.id}}">
+            <image src="{{item.sub_image}}" />
+            <image wx:if="{{item.fight_status_ing==1}}" src="../../../static/images/icon-xxqg-2.png" class="goods-xsqg" />
+          </view>
+          <view class="goods-col-goods-name">
+            <view class="goods-col-goods-name-txt">{{item.name}}</view>
+          </view>
+          <view class="goods-col-goods-info">
+            <view class="goods-col-goods-price"> <text>￥</text>{{item.price}}</view>
+            <view class="goods-col-goods-detail" bindtap="addcar" data-v="{{item}}" data-id="{{item.id}}">
+              <image src="../../static/images/icon-car-2.png" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+
+</view>

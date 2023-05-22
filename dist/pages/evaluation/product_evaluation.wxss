@@ -1,0 +1,158 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+.evaluation-btn {
+  color: var(--ColorMain);
+  border: 1rpx solid var(--ColorMain);
+  border-radius: 100px;
+  width: 100%;
+  padding: 6px 0;
+  text-align: center;
+}
+.evaluation-container .evaluation-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.evaluation-container .evaluation-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: #fff;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  padding: 2vw 5vw;
+}
+.evaluation-container .evaluation-user {
+  display: flex;
+  align-items: center;
+}
+.evaluation-container .evaluation-user-pic {
+  display: flex;
+  width: 40px;
+}
+.evaluation-container .evaluation-user-pic image {
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+}
+.evaluation-container .evaluation-user-name {
+  display: flex;
+  flex: 1;
+}
+.evaluation-container .evaluation-time {
+  display: flex;
+  width: 100px;
+  justify-content: flex-end;
+  font-size: 13px;
+  color: #666;
+}
+.evaluation-container .evaluation-sheet {
+  display: flex;
+  width: 30px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.evaluation-container .evaluation-sheet image {
+  width: 12px;
+  height: 12px;
+}
+.evaluation-container .evaluation-product {
+  display: flex;
+  margin: 4px 0;
+  align-items: center;
+  padding: 0 1vw;
+}
+.evaluation-container .evaluation-score {
+  display: flex;
+  width: 90px;
+}
+.evaluation-container .evaluation-score image {
+  width: 16px;
+  height: 16px;
+  margin-right: 2px;
+}
+.evaluation-container .evaluation-product-name {
+  margin-left: 14px;
+  color: #666;
+  font-size: 13px;
+}
+.evaluation-container .evaluation-content {
+  margin-bottom: 0px;
+  padding: 0 1vw;
+}
+.evaluation-container .evaluation-txt {
+  font-size: 14px;
+  color: #333;
+}
+.evaluation-container .evaluation-attachment {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 1.5vw;
+  padding: 0 1vw;
+}
+.evaluation-container .evaluation-attachment-item {
+  display: flex;
+  width: 27vw;
+  height: 27vw;
+  margin-top: 3.5vw;
+}
+.evaluation-container .evaluation-video {
+  width: 100%;
+  height: 100%;
+}
+.evaluation-container .evaluation-video video {
+  width: 100%;
+  height: 100%;
+}
+.evaluation-container .evaluation-pic {
+  width: 100%;
+  height: 100%;
+}
+.evaluation-container .evaluation-pic image {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+.evaluation-container .evaluation-menu {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  color: #333;
+}
+.evaluation-container .evaluation-menu-item {
+  display: flex;
+  width: 40px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.evaluation-container .evaluation-menu-item-selected {
+  color: #d81e06;
+}
+.evaluation-container .evaluation-menu-item image {
+  width: 18px;
+  height: 18px;
+  margin-left: 3px;
+}
+.evaluation-container .evaluation-reply {
+  font-size: 13px;
+  color: #666;
+  padding: 10px 1vw 0;
+}

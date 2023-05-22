@@ -1,0 +1,23 @@
+<view>
+
+  <image wx:if="{{!list[0]}}" src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+
+
+  <view class="level-list-container">
+    <view class="level-list-wrap">
+      <view class="level-item" wx:for="{{list}}">
+        <view class="level-pic">
+          <image src="{{item.pic}}" />
+        </view>
+        <view class="level-info">
+          <view class="level-name">{{item.name}}</view>
+          <view class="level-card-num">x {{item.num}}张</view>
+        </view>
+        <view class="level-btn-wrap">
+          <view class="level-btn" bindtap="become" data-item="{{item}}">查看</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

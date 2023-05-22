@@ -1,0 +1,83 @@
+<view>
+
+  <!--pages/erkai/team/team.wxml-->
+
+  <block wx:if="{{!list[0]}}">
+    <image src="../../static/images/nothing.png" style="width:200px;height:200px;margin:0 auto;padding-top:100px;" />
+    <view class="create-btn" bindtap="build">创建团队</view>
+  </block>
+
+
+  <block wx:else="">
+    <view class="menu-container">
+      <view bindtap="info" class="mix-bottom ui-row" style="height:50px;">
+        <view class="menu-label ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            团队名称
+          </view>
+        </view>
+        <view class="menu-name ui-col ui-col-align-right align-right valign-middle" style="">
+          <view class="ui-col-content align-right valign-middle">
+            {{detail.name}}
+          </view>
+        </view>
+        <view class="ui-col ui-col-align-right align-right valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content align-right valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+      <view bindtap="qrcode" class="ui-row" style="height:50px;">
+        <view class="menu-label ui-col valign-middle" style="">
+          <view class="ui-col-content valign-middle">
+            团队二维码
+          </view>
+        </view>
+        <view class="menu-name ui-col ui-col-align-right align-right valign-middle" style="">
+          <view class="ui-col-content align-right valign-middle">
+            <image src="../../static/images/icon-qrcode-a.png" />
+          </view>
+        </view>
+        <view class="ui-col ui-col-align-right align-right valign-middle" style="flex:0 0 25px;">
+          <view class="ui-col-content align-right valign-middle">
+            <span type="arrow-right" class="ui-icon icon-arrow-right" style="font-size: 16px;"></span>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="team-container">
+      <view class="team-wrap">
+        <view class="team-list">
+          <view class="team-item" wx:for="{{list}}" wx:for-index="k" wx:for-item="v">
+            <view class="team-pic">
+              <image src="{{v.avatarUrl}}" />
+            </view>
+            <view class="team-name">
+              <view class="team-name-txt">{{v.nickName}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+
+  <view class="btn-wrap">
+    <view wx:if="{{isCanJoin}}" class="btn-item" bindtap="joinTeam">加入该团队</view>
+  </view>
+
+
+  <view class="qrcode-toast" wx:if="{{showQrcode}}">
+    <view class="qrcode-wrap">
+      <image src="{{detail.qrcode}}" />
+    </view>
+    <view class="qrcode-btn">
+      <view class="qrcode-close-btn" bindtap="closeQrcode">
+        <image src="../../static/images/icon-close.png" />
+      </view>
+    </view>
+  </view>
+
+
+
+</view>

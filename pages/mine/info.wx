@@ -1,0 +1,430 @@
+<template>
+  <view>
+
+
+
+<form catchsubmit="formSubmit" catchreset="formReset">
+
+
+  <ui-row height="40">
+      <ui-col vertical-align="middle" style="padding-left:10px;"> {{user.level_info.name}} 身份信息</ui-col>
+  </ui-row> 
+
+  <view class="form" style="background-color:#fff;padding:0 10px;">
+    <view class="mix-bottom">
+      <ui-row height="50">
+          <ui-col width="16" vertical-align="middle">
+            <image src="../../static/images/xing.png" class="xing"></image>
+          </ui-col>
+          <ui-col width="80" vertical-align="middle"> <text class="f-s-26">姓名</text> </ui-col>
+          <ui-col vertical-align="middle">
+              <input class="weui-input" name="name" placeholder="请输入" value="{{user.user_level_info.name}}" placeholder-style="font-size:12px;" />
+          </ui-col>
+      </ui-row>   
+    </view>   
+    <view class="mix-bottom">
+      <ui-row height="50">
+          <ui-col width="16" vertical-align="middle">
+            <image src="../../static/images/xing.png" class="xing"></image>
+          </ui-col>
+          <ui-col width="80" vertical-align="middle"> <text class="f-s-26">电话</text> </ui-col>
+          <ui-col vertical-align="middle">
+              <input class="weui-input" name="tel" placeholder="请输入" value="{{user.user_level_info.tel}}" placeholder-style="font-size:12px;" />
+          </ui-col>
+      </ui-row>   
+    </view>           
+    <view class="mix-bottom">
+      <ui-row height="50">
+          <ui-col width="16" vertical-align="middle">
+            <image src="../../static/images/xing.png" class="xing"></image>
+          </ui-col>
+          <ui-col width="80" vertical-align="middle"> <text class="f-s-26">定位</text> </ui-col>
+          <ui-col vertical-align="middle">              
+              <view class="yj-form-row-pick-content" bindtap="chooseLocation">
+                <view class="picker-input">
+                  <input class="weui-input" name="input" value="{{dingwei}}" placeholder="点击选择定位" disabled placeholder-style="font-size:12px;" />
+                </view>
+                <view class="yj-form-row-item-sel">
+                  <image class="sel-icon" src="../../static/images/icon-addr.png" />
+                </view>
+              </view>              
+          </ui-col>
+      </ui-row>   
+    </view>    
+    <view class="mix-bottom">
+      <ui-row height="50">
+          <ui-col width="16" vertical-align="middle">
+            <image src="../../static/images/xing.png" class="xing"></image>
+          </ui-col>
+          <ui-col width="80" vertical-align="middle"> <text class="f-s-26">省市区</text> </ui-col>
+          <ui-col vertical-align="middle">
+              <input class="weui-input" name="input" placeholder="请点击上方获取定位" disabled value="{{user.user_level_info.province}}{{user.user_level_info.city}}{{user.user_level_info.district}}" placeholder-style="font-size:12px;" />
+          </ui-col>
+      </ui-row>   
+    </view>
+    <view class="mix-bottom">
+      <ui-row height="50">
+          <ui-col width="16" vertical-align="middle">
+            <image src="../../static/images/xing.png" class="xing"></image>
+          </ui-col>
+          <ui-col width="80" vertical-align="middle"> <text class="f-s-26">详细位置</text> </ui-col>
+          <ui-col vertical-align="middle">
+              <input class="weui-input" name="address" placeholder="请输入" value="{{user.user_level_info.address}}" placeholder-style="font-size:12px;" />
+          </ui-col>
+      </ui-row>   
+    </view>       
+
+  </view>     
+
+
+
+  <ui-row height="75"><ui-col></ui-col></ui-row>
+  
+  <view class="submit-wrap">
+    <button form-type="submit" class="submit-btn">保存</button>
+  </view>
+  
+</form>
+
+  </view>
+</template>
+
+<script>
+var app = getApp();
+let siteinfo = getApp().siteInfo;
+var QQMapWX = require('../../static/utils/qqmap-wx-jssdk.js');
+var qqmapsdk;
+export default {
+  config: {
+    navigationBarTitleText: '资料编辑'
+  },
+  data: {
+    mch_id:0,
+    step:1,
+    detail:[],
+    cateArr:[],
+    cateIndex:-1,
+    headimg:'',
+    cardimg:'',  
+    business_license:'',
+    store_img:'',
+    province:'',
+    city:'',
+    district:'',
+    location:'',
+    address:'',   
+    latitude:'',
+    longitude:'',     
+    mch_cate:[],
+    user_level_info_id:0,
+  },
+
+  onLoad(e){
+    qqmapsdk = new QQMapWX({
+      key: 'KHABZ-MEULF-GGWJE-NUL5G-4TGFT-4VFT4'
+    }); 
+    if(!wx.getStorageSync('token')){wx.navigateTo({url:'../login/login'})}    
+    this.getUserInfo();
+  },
+
+  onShow(){
+    
+  },
+
+  getUserInfo(){
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/GetUserInfo',
+      data:{token:wx.getStorageSync('token')},
+      success(res) {
+        console.log(res);
+        that.setData({
+          user:res.data.data
+        })
+        if(res.data.data.user_level_info.id){
+          this.setData({
+            user_level_info_id:res.data.data.user_level_info.id
+          })
+        }
+        wx.setStorageSync('user', res.data.data)
+      }
+    })  
+  }, 
+
+  formSubmit(e) {
+    console.log('form发生了submit事件，携带数据为：', e.detail.value)
+
+
+    if(e.detail.value.name==''){wx.showToast({title:'请输入姓名'});return ;} 
+    if(e.detail.value.tel==''){wx.showToast({title:'请输入电话'});return ;} 
+    if(this.data.latitude==''){wx.showToast({title:'请选择定位'});return ;}
+    if(e.detail.value.address==''){wx.showToast({title:'请输入详细位置'});return ;} 
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/EditUserLevelInfo',
+      data:{
+          id:this.data.user_level_info_id,
+          token:wx.getStorageSync('token'), 
+          name:e.detail.value.name,
+          tel:e.detail.value.tel,
+          address:e.detail.value.address,
+          province:this.data.user.user_level_info.province,
+          city:this.data.user.user_level_info.city,
+          district:this.data.user.user_level_info.district,
+          latitude:this.data.latitude,
+          longitude:this.data.longitude,        
+        },
+      success(res) {
+        console.log(res);
+        wx.showToast({
+          title:'保存成功'
+        })        
+        setTimeout(function(){
+              that.getUserInfo(); 
+        },1000);        
+                 
+      }
+    }) 
+
+ 
+  }, 
+
+
+
+  saveImg(){
+    if(this.data.business_license==''){wx.showToast({title:'请上传营业执照'});return ;}
+    if(this.data.store_img==''){wx.showToast({title:'请上传门头照'});return ;}        
+    if(this.data.headimg==''){wx.showToast({title:'请上传正面照'});return ;}
+    if(this.data.cardimg==''){wx.showToast({title:'请上传身份证'});return ;}
+
+
+    let that = this;
+    app.util.request({
+      'url': 'entry/wxapp/submitMchApply',
+      data:{
+          token:wx.getStorageSync('token'),
+          opt:'pic_info',
+          mch_id:this.data.mch_id,
+          headimg:this.data.headimg,
+          cardimg:this.data.cardimg,
+          business_license:this.data.business_license,
+          store_img:this.data.store_img,          
+        },
+      success(res) {
+        console.log(res);
+        if(res.data.errno==0){
+          wx.showToast({
+              title:'保存成功'
+            })  
+        }    
+        that.getMchDetail(); 
+      }
+    })  
+  },
+
+
+  upload(e){
+    console.log(siteinfo.site);
+    let t = e.currentTarget.dataset.t;
+    let that = this;
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success (res) {
+        // tempFilePath可以作为img标签的src属性显示图片
+        const tempFilePaths = res.tempFilePaths
+        var url = app.util.url('entry/wxapp/uploadPic');
+        wx.uploadFile({
+          // url:url,
+          url: siteinfo.site+"/app/index.php?i="+siteinfo.uniacid+"&c=entry&a=wxapp&do=UploadPic&m="+siteinfo.model,
+          filePath: tempFilePaths[0],
+          name: 'file',
+          success (res){
+            console.log(res.data)
+            if(t==1){
+              that.setData({
+                  headimg:res.data,
+                  pic1:siteinfo.site+res.data,
+              })
+            }else if(t==2){
+              that.setData({
+                  cardimg:res.data,
+                  pic2:siteinfo.site+res.data,
+              })
+            }else if(t==3){
+              that.setData({
+                  business_license:res.data,
+                  pic3:siteinfo.site+res.data,
+              })
+            }else{
+              that.setData({
+                  store_img:res.data,
+                  pic4:siteinfo.site+res.data,
+              })
+            }
+          }
+        })
+      }
+    })
+  },  
+
+  chooseLocation(){
+    let vm = this;
+    let str = 'data.address_name';
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userLocation']) {
+          wx.authorize({
+            scope: 'scope.userLocation',
+            success () {
+              wx.chooseLocation({
+                success (res) {
+                    console.log(res);
+                    vm.setData({
+                      latitude:res.latitude,
+                      longitude:res.longitude,
+                    })
+                    vm.getLocal(res.latitude,res.longitude);
+                }
+              })
+            },
+          fail: function (res) {
+            wx.showModal({
+              content:'你拒绝了授权地理位置，或许会出现不能正常使用的情况'
+            })
+          },            
+          })
+        }else{
+              wx.chooseLocation({
+                success (res) {
+                    console.log(res);
+                    vm.setData({
+                      latitude:res.latitude,
+                      longitude:res.longitude,
+                    })    
+                    vm.getLocal(res.latitude,res.longitude);                                  
+                }
+              })          
+        }
+      }
+    })
+  },
+
+  getLocal: function (latitude, longitude) {
+    console.log(latitude)
+    let vm = this;
+    qqmapsdk.reverseGeocoder({
+      location: {
+        latitude: latitude,
+        longitude: longitude
+      },
+      success: function (res) {
+        console.log("getLocal");
+        console.log(res);
+        let a1 = 'user.user_level_info.province';
+        let a2 = 'user.user_level_info.city';
+        let a3 = 'user.user_level_info.district';
+        let a4 = 'user.user_level_info.address';
+        let a5 = 'latitude';
+        let a6 = 'longitude';
+        vm.setData({
+          dingwei:latitude+','+longitude,
+          latitude:latitude,
+          addr_data:res.result,
+          [a1]:res.result.ad_info.province,
+          [a2]:res.result.ad_info.city,
+          [a3]:res.result.ad_info.district,
+          [a4]:res.result.address_component.street_number,
+          [a5]:latitude,
+          [a6]:longitude,
+          })        
+      },
+      fail: function (res) {
+        console.log("fail");
+        console.log(res);
+      },
+      complete: function (res) {
+        // console.log(res);
+      }
+    });
+  },  
+
+}
+</script>
+
+<style lang="less">
+.l-active{width: 100%;height: 2rpx;background-color: #FA5C37;}
+.l-default{width: 100%;height: 2rpx;background-color: #F9DBD0;}
+.line{width: 100%;height: 2rpx;background-color: #F9DBD0;}
+.n-active{background-color:#FA5C37;color:#fff;width: 16px;height: 16px;line-height: 16px;font-size: 11px;border-radius: 100px;}
+.n-default{background-color: #F9DBD0;color: #fff;width: 16px;height: 16px;line-height: 16px;font-size: 11px;border-radius: 100px;}
+.t-active{color: #FA5C37;}
+.t-default{color: #CFCFCF;}
+.placeholderClass{font-size: 12px;}
+.xing{width: 7px;height: 7px;}
+.sel-icon{width: 20px;height: 20px;}
+.yj-form-row-pick-content{display: flex;}
+.picker-input{display: flex;flex: 1;}
+.yj-form-row-item-sel{display: flex;width: 50px;justify-content: center;align-items: center;}
+
+.submit-wrap{position: fixed;left: 0;right: 0;bottom: 0;background-color: #fff;z-index:99999;}
+.submit-btn{color:#fff;background-color: var(--ColorMain);border-radius: 2rpx;width: 92%;margin: 0 auto;margin-top: 20px;margin-bottom: 20px;}
+
+
+.image-upload-container{
+  display: flex;
+  // padding: 10px;
+  flex-direction: column;
+
+  .image-upload-wrap{
+    display: flex;
+    flex: 1;
+    background-color: #fff;
+    padding: 20px 0;
+  }
+  
+  .image-upload-item{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;align-items: center;
+  }
+
+  .image-upload-preview{
+    display: flex;
+    flex: 1;
+  }
+  .image-upload-preview image{
+    width: 120px;
+    height: 120px;
+  }
+  .image-upload-btn{
+    display: flex;
+    flex: 1;
+  }
+  .image-upload-select{
+      width: 100px;
+      padding: 6px 0;
+      text-align: center;
+      background-color: #ddd;
+      border-radius: 6px;
+      margin-top: 10px;
+  }
+}
+
+.unit{color: #FA5C37;}
+.price{
+  font-size: 30px;
+  color: #FA5C37;
+}
+
+  .msg{
+    padding: 10px;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 16px;
+  }
+
+</style>

@@ -1,0 +1,71 @@
+/* 1像素解决方案 */
+/*
+ * 清除1px
+ */
+/*
+ * 清除浮动
+ */
+/*
+ * mobile
+ */
+/*
+ * 1px
+ */
+/*
+ * text
+ */
+/* 垂直居中 */
+/* 水平居中 */
+/* 水平垂直居中 */
+/* 超出部分出省略号 */
+/* 多行文本超出部分省略号 */
+page {
+  background-color: var(--defaultBgColor);
+}
+.yj-container {
+  padding: 10px;
+}
+.yj-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.yj-item {
+  display: flex;
+  margin-bottom: 15px;
+  background-size: 100% 100%;
+  background-color: #fff;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 4px;
+}
+.name {
+  display: flex;
+  padding: 10px 0;
+  align-items: center;
+  font-weight: 650;
+}
+.brief {
+  display: flex;
+  flex: 1;
+  line-height: 26px;
+}
+.time {
+  display: flex;
+  color: #666;
+  line-height: 26px;
+}
+.btn {
+  display: flex;
+  color: #666;
+  padding-top: 10px;
+}
+.btn .btn-txt {
+  display: flex;
+  flex: 1;
+  color: #3A4662;
+}
+.btn .btn-icon {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
